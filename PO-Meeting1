@@ -1,0 +1,47 @@
+Overview of points made during first PO-Meeting about requirements
+
+-Typical web browser functionality.
+-We will not have access to any of unb's services. (D2L, eServices)
+-As of now emails will not be involved in the creation of accounts, privacy concern.
+-Have not decided as of yet how to notify students with low attendence.
+-Account creation will consist of username and password. (Student and Faculty)
+-Students will manually select the courses they are in. 
+-faculty members will be responsible for creating their courses in the app, no pre-existing courses.
+-faculty can remove students from a course.
+-faculty cannot assign seats, this is left up to the students.
+-students will be able to switch seats if they want, but only to seats labeled AVAILABLE.
+-possible chat feature for students to coordinate switching of seats. (this is likely to change)
+-faculty will be incharge of creating the specific seating template for their class.
+-have not yet decided how to handle labs and tutorials.
+-faculty takes attendance by marking the seats which are empty, 
+ otherwise student is assumed to be present.
+-faculty can go back to previous dates to modify attendance.
+-system always defults to current date.
+-as of now attendance tracking data will appear spreadsheet style including user-> days missed or present
+-will likely have Report/Queries for attendance statistics. i.e. able to look up students that missed 'x' number of days.
+
+Two different view modes for users with accounts and users without:
+    1.  both students and faculty can see the names of users associated with their selected seats.
+    2.  anonymous users without account can view classes seating plans, but not the associated names.
+
+
+Some classes will have optional attendance, some classes will have mandatory attendance.
+    Optional-> students can choose to create an account on our app in order to pick their seat.
+               there will be seats reserved for students who choose not to use the app, these seats will appear... 
+               in the seating template, but will be un-available to choose by users.
+    Mandatory-> It is assumed all students will be using the app.
+    
+Seat types:
+    Closed - seats appear on template but it is apparent to students that no one is to sit there.
+    Open - anyone can sit in these seats, and they cannot be reserved by students with the app.
+    Reservable - these seats will be chosen by students with the app.
+    
+Creating template (for faculty):
+    1.  Template starts as grid of max possible size. (Dineen)
+    2.  Faculty selects a section they wish to use to represent their class,
+        grid now resizes to fit only their selection.
+    3.  Seats are then set as either Closed, Open or Reservable.
+    
+Questions left unanswered:
+  -Can students view the templates of courses they are not in?
+  -Do students have to be accepted into courses by faculty to modify seating?
