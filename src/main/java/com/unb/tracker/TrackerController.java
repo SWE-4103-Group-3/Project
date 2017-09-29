@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 @EnableAutoConfiguration
 public class TrackerController {
-    @RequestMapping(value="/{name}", method = RequestMethod.GET)
-    public String index(ModelMap map, @PathVariable("name") String name) {
-        map.addAttribute("name", name);
+    @RequestMapping(value="/", method = RequestMethod.GET)
+    public String index(ModelMap map) {
         return "index";
     }
 }
