@@ -41,14 +41,15 @@ public class TrackerController {
         return userRepository.findAll();
     }
 
-    @GetMapping(path="/course/form")
+    @GetMapping(path="/course")
     public String courseForm(Model model) {
         model.addAttribute("course", new Course());
         return "courseFormView";
     }
+
     @Autowired
     private CourseRepository courseRepository;
-    @PostMapping("/course/save")
+    @PostMapping("/course")
     public String courseSave(@ModelAttribute Course course) {
         courseRepository.save(course);
         return "courseFormView";

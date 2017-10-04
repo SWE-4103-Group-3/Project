@@ -5,4 +5,13 @@
 {% endblock %}
 
 {% block body %}
+    <form action="/savecourse" method="post">
+        <input type="text" name="courseName">
+        <input type="text" name="classDays">
+        <input type="time" name="classTime">
+        <input type="date" name="startDate">
+        <input type="date" name="endDate">
+        <input type="submit" value="Submit">
+    </form>
+
 {% endblock %}
