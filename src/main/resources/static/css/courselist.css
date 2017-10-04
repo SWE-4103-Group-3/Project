@@ -1,0 +1,15 @@
+div.courselist {
+    margin-right: 80%;
+    width: 20%;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+a.courselist-item {
+    border-right: none;
+}
