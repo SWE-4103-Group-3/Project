@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,18 @@ public class TrackerController {
         return userRepository.findAll();
     }
 
-    @GetMapping(path="/addcourse")
-    public String courseForm(ModelMap map) { return "courseFormView"; }
+    @GetMapping(path="/course/form")
+    public String courseForm(Model model) {
+        model.addAttribute("course", new Course());
+        return "courseFormView";
+    }
+    @Autowired
+    private CourseRepository courseRepository;
+    @PostMapping("/course/save")
+    public String courseSave(@ModelAttribute Course course) {
+        courseRepository.save(course);
+        return "courseFormView";
+    }
+
 
 }
