@@ -23,9 +23,6 @@ public class Course {
 
     private String courseName;
 
-    //TODO: Determine if this is necessary
-    private String classDays;
-
     private String classTime;
 
     private Date startDate;
@@ -45,14 +42,6 @@ public class Course {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
-    }
-
-    public String getClassDays() {
-        return classDays;
-    }
-
-    public void setClassDays(String classDays) {
-        this.classDays = classDays;
     }
 
     public String getClassTime() {

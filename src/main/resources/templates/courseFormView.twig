@@ -5,13 +5,28 @@
 {% endblock %}
 
 {% block body %}
-    <form action="/savecourse" method="post">
-        <input type="text" name="courseName">
-        <input type="text" name="classDays">
-        <input type="time" name="classTime">
-        <input type="date" name="startDate">
-        <input type="date" name="endDate">
-        <input type="submit" value="Submit">
-    </form>
+    <div style="width: 40%" align="center">
+        <form action="/course" method="post">
+            <div class="md-form">
+                <input type="text" name="courseName" class="form-control" id="courseFormName">
+                <label for="courseFormName">Course</label>
+            </div>
 
+            <div class="md-form">
+                <input type="time" name="classTime" class="form-control" id="courseFormTime">
+            </div>
+
+            <div class="md-form">
+                <input type="date" name="startDate" class="form-control" id="courseFormStartDate">
+            </div>
+
+            <div class="md-form">
+                <input type="date" name="endDate" class="form-control" id="courseFormEndDate">
+            </div>
+
+            <div class="md-form">
+                <input type="submit" class="btn btn-default" value="Submit" class="form-control" id="courseFormSubmit">
+            </div>
+        </form>
+    </div>
 {% endblock %}
