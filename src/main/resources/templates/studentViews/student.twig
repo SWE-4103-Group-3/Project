@@ -1,0 +1,23 @@
+{% extends '/templates/base.twig' %}
+
+{% block title %}
+    <link href="/css/student.css" rel="stylesheet"/>
+    <title>Student View</title>
+{% endblock %}
+
+{% block body %}
+    <nav class="navbar navbar-dark justify-content-between">
+        <a class="navbar-brand" style="font-size: 20pt;">Attendance Tracker</a>
+        <div class="float-right">
+            <img src="https://thumb9.shutterstock.com/display_pic_with_logo/78238/78238,1255878221,16/stock-photo-cyber-woman-with-a-corn-39094327.jpg" class="rounded-circle hoverable" style="width:35px;height:35px;">
+            <button class="btn btn-outline-success btn-sm my-0" onclick="location.href='/'">Disconnect</button>
+        </div>
+    </nav>
+    {% include '/templates/courselist.twig' %}
+    <div class="student-body">
+        <div class="welcome-text">
+            <h1>Welcome Back, {{ "User" }}!</h1>
+            <p>Select a course from the course list.</p>
+        </div>
+    </div>
+{% endblock %}
