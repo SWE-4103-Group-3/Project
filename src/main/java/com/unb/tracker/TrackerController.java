@@ -1,15 +1,11 @@
 package com.unb.tracker;
 
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -22,7 +18,7 @@ public class TrackerController {
 
     @Autowired
     private CourseRepository courseRepository;
-    @RequestMapping(value="/addCourse", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+    @RequestMapping(value="/add-course", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
 
     public @ResponseBody
     String addNewCourse (@RequestParam String name) {
@@ -34,7 +30,7 @@ public class TrackerController {
 
     @Autowired
     private UserRepository userRepository;
-    @RequestMapping(value="/addUser", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+    @RequestMapping(value="/add-user", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
 
     public @ResponseBody
     String addNewUser (@RequestParam String name, @RequestParam String email) {
@@ -49,11 +45,11 @@ public class TrackerController {
         return "Saved";
     }
 
-    @GetMapping(path="/instructorViews")
+    @GetMapping(path="/instructor")
     public String instructor(ModelMap map) {
         Iterable<Course> courseList = courseRepository.findAll();
         map.addAttribute("courseList", courseList);
-        return "instructorViews/instructor";
+        return "instructor/instructor";
     }
 
     @GetMapping(path="/all")
