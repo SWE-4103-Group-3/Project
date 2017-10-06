@@ -1,0 +1,48 @@
+{% extends 'base.twig' %}
+
+{% block body %}
+<div style="height: 100vh">
+    <div class="flex-center flex-column">
+        <div><h1>{{ course }} Seating Plan</h1></div>
+
+        <div>
+            <table>
+                <tbody>
+                {% for i in [0,1,2,3,4,5] %}
+
+                    <tr>
+                        {% for j in [0,1,2,3,4,5] %}
+                            <td><input onclick="console.log(this.id);this.style.backgroundColor = getColour();return false;" type="button" style="background-color: #0000FF;" id="{{ i }}{{ j }}"></td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <form action="">
+                <input type="radio" name="type" value="#FF0000"> Closed
+                <input type="radio" name="type" value="#00FF00"> Reserved
+                <input type="radio" name="type" value="#0000FF"> Open
+            </form>
+        </div>
+
+        <div>
+            <button>Save</button>
+        </div>
+
+    </div>
+    <script>
+        function getColour(){
+            var color = $('input[name="type"]:checked').val();
+            console.log(color);
+            return color;
+        }
+    </script>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+</div>
+{% endblock %}
