@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.stream.IntStream;
+
 @Controller
 @EnableAutoConfiguration
 public class TrackerController {
@@ -57,4 +59,15 @@ public class TrackerController {
         // This returns a JSON or XML with the users
         return userRepository.findAll();
     }
+
+    @RequestMapping(value="/instructor/{course}",method= RequestMethod.GET)
+    public String templateBuilder(@PathVariable String course,@RequestParam int width,@RequestParam int height,ModelMap map)
+    {
+        map.addAttribute("course",course);
+        map.addAttribute("width", width);
+        map.addAttribute("height",height);
+        return "templateBuilder";
+    }
+
+
 }
