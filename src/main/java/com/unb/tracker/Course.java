@@ -23,7 +23,7 @@ public class Course {
 
     private String courseName;
 
-    private String classTime;
+    private String timeSlot;
 
     private Date startDate;
 
@@ -36,6 +36,7 @@ public class Course {
     public void setId(Integer id) {
         this.id = id;
     }
+
     public String getCourseName() {
         return courseName;
     }
@@ -44,13 +45,9 @@ public class Course {
         this.courseName = courseName;
     }
 
-    public String getClassTime() {
-        return classTime;
-    }
+    public String getTimeSlot() { return timeSlot; }
 
-    public void setClassTime(String classTime) {
-        this.classTime = classTime;
-    }
+    public void setTimeSlot(String timeSlot) { this.timeSlot = timeSlot; }
 
     public Date getStartDate() {
         return startDate;

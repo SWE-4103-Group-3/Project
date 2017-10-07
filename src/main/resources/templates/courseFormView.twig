@@ -5,7 +5,18 @@
 {% endblock %}
 
 {% block body %}
-    <div style="width: 40%" align="center">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.datepicker').pickadate({
+                formatSubmit: 'yyyy-mm-dd'
+            });
+            $('.timepicker').pickatime({
+                twelvehour: true
+            });
+        });
+    </script>
+
+    <div style="width: 40%">
         <form action="/course" method="post">
             <div class="md-form">
                 <input type="text" name="courseName" class="form-control" id="courseFormName">
@@ -13,7 +24,8 @@
             </div>
 
             <div class="md-form">
-                <input type="time" name="classTime" class="form-control" id="courseFormTime">
+                <input placeholder="Timeslot" type="text" name="timeSlot" id="timeSlot" class="form-control timepicker">
+                <label for="timeSlot">Click below to select a Timeslot</label>
             </div>
 
             <div class="md-form">
@@ -21,11 +33,17 @@
             </div>
 
             <div class="md-form">
-                <input type="date" name="endDate" class="form-control" id="courseFormEndDate">
+                <input placeholder="Start Date" name="startDate" type="text" id="startDate" class="form-control datepicker">
+                <label for="startDate">Click below to select a start date</label>
             </div>
 
             <div class="md-form">
-                <input type="submit" class="btn btn-default" value="Submit" class="form-control" id="courseFormSubmit">
+                <input placeholder="End Date" name="endDate" type="text" id="endDate" class="form-control datepicker">
+                <label for="startDate">Click below to select an end date</label>
+            </div>
+
+            <div class="md-form">
+                <input type="submit" class="btn btn-primary" value="Submit" class="form-control" id="courseFormSubmit">
             </div>
         </form>
     </div>
