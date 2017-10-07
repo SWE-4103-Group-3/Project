@@ -1,34 +1,32 @@
-{% extends 'base.twig' %}
+{% extends 'base_instructor.twig' %}
 
 {% block style %}
+    {{ parent() }}
     <link href="/css/grid.css" rel="stylesheet"/>
 {% endblock %}
 
-{% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div><h1>{{ course }}</h1></div>
-            </div>
+{% block content %}
+    <div class="row">
+        <div class="col text-center">
+            <div><h1>{{ course }}</h1></div>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col">
-                <div id="grid"></div>
-            </div>
+    <div class="row">
+        <div class="col">
+            <div id="grid"></div>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col">
-                <div>
-                    <button>Save</button>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col text-center">
+            <button id="edit" type="button" class="btn btn-primary">Edit</button>
         </div>
     </div>
 {% endblock %}
 
 {% block script %}
+    {{ parent() }}
     <script type="text/javascript" src="/js/grid.js"></script>
     <script>
         $(document).ready(function() {
