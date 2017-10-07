@@ -52,11 +52,11 @@ public class TrackerController {
         return "instructor/instructor";
     }
 
-    @GetMapping(path="/studentViews")
+    @GetMapping(path="/student")
     public String student(ModelMap map) {
         Iterable<Course> courseList = courseRepository.findAll();
         map.addAttribute("courseList", courseList);
-        return "studentViews/student";
+        return "student/student";
     }
 
     @GetMapping(path="/all")
