@@ -65,7 +65,7 @@ public class TrackerController {
         map.addAttribute("course",course);
         map.addAttribute("cols", cols);
         map.addAttribute("rows",rows);
-        return "templateBuilder";
+        return "instructor/course";
     }
 
 
