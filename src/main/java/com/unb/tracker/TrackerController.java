@@ -47,11 +47,10 @@ public class TrackerController {
     }
 
     @RequestMapping(value="/instructor/{course}",method= RequestMethod.GET)
-    public String templateBuilder(@PathVariable String course,@RequestParam int width,@RequestParam int height,ModelMap map)
-    {
+    public String templateBuilder(@PathVariable String course, @RequestParam int cols, @RequestParam int rows, ModelMap map) {
         map.addAttribute("course",course);
-        map.addAttribute("width", width);
-        map.addAttribute("height",height);
+        map.addAttribute("cols", cols);
+        map.addAttribute("rows",rows);
         return "templateBuilder";
     }
 
