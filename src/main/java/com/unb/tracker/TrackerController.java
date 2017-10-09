@@ -52,6 +52,13 @@ public class TrackerController {
         return "instructor/instructor";
     }
 
+    @GetMapping(path="/student")
+    public String student(ModelMap map) {
+        Iterable<Course> courseList = courseRepository.findAll();
+        map.addAttribute("courseList", courseList);
+        return "student/student";
+    }
+
     @GetMapping(path="/all")
     public @ResponseBody Iterable<User> getAllUsers() {
         // This returns a JSON or XML with the users
