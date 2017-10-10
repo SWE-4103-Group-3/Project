@@ -2,6 +2,8 @@ function Cell(opt) {
   this.el = $('<td/>');
 
   this.percent = opt.percent;
+  this.row = opt.row;
+  this.col = opt.col;
   this.states = opt.states;
   this.parent = opt.parent;
   this.state = 0;
@@ -19,8 +21,8 @@ function Cell(opt) {
   });
 
   this.render = function() {
-    this.el.css('width', this.percent+'%')
-    this.el.css('padding-bottom', this.percent+'%')
+    this.el.css('width', this.percent+'%');
+    this.el.css('padding-bottom', this.percent+'%');
     this.el.addClass(this.states[this.state]);
   };
 
@@ -55,6 +57,20 @@ function Grid(opt) {
       }
       this.el.append(row);
     }
+  };
+
+  this.getSeats = function() {
+    var seats = [];
+    for(var i = 0; i < this.cells.length; i++) {
+      for(var j = 0; j < this.cells[i].length; j++) {
+        seats.push({
+          "row": this.cells[i][j].row,
+          "col": this.cells[i][j].col,
+          "state": this.cells[i][j].state
+        });
+      }
+    }
+    return seats;
   };
 
   this.render()

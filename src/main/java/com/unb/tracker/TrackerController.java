@@ -68,10 +68,19 @@ public class TrackerController {
         return "instructor/course";
     }
 
+    @PostMapping(value="/courses/{courseId}")
+    public String postCourseSeats(@PathVariable Long courseId, @RequestBody List<Seat> seats, ModelMap map) {
+        Course course = courseRepository.findOne(courseId);
+        course.setSeats(seats);
+        courseRepository.save(course);
+        map.addAttribute("course", course);
+        return "instructor/course";
+    }
+
     @PostMapping(value="/courses")
     @ResponseBody public String postCourse(@RequestBody Course course) {
         courseRepository.save(course);
-        return "Saved!";
+        return "Saved";
     }
 
     @GetMapping(value="/courses")
