@@ -20,22 +20,23 @@ public class TrackerController {
 
     @Autowired
     private CourseRepository courseRepository;
-    @RequestMapping(value="/add-course", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
-
-    public @ResponseBody
-    String addNewCourse (@RequestParam String name) {
-        Course n = new Course();
-        n.setName(name);
-        courseRepository.save(n);
-        return "Saved";
-    }
 
     @Autowired
     private UserRepository userRepository;
-    @RequestMapping(value="/add-user", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
 
-    public @ResponseBody
-    String addNewUser (@RequestParam String name, @RequestParam String email) {
+    @RequestMapping(value="/add-course", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+    public @ResponseBody String addNewCourse (@RequestParam String name, @RequestParam int rows, @RequestParam int cols) {
+        Course c = new Course();
+        c.setName(name);
+        c.setCols(cols);
+        c.setRows(rows);
+        courseRepository.save(c);
+        return "saved";
+    }
+
+
+    @RequestMapping(value="/add-user", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+    public @ResponseBody String addNewUser (@RequestParam String name, @RequestParam String email) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
 
@@ -60,11 +61,10 @@ public class TrackerController {
         return userRepository.findAll();
     }
 
-    @RequestMapping(value="/instructor/{course}",method= RequestMethod.GET)
-    public String templateBuilder(@PathVariable String course, @RequestParam int cols, @RequestParam int rows, ModelMap map) {
-        map.addAttribute("course",course);
-        map.addAttribute("cols", cols);
-        map.addAttribute("rows",rows);
+    @RequestMapping(value="/courses/{courseId}",method= RequestMethod.GET)
+    public String templateBuilder(@PathVariable Long courseId, ModelMap map) {
+        Course course = courseRepository.findOne(courseId);
+        map.addAttribute("course", course);
         return "instructor/course";
     }
 
