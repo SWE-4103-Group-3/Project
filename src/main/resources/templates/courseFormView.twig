@@ -8,7 +8,8 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('.datepicker').pickadate({
-                formatSubmit: 'yyyy-mm-dd'
+                formatSubmit: 'yyyy-mm-dd',
+                hiddenName: true
             });
             $('.timepicker').pickatime({
                 twelvehour: true
@@ -29,16 +30,12 @@
             </div>
 
             <div class="md-form">
-                <input type="date" name="startDate" class="form-control" id="courseFormStartDate">
-            </div>
-
-            <div class="md-form">
-                <input placeholder="Start Date" name="startDate" type="text" id="startDate" class="form-control datepicker">
+                <input placeholder="Start Date" name="startDate" type="date" id="startDate" class="form-control datepicker">
                 <label for="startDate">Click below to select a start date</label>
             </div>
 
             <div class="md-form">
-                <input placeholder="End Date" name="endDate" type="text" id="endDate" class="form-control datepicker">
+                <input placeholder="End Date" name="endDate" type="date" id="endDate" class="form-control datepicker">
                 <label for="startDate">Click below to select an end date</label>
             </div>
 
