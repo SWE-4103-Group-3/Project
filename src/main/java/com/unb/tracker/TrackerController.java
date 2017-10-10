@@ -72,8 +72,6 @@ public class TrackerController {
         return "courseFormView";
     }
 
-    @Autowired
-    private CourseRepository courseRepository;
     @PostMapping("/course")
     public String courseSave(@ModelAttribute Course course) {
         courseRepository.save(course);
