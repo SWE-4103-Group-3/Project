@@ -61,24 +61,29 @@ public class TrackerController {
         return userRepository.findAll();
     }
 
-    @GetMapping(value="/courses/{courseId}")
-    public String getCourse(@PathVariable Long courseId, ModelMap map) {
+    @GetMapping(value="/instructor/{courseId}") // courseId should be changed to name / section eventually
+    public String getCoursePage(@PathVariable Long courseId, ModelMap map) {
         Course course = courseRepository.findOne(courseId);
         map.addAttribute("course", course);
         return "instructor/course";
     }
 
-    @PostMapping(value="/courses/{courseId}")
-    public String postCourseSeats(@PathVariable Long courseId, @RequestBody List<Seat> seats, ModelMap map) {
+    @GetMapping(value="/courses/{courseId}")
+    public @ResponseBody Course getCourse(@PathVariable Long courseId) {
+        return courseRepository.findOne(courseId);
+    }
+
+    @PostMapping(value="/courses/{courseId}/seats")
+    public @ResponseBody Course postCourseSeats(@PathVariable Long courseId, @RequestBody List<Seat> seats) {
         Course course = courseRepository.findOne(courseId);
         course.setSeats(seats);
         courseRepository.save(course);
-        map.addAttribute("course", course);
-        return "instructor/course";
+        return course;
     }
 
     @PostMapping(value="/courses")
-    @ResponseBody public String postCourse(@RequestBody Course course) {
+    @ResponseBody
+    public String postCourse(@RequestBody Course course) {
         courseRepository.save(course);
         return "Saved";
     }
