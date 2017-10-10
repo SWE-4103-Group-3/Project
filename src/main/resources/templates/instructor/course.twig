@@ -30,12 +30,25 @@
     <script type="text/javascript" src="/js/grid.js"></script>
     <script>
         $(document).ready(function() {
-           var grid = new Grid({
-               rows: {{ course.rows }},
-               cols: {{ course.cols }},
-               states: ["open", "closed", "reserved"]
-           });
-           $('#grid').append(grid.el);
+            var grid;
+            $.ajax({
+                type: "get",
+                url: "/courses/{{ course.id }}",
+                dataType: "json",
+                success: function(data, status) {
+                    grid = new Grid({
+                        rows: data.rows,
+                        cols: data.cols,
+                        seats: data.seats,
+                        states: ["open", "closed", "reserved"]
+                    });
+                    $('#grid').append(grid.el);
+                },
+                error: function(data, status) {
+                    console.log(data);
+                }
+            });
+
             $('#editsave').on('click', function(e) {
                 if(grid.editable) {
                     grid.editable = false;
@@ -44,12 +57,9 @@
                     console.log(seats);
                     $.ajax({
                         type: "post",
-                        url: window.location.pathname,
+                        url: "/courses/{{ course.id }}/seats",
                         data: JSON.stringify(seats),
                         contentType: "application/json",
-                        success: function(data, status) {
-                            alert("it worked");
-                        },
                         error: function(data, status) {
                             console.log(data);
                         }
