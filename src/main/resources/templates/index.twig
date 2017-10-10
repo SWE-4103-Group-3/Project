@@ -2,9 +2,9 @@
 
 {% block body %}
 <div style="height: 100vh">
-    <div class="flex-center flex-column">
-        <button type="button" class="btn btn-primary">I'm a Student</button>
-		<button type="button" class="btn btn-primary">I'm a Teacher</button>
+    <div class="flex-center flex-column" style="margin-bottom:60px;height:calc(100% - 60px);">
+        <button type="button" onclick="location.href='/student'" class="btn btn-primary">I'm a Student</button>
+		<button type="button" onclick="location.href='/instructor'" class="btn btn-primary">I'm a Teacher</button>
     </div>
 </div>
 {% endblock %}

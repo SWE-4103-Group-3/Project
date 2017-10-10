@@ -11,7 +11,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
-
+    
     //TODO: Add link to users table when it actually exists
     //private User Professor;
 
@@ -21,13 +21,14 @@ public class Course {
     //TODO: Investigate how to keep "Old seat Plan (another FK?)"
     //private SeatPlan oldSeatPlan
 
-    private String courseName;
-
     private String timeSlot;
 
     private Date startDate;
 
     private Date endDate;
+    
+    private String name;
+
 
     public Integer getId() {
         return id;
@@ -35,14 +36,6 @@ public class Course {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
     }
 
     public String getTimeSlot() { return timeSlot; }
@@ -65,5 +58,13 @@ public class Course {
         this.endDate = endDate;
     }
 
-}
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+}

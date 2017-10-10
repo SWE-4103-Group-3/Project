@@ -1,18 +1,33 @@
 <!doctype html>
+<html>
+    <head>
+        {% block title %}
+            <title>Tracker</title>
+        {% endblock %}
 
-{% block title %}
-<title>Tracker</title>
-{% endblock %}
+        <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="/css/mdb.min.css" rel="stylesheet"/>
+        <link href="/css/footer.css" rel="stylesheet"/>
+        <link href="/css/base.css" rel="stylesheet"/>
+        <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="/js/popper.min.js"></script>
+        <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/mdb.min.js"></script>
+    </head>
+    <body>
+        {% block body %}
+        {% endblock %}
 
-<link href="/css/bootstrap.min.css" rel="stylesheet"/>
-<link href="/css/mdb.min.css" rel="stylesheet"/>
-
-<script type="text/javascript" src="/js/tether.min.js"></script>
-<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="/js/popper.min.js"></script>
-<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/js/mdb.min.js"></script>
-{% block body %}
-{% endblock %}
+        <footer class="page-footer center-on-small-only pt-0">
+            {% block footer %}
+            <div class="footer-copyright">
+                <div class="container-fluid">
+                    © 2017 Copyright: <a href="http://localhost:8080/"> localhost:8080 </a>
+                </div>
+            </div>
+            {% endblock %}
+        </footer>
+    </body>
+</html>
 
 

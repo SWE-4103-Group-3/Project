@@ -18,12 +18,23 @@ public class TrackerController {
     }
 
     @Autowired
-    private UserRepository userRepository;
-    @RequestMapping(value="/add", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+    private CourseRepository courseRepository;
+    @RequestMapping(value="/add-course", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
 
     public @ResponseBody
-    String addNewUser (@RequestParam String name
-            , @RequestParam String email) {
+    String addNewCourse (@RequestParam String name) {
+        Course n = new Course();
+        n.setName(name);
+        courseRepository.save(n);
+        return "Saved";
+    }
+
+    @Autowired
+    private UserRepository userRepository;
+    @RequestMapping(value="/add-user", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+
+    public @ResponseBody
+    String addNewUser (@RequestParam String name, @RequestParam String email) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
 
@@ -33,6 +44,20 @@ public class TrackerController {
         n.setEmail(email);
         userRepository.save(n);
         return "Saved";
+    }
+
+    @GetMapping(path="/instructor")
+    public String instructor(ModelMap map) {
+        Iterable<Course> courseList = courseRepository.findAll();
+        map.addAttribute("courseList", courseList);
+        return "instructor/instructor";
+    }
+
+    @GetMapping(path="/student")
+    public String student(ModelMap map) {
+        Iterable<Course> courseList = courseRepository.findAll();
+        map.addAttribute("courseList", courseList);
+        return "student/student";
     }
 
     @GetMapping(path="/all")
