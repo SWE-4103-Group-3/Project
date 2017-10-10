@@ -1,7 +1,9 @@
 {% extends 'base.twig' %}
 
 {% block title %}
-    <h1>Course form goes here</h1>
+   <div>
+       &nbsp;
+   </div>
 {% endblock %}
 
 {% block body %}
@@ -20,23 +22,19 @@
     <div style="width: 40%">
         <form action="/course" method="post">
             <div class="md-form">
-                <input type="text" name="name" class="form-control" id="courseFormName">
-                <label for="courseFormName">Course</label>
+                <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName">
             </div>
 
             <div class="md-form">
                 <input placeholder="Timeslot" type="text" name="timeSlot" id="timeSlot" class="form-control timepicker">
-                <label for="timeSlot">Click below to select a Timeslot</label>
             </div>
 
             <div class="md-form">
-                <input placeholder="Start Date" name="startDate" type="date" id="startDate" class="form-control datepicker">
-                <label for="startDate">Click below to select a start date</label>
+                <input placeholder="Start Date" name="startDate" type="text" id="startDate" class="form-control datepicker">
             </div>
 
             <div class="md-form">
-                <input placeholder="End Date" name="endDate" type="date" id="endDate" class="form-control datepicker">
-                <label for="startDate">Click below to select an end date</label>
+                <input placeholder="End Date" name="endDate" type="text" id="endDate" class="form-control datepicker">
             </div>
 
             <div class="md-form">
