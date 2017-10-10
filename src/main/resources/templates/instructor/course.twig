@@ -31,8 +31,8 @@
     <script>
         $(document).ready(function() {
            var grid = new Grid({
-               rows: {{ rows }},
-               cols: {{ cols }},
+               rows: {{ course.rows }},
+               cols: {{ course.cols }},
                states: ["open", "closed", "reserved"]
            });
            $('#grid').append(grid.el);
