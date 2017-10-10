@@ -37,10 +37,24 @@
            });
            $('#grid').append(grid.el);
             $('#editsave').on('click', function(e) {
-                console.log("heyheylsafjhlsdj")
                 if(grid.editable) {
                     grid.editable = false;
                     $('#editsave').html('Edit');
+                    var seats = grid.getSeats();
+                    console.log(seats);
+                    $.ajax({
+                        type: "post",
+                        url: window.location.pathname,
+                        data: JSON.stringify(seats),
+                        contentType: "application/json",
+                        success: function(data, status) {
+                            alert("it worked");
+                        },
+                        error: function(data, status) {
+                            console.log(data);
+                        }
+                    });
+
                 } else {
                     grid.editable = true;
                     $('#editsave').html('Save');
