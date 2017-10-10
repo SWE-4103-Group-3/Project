@@ -3,16 +3,19 @@ function Cell(opt) {
 
   this.percent = opt.percent;
   this.states = opt.states;
-  this.state = 0
+  this.parent = opt.parent;
+  this.state = 0;
 
   this.el.on('click', {cell: this}, function(e) {
-    cell = e.data.cell
-    cell.el.removeClass(cell.states[cell.state]);
-    cell.state++;
-    if(!cell.states[cell.state]) {
-      cell.state = 0;
+    cell = e.data.cell;
+    if(cell.parent.editable) {
+      cell.el.removeClass(cell.states[cell.state]);
+      cell.state++;
+      if(!cell.states[cell.state]) {
+          cell.state = 0;
+      }
+      cell.el.addClass(cell.states[cell.state]);
     }
-    cell.el.addClass(cell.states[cell.state]);
   });
 
   this.render = function() {
@@ -30,6 +33,7 @@ function Grid(opt) {
   this.rows = opt.rows;
   this.cols = opt.cols;
   this.states = opt.states;
+  this.editable = opt.editable;
 
   this.cells = new Array(); // init cell 2D array
 
@@ -43,7 +47,8 @@ function Grid(opt) {
           row: i,
           col: j,
           percent: percent,
-          states: this.states
+          states: this.states,
+          parent: this
         });
         row.append(cell.el);
         this.cells[i][j] = cell;

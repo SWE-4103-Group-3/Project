@@ -8,7 +8,7 @@
 {% block content %}
     <div class="row">
         <div class="col text-center">
-            <div><h1>{{ course }}</h1></div>
+            <div><h1>{{ course.name }}</h1></div>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
 
     <div class="row">
         <div class="col text-center">
-            <button id="edit" type="button" class="btn btn-primary">Edit</button>
+            <button id="editsave" type="button" class="btn btn-primary">Edit</button>
         </div>
     </div>
 {% endblock %}
@@ -36,6 +36,16 @@
                states: ["open", "closed", "reserved"]
            });
            $('#grid').append(grid.el);
+            $('#editsave').on('click', function(e) {
+                console.log("heyheylsafjhlsdj")
+                if(grid.editable) {
+                    grid.editable = false;
+                    $('#editsave').html('Edit');
+                } else {
+                    grid.editable = true;
+                    $('#editsave').html('Save');
+                }
+            });
         });
     </script>
 {% endblock %}
