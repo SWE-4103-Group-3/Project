@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 @Controller
@@ -31,9 +32,8 @@ public class TrackerController {
         c.setCols(cols);
         c.setRows(rows);
         courseRepository.save(c);
-        return "saved";
+        return "Saved";
     }
-
 
     @RequestMapping(value="/add-user", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
     public @ResponseBody String addNewUser (@RequestParam String name, @RequestParam String email) {
@@ -61,11 +61,22 @@ public class TrackerController {
         return userRepository.findAll();
     }
 
-    @RequestMapping(value="/courses/{courseId}",method= RequestMethod.GET)
-    public String templateBuilder(@PathVariable Long courseId, ModelMap map) {
+    @GetMapping(value="/courses/{courseId}")
+    public String getCourse(@PathVariable Long courseId, ModelMap map) {
         Course course = courseRepository.findOne(courseId);
         map.addAttribute("course", course);
         return "instructor/course";
+    }
+
+    @PostMapping(value="/courses")
+    @ResponseBody public String postCourse(@RequestBody Course course) {
+        courseRepository.save(course);
+        return "Saved!";
+    }
+
+    @GetMapping(value="/courses")
+    public @ResponseBody Iterable<Course> getCourses() {
+        return courseRepository.findAll();
     }
 
 }

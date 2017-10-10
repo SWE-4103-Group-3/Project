@@ -11,7 +11,7 @@ public class Course {
     private String name;
     private Integer rows;
     private Integer cols;
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL}) //necessary for hibernate when updating course that does not already have a seat plan
     private List<Seat> seats;
 
     public Integer getRows() {
