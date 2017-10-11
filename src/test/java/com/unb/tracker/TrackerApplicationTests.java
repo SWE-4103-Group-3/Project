@@ -1,15 +1,22 @@
 package com.unb.tracker;
 
+import com.google.common.collect.Iterables;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -19,11 +26,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TrackerApplicationTests {
+    DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     @Autowired
 	private TrackerController controller;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Test
 	public void contextLoads() throws Exception {
@@ -32,13 +42,75 @@ public class TrackerApplicationTests {
 
     @Test
     public void shouldReturnIndex() throws Exception {
-        this.mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
+        this.mockMvc.perform(get("/"))
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(view().name("index"));
     }
 
     @Test
     public void shouldHit404() throws Exception {
-        this.mockMvc.perform(get("/thisdoesnotexist")).andDo(print()).andExpect(status().is(404));
+        this.mockMvc.perform(get("/thisdoesnotexist"))
+                .andDo(print())
+                .andExpect(status().is(404));
+    }
+
+    @Test
+    public void loadCourseFormView() throws Exception {
+        this.mockMvc.perform(get("/course"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("courseFormView"));
+    }
+    @Test
+    public void saveCourse() throws Exception {
+        String name = "name";
+        String timeSlot = "8:30";
+        String startDate = "2017-01-01";
+        String endDate = "2017-01-01";
+        Course myCourse = new Course();
+        myCourse.setName(name);
+
+        myCourse.setStartDate(convertToSqlDate(startDate));
+        myCourse.setEndDate(convertToSqlDate(endDate));
+        myCourse.setTimeSlot(timeSlot);
+        this.mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("name", name)
+                .param("timeSlot", timeSlot)
+                .param("startDate", startDate)
+                .param("endDate", endDate))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("courseFormView"));
+
+        Iterable<Course> courses = courseRepository.findAll();
+        assertThat(Iterables.contains(courses, myCourse));
+    }
+
+    private Date convertToSqlDate(String dateString) throws Exception {
+            return new java.sql.Date(dateFormat.parse(dateString).getTime());
+    }
+
+    @Test
+    public void hitCourseValidation() throws Exception {
+        String name = "name";
+        String timeSlot = "8:30";
+        String startDate = "this isn't a real date";
+        String endDate = "2017-01-01";
+        //Dummy placeholder string to solve ambiguous argument problem
+        String s = null;
+        this.mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("name", name)
+                .param("timeSlot", timeSlot)
+                .param("startDate", startDate)
+                .param("endDate", endDate))
+                .andDo(print())
+                .andExpect(status().is(400));
+                //TODO: Add this back once we have validation setup correctly
+                //.andExpect(model().attributeHasErrors("startDate"));
+
     }
 
 }
