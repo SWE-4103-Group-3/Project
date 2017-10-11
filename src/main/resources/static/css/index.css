@@ -3,6 +3,21 @@ div#index-main {
     height: calc(100% - 60px);
 }
 
+div#authentication-container {
+    display: flex;
+}
+
+div#sign-in-card {
+    margin-right: 2px;
+    float: left;
+}
+
+div#sign-up-card {
+    margin-left: 2px;
+    float: right;
+    display: none;
+}
+
 div#sign-in-form {
     display: none;
     padding-bottom: 10px;

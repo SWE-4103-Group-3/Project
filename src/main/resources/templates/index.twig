@@ -10,7 +10,7 @@
     <div style="height: 100vh">
         <div id = index-main" class="flex-center flex-column">
             <div id="sign-in-form" class="form-elegant">
-                <div class="card">
+                <div id="sign-in-card" class="card">
                     <div class="card-body mx-4">
                         <div class="text-center">
                             <h3 class="dark-grey-text mb-5"><strong>Sign in</strong></h3>
@@ -29,7 +29,29 @@
                         </div>
                     </div>
                     <div class="modal-footer mx-5 pt-3 mb-1">
-                        <p class="font-small grey-text d-flex justify-content-end">Not a member? <a href="#" class="blue-text ml-1"> Sign Up</a></p>
+                        <p class="font-small grey-text d-flex justify-content-end">Not a member? <a href="#" id="sign-up" class="blue-text ml-1"> Sign Up</a></p>
+                    </div>
+                </div>
+                <div id="sign-up-card" class="card">
+                    <div class="card-body mx-4">
+                        <div class="text-center">
+                            <h3 class="dark-grey-text mb-5"><strong>Sign up</strong></h3>
+                        </div>
+                        <div class="md-form">
+                            <input type="text" id="Form-email1" class="form-control">
+                            <label for="Form-email1">Your Email Address</label>
+                        </div>
+                        <div class="md-form">
+                            <input type="text" id="Form-email1" class="form-control">
+                            <label for="Form-email1">New Username</label>
+                        </div>
+                        <div class="md-form pb-3">
+                            <input type="password" id="Form-pass1" class="form-control">
+                            <label for="Form-pass1">New password</label>
+                        </div>
+                        <div class="text-center mb-3">
+                            <button type="button" class="btn btn-primary">SIGN UP</button>
+                        </div>
                     </div>
                 </div>
             </div>
