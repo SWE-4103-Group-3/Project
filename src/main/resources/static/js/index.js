@@ -11,7 +11,6 @@ function displayLoginForm() {
 }
 
 function displaySignUpCard() {
-    console.log('hit');
     $('#sign-up-card').show('slide', {direction: 'left'}, 400, function() {
         $('#sign-up-card').css('display', 'flex');
         console.log('hit');

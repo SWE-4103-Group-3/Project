@@ -12,21 +12,29 @@
             <div id="sign-in-form" class="form-elegant">
                 <div id="sign-in-card" class="card">
                     <div class="card-body mx-4">
-                        <div class="text-center">
-                            <h3 class="dark-grey-text mb-5"><strong>Sign in</strong></h3>
-                        </div>
-                        <div class="md-form">
-                            <input type="text" id="Form-email1" class="form-control">
-                            <label for="Form-email1">Your Username</label>
-                        </div>
-                        <div class="md-form pb-3">
-                            <input type="password" id="Form-pass1" class="form-control">
-                            <label for="Form-pass1">Your password</label>
-                            <p class="font-small blue-text d-flex justify-content-end">Forgot <a href="#" class="blue-text ml-1"> Password?</a></p>
-                        </div>
-                        <div class="text-center mb-3">
-                            <button type="button" class="btn btn-primary">Sign in</button>
-                        </div>
+                        <form name="sign-in-form" method="post">
+                            <div class="text-center">
+                                <h3 class="dark-grey-text mb-5"><strong>Sign in</strong></h3>
+                            </div>
+                            <div class="md-form">
+                                <input type="text" id="sign-in-username" class="form-control">
+                                <label for="sign-in-username">Your Username</label>
+                            </div>
+                            <div class="md-form pb-3">
+                                <input type="password" id="sign-in-password" class="form-control">
+                                <label for="sign-in-password">Your password</label>
+                                <p class="font-small blue-text d-flex justify-content-end">Forgot <a href="#" class="blue-text ml-1"> Password?</a></p>
+                            </div>
+                            {% if(false) %}
+                                <div id="login-error">
+                                    <p class="font-small red-text" style="margin:0;">Invalid username or password.</p>
+                                    <p class="font-small red-text">Please try again.</p>
+                                </div>
+                            {% endif %}
+                            <div class="text-center mb-3">
+                                <button type="submit" class="btn btn-primary">Sign in</button>
+                            </div>
+                        </form>
                     </div>
                     <div class="modal-footer mx-5 pt-3 mb-1">
                         <p class="font-small grey-text d-flex justify-content-end">Not a member? <a href="#" id="sign-up" class="blue-text ml-1"> Sign Up</a></p>
@@ -34,24 +42,40 @@
                 </div>
                 <div id="sign-up-card" class="card">
                     <div class="card-body mx-4">
-                        <div class="text-center">
-                            <h3 class="dark-grey-text mb-5"><strong>Sign up</strong></h3>
-                        </div>
-                        <div class="md-form">
-                            <input type="text" id="Form-email1" class="form-control">
-                            <label for="Form-email1">Your Email Address</label>
-                        </div>
-                        <div class="md-form">
-                            <input type="text" id="Form-email1" class="form-control">
-                            <label for="Form-email1">New Username</label>
-                        </div>
-                        <div class="md-form pb-3">
-                            <input type="password" id="Form-pass1" class="form-control">
-                            <label for="Form-pass1">New password</label>
-                        </div>
-                        <div class="text-center mb-3">
-                            <button type="button" class="btn btn-primary">SIGN UP</button>
-                        </div>
+                        <form name="sign-in-form" method="post">
+                            <div class="text-center">
+                                <h3 class="dark-grey-text mb-5"><strong>Sign up</strong></h3>
+                            </div>
+                            <div class="md-form">
+                                <input type="text" id="sign-up-email" class="form-control">
+                                <label for="sign-up-email">Your Email Address</label>
+                            </div>
+                            <div class="md-form">
+                                <input type="text" id="sign-up-username" class="form-control">
+                                <label for="sign-up-username">New Username</label>
+                            </div>
+                            <div class="md-form">
+                                <input type="password" id="sign-up-password" class="form-control">
+                                <label for="sign-up-password">New password</label>
+                            </div>
+                            <div class="md-form pb-3">
+                                <input type="password" id="sign-up-password-confirm" class="form-control">
+                                <label for="sign-up-password-confirm">Confirm password</label>
+                            </div>
+                            {% if(false) %}
+                                <div class="sign-up-error">
+                                    <p class="font-small red-text" style="margin:0;">That username is already taken.</p>
+                                    <p class="font-small red-text">Please use another username.</p>
+                                </div>
+                            {% elseif(false) %}
+                                <div class="sign-up-error">
+                                    <p class="font-small red-text" style="margin:0;">Your passwords don't match.</p>
+                                </div>
+                            {% endif %}
+                            <div class="text-center mb-3">
+                                <button type="submit" class="btn btn-primary">SIGN UP</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

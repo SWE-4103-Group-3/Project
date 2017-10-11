@@ -1,3 +1,10 @@
+label.active
+
+div.md-form {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
 div#index-main {
     margin-bottom: 60px;
     height: calc(100% - 60px);
