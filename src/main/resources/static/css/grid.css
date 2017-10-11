@@ -1,9 +1,13 @@
 #grid {
     width: 40%;
-    margin: auto;
 }
 #edit {
     margin: auto;
+}
+
+.instructor-body {
+    padding-top: 10px;
+    padding-left: 30px;
 }
 
 table {
@@ -28,4 +32,13 @@ td {
 
 td:hover {
     filter: brightness(120%);
+}
+
+.btn {
+    margin: 0;
+    margin-top: 15px;
+}
+
+h1 {
+    font-size: 3rem;
 }
