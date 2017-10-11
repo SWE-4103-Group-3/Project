@@ -19,6 +19,8 @@ public class User {
 
     private String passwordConfirm;
 
+    private boolean hasExtendedPrivileges;
+
     public Integer getId() {
         return id;
     }
@@ -51,5 +53,8 @@ public class User {
 
     public void setPasswordConfirm(String passwordConfirm) { this.passwordConfirm = passwordConfirm; }
 
+    public boolean getHasExtendedPrivileges() { return hasExtendedPrivileges; }
+
+    public void setHasExtendedPrivileges(String password) { this.hasExtendedPrivileges = hasExtendedPrivileges; }
 
 }
