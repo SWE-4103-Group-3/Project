@@ -1,6 +1,11 @@
-package com.unb.tracker;
+package com.unb.tracker.web;
 
 
+import com.unb.tracker.model.Course;
+import com.unb.tracker.model.Seat;
+import com.unb.tracker.model.User;
+import com.unb.tracker.repository.CourseRepository;
+import com.unb.tracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.MediaType;
@@ -9,7 +14,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Controller
 @EnableAutoConfiguration

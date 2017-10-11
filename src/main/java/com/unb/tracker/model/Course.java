@@ -1,4 +1,4 @@
-package com.unb.tracker;
+package com.unb.tracker.model;
 
 import javax.persistence.*;
 import java.util.List;
