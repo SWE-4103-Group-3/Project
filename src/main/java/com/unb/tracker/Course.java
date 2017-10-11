@@ -9,10 +9,19 @@ public class Course {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private String name;
+    private String section;
     private Integer rows;
     private Integer cols;
     @OneToMany(cascade = {CascadeType.ALL}) //necessary for hibernate when updating course that does not already have a seat plan
     private List<Seat> seats;
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
 
     public Integer getRows() {
         return rows;

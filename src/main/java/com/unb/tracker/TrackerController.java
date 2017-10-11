@@ -61,11 +61,24 @@ public class TrackerController {
         return userRepository.findAll();
     }
 
-    @GetMapping(value="/instructor/{courseId}") // courseId should be changed to name / section eventually
-    public String getCoursePage(@PathVariable Long courseId, ModelMap map) {
-        Course course = courseRepository.findOne(courseId);
-        map.addAttribute("course", course);
-        return "instructor/course";
+    @GetMapping(value="/instructor/{courseName}/{courseSection}") // TODO: Course should also be identified by instructor name
+    public String getCourseByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection, ModelMap map) {
+        List<Course> courses = courseRepository.findByNameAndSection(courseName, courseSection);
+        if(courses.size() == 1) {
+            map.addAttribute("course", courses.get(0));
+            return "instructor/course";
+        }
+        return "404";
+    }
+
+    @GetMapping(value="/instructor/{courseName}") // TODO: Course should also be identified by instructor name
+    public String getCourseByName(@PathVariable String courseName, ModelMap map) {
+        List<Course> courses = courseRepository.findByName(courseName);
+        if(courses.size() == 1) {
+            map.addAttribute("course", courses.get(0));
+            return "instructor/course";
+        }
+        return "404";
     }
 
     @GetMapping(value="/courses/{courseId}")
