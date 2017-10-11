@@ -9,10 +9,14 @@
         <link href="/css/mdb.min.css" rel="stylesheet"/>
         <link href="/css/footer.css" rel="stylesheet"/>
         <link href="/css/base.css" rel="stylesheet"/>
+        {% block style %}
+        {% endblock %}
         <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="/js/popper.min.js"></script>
         <script type="text/javascript" src="/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/js/mdb.min.js"></script>
+        {% block script %}
+        {% endblock %}
     </head>
     <body>
         {% block body %}
@@ -28,7 +32,4 @@
             {% endblock %}
         </footer>
     </body>
-
 </html>
-
-
