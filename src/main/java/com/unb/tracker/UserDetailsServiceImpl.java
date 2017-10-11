@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         User user = userRepository.findByUserName(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        if(user.getHasExtendedPrivileges()) {
+        if(user.hasExtendedPrivileges()) {
             grantedAuthorities.add(new SimpleGrantedAuthority("Instructor"));
         }
         else {

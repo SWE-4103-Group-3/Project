@@ -53,8 +53,8 @@ public class User {
 
     public void setPasswordConfirm(String passwordConfirm) { this.passwordConfirm = passwordConfirm; }
 
-    public boolean getHasExtendedPrivileges() { return hasExtendedPrivileges; }
+    public boolean hasExtendedPrivileges() { return hasExtendedPrivileges; }
 
-    public void setHasExtendedPrivileges(String password) { this.hasExtendedPrivileges = hasExtendedPrivileges; }
+    public void setExtendedPrivileges(boolean hasExtendedPrivileges) { this.hasExtendedPrivileges = hasExtendedPrivileges; }
 
 }
