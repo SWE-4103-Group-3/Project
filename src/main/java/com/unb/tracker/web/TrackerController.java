@@ -18,11 +18,6 @@ import java.util.List;
 @Controller
 @EnableAutoConfiguration
 public class TrackerController {
-    @RequestMapping(value="/", method = RequestMethod.GET)
-    public String index(ModelMap map) {
-        return "index";
-    }
-
     @Autowired
     private CourseRepository courseRepository;
 
@@ -46,7 +41,7 @@ public class TrackerController {
 
 
         User n = new User();
-        n.setName(name);
+        n.setUsername(name);
         n.setEmail(email);
         userRepository.save(n);
         return "Saved";
