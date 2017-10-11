@@ -7,18 +7,6 @@
 {% endblock %}
 
 {% block body %}
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.datepicker').pickadate({
-                formatSubmit: 'yyyy-mm-dd',
-                hiddenName: true
-            });
-            $('.timepicker').pickatime({
-                twelvehour: true
-            });
-        });
-    </script>
-
     <div style="width: 40%">
         <form action="/course" method="post">
             <div class="md-form">
@@ -42,4 +30,16 @@
             </div>
         </form>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.datepicker').pickadate({
+                formatSubmit: 'yyyy-mm-dd',
+                hiddenName: true
+            });
+            $('.timepicker').pickatime({
+                twelvehour: true
+            });
+        });
+    </script>
 {% endblock %}
