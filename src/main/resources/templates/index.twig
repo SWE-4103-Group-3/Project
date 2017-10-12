@@ -12,22 +12,22 @@
             <div id="sign-in-form" class="form-elegant">
                 <div id="sign-in-card" class="card">
                     <div class="card-body mx-4">
-                        <form modelAttribute="sign-in-form" method="post">
+                        <form modelAttribute="sign-in-form" method="POST" action="/login">
                             <div class="text-center">
                                 <h3 class="dark-grey-text mb-5"><strong>Sign in</strong></h3>
                             </div>
                             <div class="md-form">
-                                <input type="text" id="sign-in-username" class="form-control">
-                                <label class="input-form-label active" for="sign-in-username">Your Username</label>
+                                <input type="text" id="sign-in-username" class="form-control" path="username">
+                                <label class="input-form-label active" for="sign-in-username" path="username">Your Username</label>
                             </div>
                             <div class="md-form pb-3">
-                                <input type="password" id="sign-in-password" class="form-control">
-                                <label class="input-form-label active" for="sign-in-password">Your password</label>
+                                <input type="password" id="sign-in-password" class="form-control" path="password">
+                                <label class="input-form-label active" for="sign-in-password" path="password">Your password</label>
                                 <p class="font-small blue-text d-flex justify-content-end">Forgot <a href="#" class="blue-text ml-1"> Password?</a></p>
                             </div>
-                            {% if(false) %}
+                            {% if(loginError) %}
                                 <div id="login-error">
-                                    <p class="font-small red-text" style="margin:0;">Invalid username or password.</p>
+                                    <p class="font-small red-text" style="margin:0;">{{loginError}}</p>
                                     <p class="font-small red-text">Please try again.</p>
                                 </div>
                             {% endif %}
@@ -42,34 +42,30 @@
                 </div>
                 <div id="sign-up-card" class="card">
                     <div class="card-body mx-4">
-                        <form modelAttribute="sign-up-form" method="post">
+                        <form modelAttribute="sign-up-form" method="POST" action="/signup">
                             <div class="text-center">
                                 <h3 class="dark-grey-text mb-5"><strong>Sign up</strong></h3>
                             </div>
                             <div class="md-form">
-                                <input type="text" id="sign-up-email" class="form-control">
-                                <label class="input-form-label active" for="sign-up-email">Your Email Address</label>
+                                <input type="text" id="sign-up-email" class="form-control" path="email">
+                                <label class="input-form-label active" for="sign-up-email" path="email">Your Email Address</label>
                             </div>
                             <div class="md-form">
-                                <input type="text" id="sign-up-username" class="form-control">
-                                <label class="input-form-label active" for="sign-up-username">New Username</label>
+                                <input type="text" id="sign-up-username" class="form-control" path="username">
+                                <label class="input-form-label active" for="sign-up-username" path="username">New Username</label>
                             </div>
                             <div class="md-form">
-                                <input type="password" id="sign-up-password" class="form-control">
-                                <label class="input-form-label active" for="sign-up-password">New password</label>
+                                <input type="password" id="sign-up-password" class="form-control" path="password">
+                                <label class="input-form-label active" for="sign-up-password" path="password">New password</label>
                             </div>
                             <div class="md-form pb-3">
-                                <input type="password" id="sign-up-password-confirm" class="form-control">
-                                <label class="input-form-label active" for="sign-up-password-confirm">Confirm password</label>
+                                <input type="password" id="sign-up-password-confirm" class="form-control" path="passwordConfirm">
+                                <label class="input-form-label active" for="sign-up-password-confirm" path="passwordConfirm">Confirm password</label>
                             </div>
-                            {% if(false) %}
+                            {% if(accountCreationError) %}
                                 <div class="sign-up-error">
-                                    <p class="font-small red-text" style="margin:0;">That username is already taken.</p>
+                                    <p class="font-small red-text" style="margin:0;">{{accountCreationError}}</p>
                                     <p class="font-small red-text">Please use another username.</p>
-                                </div>
-                            {% elseif(false) %}
-                                <div class="sign-up-error">
-                                    <p class="font-small red-text" style="margin:0;">Your passwords don't match.</p>
                                 </div>
                             {% endif %}
                             <div class="text-center mb-3">

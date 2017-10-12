@@ -27,8 +27,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 	{
 		//TODO: Should ensure we are only exposing static content (css & js) for pages accessible to everyone (index page)
 		http
+			.csrf().disable() /*TODO:Going to need to figure out how to not disable this*/
 			.authorizeRequests()
-				.antMatchers("/").permitAll()
+				.antMatchers("/", "/signup").permitAll()
 				.antMatchers("/js/**").permitAll()
 				.antMatchers("/css/**").permitAll()
 				.antMatchers("/font.roboto/**").permitAll()

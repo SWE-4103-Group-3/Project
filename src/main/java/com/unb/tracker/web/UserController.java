@@ -25,38 +25,32 @@ public class UserController {
 
 	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
 	public String index(Model model) {
-		return "/";
+		model.addAttribute("sign-in-form", new User());
+		model.addAttribute("sign-up-form", new User());
+		return "index";
 	}
 
-	@RequestMapping(value = "/registration", method = RequestMethod.GET)
-	public String registration(Model model) {
-		model.addAttribute("userForm", new User());
-
-		return "registration";
-	}
-
-	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
+	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	public String registration(@ModelAttribute("sign-up-form") User userForm, BindingResult bindingResult, Model model) {
 		userValidator.validate(userForm, bindingResult);
 
-		if (bindingResult.hasErrors()) {
-			return "registration";
+		if (bindingResult.hasErrors())
+		{
+			model.addAttribute("accountCreationError", "Something went wrong.");
+			return "index";
 		}
 
 		userService.save(userForm);
 		securityService.autologin(userForm.getUsername(), userForm.getPasswordConfirm());
 
-		return "redirect:/welcome";
+		return "redirect:/";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(Model model, String error, String logout) {
-		if (error != null)
-			model.addAttribute("error", "Your username and password is invalid.");
+	public String login(Model model, String loginError, String logout) {
+		if (loginError != null)
+			model.addAttribute("loginError", "Invalid username or password.");
 
-		if (logout != null)
-			model.addAttribute("message", "You have been logged out successfully.");
-
-		return "login";
+		return "index";
 	}
 }
