@@ -1,1 +1,6 @@
-
+a.navbar-brand {
+    color: #000!important;
+}
+a.navbar-brand:hover {
+    color: #454545!important;
+}

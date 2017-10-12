@@ -9,6 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
 @Controller
 @EnableAutoConfiguration
 public class TrackerController {
@@ -19,22 +22,22 @@ public class TrackerController {
 
     @Autowired
     private CourseRepository courseRepository;
-    @RequestMapping(value="/add-course", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
-
-    public @ResponseBody
-    String addNewCourse (@RequestParam String name) {
-        Course n = new Course();
-        n.setName(name);
-        courseRepository.save(n);
-        return "Saved";
-    }
 
     @Autowired
     private UserRepository userRepository;
-    @RequestMapping(value="/add-user", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
 
-    public @ResponseBody
-    String addNewUser (@RequestParam String name, @RequestParam String email) {
+    @RequestMapping(value="/add-course", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+    public @ResponseBody String addNewCourse (@RequestParam String name, @RequestParam int rows, @RequestParam int cols) {
+        Course c = new Course();
+        c.setName(name);
+        c.setCols(cols);
+        c.setRows(rows);
+        courseRepository.save(c);
+        return "Saved";
+    }
+
+    @RequestMapping(value="/add-user", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+    public @ResponseBody String addNewUser (@RequestParam String name, @RequestParam String email) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
 
@@ -66,6 +69,7 @@ public class TrackerController {
         return userRepository.findAll();
     }
 
+
     @GetMapping(path="/course")
     public String courseForm(Model model) {
         model.addAttribute("course", new Course());
@@ -78,5 +82,50 @@ public class TrackerController {
         return "courseFormView";
     }
 
+
+    @GetMapping(value="/instructor/{courseName}/{courseSection}") // TODO: Course should also be identified by instructor name
+    public String getCourseByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection, ModelMap map) {
+        List<Course> courses = courseRepository.findByNameAndSection(courseName, courseSection);
+        if(courses.size() == 1) {
+            map.addAttribute("course", courses.get(0));
+            return "instructor/course";
+        }
+        return "404";
+    }
+
+    @GetMapping(value="/instructor/{courseName}") // TODO: Course should also be identified by instructor name
+    public String getCourseByName(@PathVariable String courseName, ModelMap map) {
+        List<Course> courses = courseRepository.findByName(courseName);
+        if(courses.size() == 1) {
+            map.addAttribute("course", courses.get(0));
+            return "instructor/course";
+        }
+        return "404";
+    }
+
+    @GetMapping(value="/courses/{courseId}")
+    public @ResponseBody Course getCourse(@PathVariable Long courseId) {
+        return courseRepository.findOne(courseId);
+    }
+
+    @PostMapping(value="/courses/{courseId}/seats")
+    public @ResponseBody Course postCourseSeats(@PathVariable Long courseId, @RequestBody List<Seat> seats) {
+        Course course = courseRepository.findOne(courseId);
+        course.setSeats(seats);
+        courseRepository.save(course);
+        return course;
+    }
+
+    @PostMapping(value="/courses")
+    @ResponseBody
+    public String postCourse(@RequestBody Course course) {
+        courseRepository.save(course);
+        return "Saved";
+    }
+
+    @GetMapping(value="/courses")
+    public @ResponseBody Iterable<Course> getCourses() {
+        return courseRepository.findAll();
+    }
 
 }
