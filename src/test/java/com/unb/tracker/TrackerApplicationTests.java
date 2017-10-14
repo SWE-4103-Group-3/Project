@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TrackerApplicationTests {
-    DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    protected final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     @Autowired
 	private TrackerController controller;
@@ -68,8 +68,12 @@ public class TrackerApplicationTests {
         String timeSlot = "8:30";
         String startDate = "2017-01-01";
         String endDate = "2017-01-01";
+        Integer rows = 10;
+        Integer cols = 11;
         Course myCourse = new Course();
         myCourse.setName(name);
+        myCourse.setRows(rows);
+        myCourse.setCols(cols);
 
         myCourse.setStartDate(convertToSqlDate(startDate));
         myCourse.setEndDate(convertToSqlDate(endDate));
@@ -79,10 +83,12 @@ public class TrackerApplicationTests {
                 .param("name", name)
                 .param("timeSlot", timeSlot)
                 .param("startDate", startDate)
-                .param("endDate", endDate))
+                .param("endDate", endDate)
+                .param("cols", cols.toString())
+                .param("rows", rows.toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("courseFormView"));
+                .andExpect(view().name("instructor/instructor"));
 
         Iterable<Course> courses = courseRepository.findAll();
         assertThat(Iterables.contains(courses, myCourse));
