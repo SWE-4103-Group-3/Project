@@ -72,6 +72,8 @@ public class TrackerController {
     public String getCourseByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection, ModelMap map) {
         List<Course> courses = courseRepository.findByNameAndSection(courseName, courseSection);
         if(courses.size() == 1) {
+            Iterable<Course> courseList = courseRepository.findAll();
+            map.addAttribute("courseList", courseList);
             map.addAttribute("course", courses.get(0));
             return "instructor/course";
         }
@@ -82,6 +84,8 @@ public class TrackerController {
     public String getCourseByName(@PathVariable String courseName, ModelMap map) {
         List<Course> courses = courseRepository.findByName(courseName);
         if(courses.size() == 1) {
+            Iterable<Course> courseList = courseRepository.findAll();
+            map.addAttribute("courseList", courseList);
             map.addAttribute("course", courses.get(0));
             return "instructor/course";
         }
