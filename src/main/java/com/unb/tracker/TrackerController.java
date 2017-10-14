@@ -10,7 +10,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Controller
 @EnableAutoConfiguration
@@ -79,7 +78,7 @@ public class TrackerController {
     @PostMapping("/course")
     public String courseSave(@ModelAttribute Course course) {
         courseRepository.save(course);
-        return "courseFormView";
+        return "instructor/instructor";
     }
 
 
