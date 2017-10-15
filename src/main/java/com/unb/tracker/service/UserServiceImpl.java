@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 		user.setUsername(user.getUsername());
 		user.setEmail(user.getEmail());
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		user.setExtendedPrivileges(user.hasExtendedPrivileges());
+		user.setHasExtendedPrivileges(user.getHasExtendedPrivileges());
 		userRepository.save(user);
 	}
 

@@ -45,16 +45,27 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() { return password; }
+    public String getPassword() {
+        return password;
+    }
 
-    public void setPassword(String password) { this.password = password; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getPasswordConfirm() { return passwordConfirm; }
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
 
-    public void setPasswordConfirm(String passwordConfirm) { this.passwordConfirm = passwordConfirm; }
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
 
-    public boolean hasExtendedPrivileges() { return hasExtendedPrivileges; }
+    public boolean getHasExtendedPrivileges() {
+        return hasExtendedPrivileges;
+    }
 
-    public void setExtendedPrivileges(boolean hasExtendedPrivileges) { this.hasExtendedPrivileges = hasExtendedPrivileges; }
-
+    public void setHasExtendedPrivileges(boolean hasExtendedPrivileges) {
+        this.hasExtendedPrivileges = hasExtendedPrivileges;
+    }
 }
