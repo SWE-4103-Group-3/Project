@@ -2,7 +2,7 @@
 
 {% block style %}
     {{ parent() }}
-    <link href="/css/grid.css" rel="stylesheet"/>
+    <link href="/static/css/grid.css" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
@@ -27,7 +27,7 @@
 
 {% block script %}
     {{ parent() }}
-    <script type="text/javascript" src="/js/grid.js"></script>
+    <script type="text/javascript" src="/static/js/grid.js"></script>
     <script>
         $(document).ready(function() {
             var grid;

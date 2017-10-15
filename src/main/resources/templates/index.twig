@@ -1,9 +1,17 @@
 {% extends 'base.twig' %}
 
 {% block title %}
-    <script type="text/javascript" src="/js/index.js"></script>
-    <link href="/css/index.css" rel="stylesheet"/>
     <title>Attendance Tracker - Welcome!</title>
+{% endblock %}
+
+{% block style %}
+    {{ parent() }}
+    <link href="/static/css/index.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript" src="/static/js/index.js"></script>
 {% endblock %}
 
 {% block body %}

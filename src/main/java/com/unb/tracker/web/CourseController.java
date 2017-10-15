@@ -5,6 +5,7 @@ import com.unb.tracker.repository.CourseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Controller
+@EnableAutoConfiguration
 public class CourseController {
     private static final Logger LOG = LoggerFactory.getLogger(CourseController.class);
 
