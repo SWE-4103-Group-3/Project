@@ -56,7 +56,8 @@ public class UserController {
 
 		if (bindingResult.hasErrors())
 		{
-			model.addAttribute("accountCreationError", "Something went wrong.");
+			model.addAttribute("accountCreationError", bindingResult.getFieldError().getCode());
+			model.addAttribute("accountType", userForm.getHasExtendedPrivileges() ? "Instructor" : "Student");
 			return "index";
 		}
 

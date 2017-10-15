@@ -28,6 +28,12 @@ div#sign-in-form {
     padding-bottom: 10px;
 }
 
+span#sign-up {
+    color: #2196F3!important;
+    margin-left: .25rem!important;
+    cursor: pointer;
+}
+
 .form-elegant .font-small {
   font-size: 0.8rem; }
 

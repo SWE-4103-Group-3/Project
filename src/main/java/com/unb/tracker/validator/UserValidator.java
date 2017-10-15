@@ -22,18 +22,19 @@ public class UserValidator implements Validator {
 	public void validate(Object o, Errors errors) {
 		User user = (User) o;
 
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "NotEmpty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "Email field cannot be empty.");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "Username field cannot be empty.");
 		if (user.getUsername().length() < 6 || user.getUsername().length() > 32)
-			errors.rejectValue("username", "Size.userForm.username");
+			errors.rejectValue("username", "Username must be between 6 and 32 characters.");
 
 		if (userService.findByUsername(user.getUsername()) != null)
-			errors.rejectValue("username", "Duplicate.userForm.username");
+			errors.rejectValue("username", "Someone already has that username.");
 
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "Password field cannot be empty.");
 		if (user.getPassword().length() < 8 || user.getPassword().length() > 32)
-			errors.rejectValue("password", "Size.userForm.password");
+			errors.rejectValue("password", "Password must be at least 8 characters in length.");
 
 		if (!user.getPasswordConfirm().equals(user.getPassword()))
-			errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
+			errors.rejectValue("passwordConfirm", "Your passwords don't match.");
 	}
 }
