@@ -72,7 +72,7 @@
                                 <label class="input-form-label active" for="sign-up-password-confirm" name="passwordConfirm">Confirm password</label>
                             </div>
                             <input id="user-type-selector" type="checkbox" name="hasExtendedPrivileges" value="false" style="display:none;"/>
-                            {% if(accountCreationError) %}
+                            {% if accountCreationError %}
                                 <div class="sign-up-error">
                                     <p class="font-small red-text" style="margin:0;">{{accountCreationError}}</p>
                                     <p class="font-small red-text">Please use another username.</p>

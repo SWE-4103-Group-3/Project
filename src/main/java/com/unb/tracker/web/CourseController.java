@@ -2,7 +2,9 @@ package com.unb.tracker.web;
 
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
+import com.unb.tracker.model.User;
 import com.unb.tracker.repository.CourseRepository;
+import com.unb.tracker.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,28 +24,40 @@ public class CourseController {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping(value="/{username}/{courseName}")
-    public String getCourseByName(@PathVariable String username, @PathVariable String courseName, ModelMap map) {
+    public String getCourseByName(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
         LOG.info("getCourseByName - starting - username: {}, courseName: {}", username, courseName);
+
+        User user = userRepository.findByUsername(principal.getName());
+        map.addAttribute("user", user);
+
         List<Course> courses = courseRepository.findByInstructorUsernameAndName(username, courseName);
         LOG.debug("courses size: {}", courses.size());
         if (courses.size() == 0){
             return "404";
         } else if(courses.size() == 1) {
             map.addAttribute("course", courses.get(0));
-            return "instructor/course";
+            return "course";
         }
         return "error";
     }
 
     @GetMapping(value="/{username}/{courseName}/{courseSection}")
-    public String getCourseByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection, ModelMap map) {
+    public String getCourseByNameAndSection(@PathVariable String username, @PathVariable String courseName, @PathVariable String courseSection, ModelMap map, Principal principal) {
+        LOG.info("getCourseByName - starting - username: {}, courseName: {}; courseSection: {}", username, courseName, courseSection);
+
+        User user = userRepository.findByUsername(principal.getName());
+        map.addAttribute("user", user);
+
         List<Course> courses = courseRepository.findByNameAndSection(courseName, courseSection);
         if (courses.size() == 0) {
             return "404";
         } else if(courses.size() == 1) {
             map.addAttribute("course", courses.get(0));
-            return "instructor/course";
+            return "course";
         }
         return "error";
     }

@@ -6,7 +6,7 @@
 
 {% block style %}
     {{ parent() }}
-    <link href="/static/css/instructor.css" rel="stylesheet"/>
+    <link href="/static/css/dashboard.css" rel="stylesheet"/>
 {% endblock %}
 
 {% block body %}
@@ -18,10 +18,10 @@
         </div>
     </nav>
     {% include '/templates/courselist.twig' %}
-    <div class="instructor-body">
+    <div class="dashboard-body">
         {% block content %}
             <div class="welcome-text">
-                <h1>Welcome Back, {{ user.username }}!</h1>
+                <h1>Welcome back, {{ user.username }}!</h1>
                 {% if user.hasExtendedPrivileges %}
                     <p>Select a course from the course list, or create a course.</p>
                     <button type="button" onclick="location.href='/'" class="btn btn-primary">Create Course</button>
