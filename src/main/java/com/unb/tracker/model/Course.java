@@ -14,6 +14,16 @@ public class Course {
     private Integer cols;
     @OneToMany(cascade = {CascadeType.ALL}) //necessary for hibernate when updating course that does not already have a seat plan
     private List<Seat> seats;
+    @ManyToOne
+    private User instructor;
+
+    public User getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(User instructor) {
+        this.instructor = instructor;
+    }
 
     public String getSection() {
         return section;

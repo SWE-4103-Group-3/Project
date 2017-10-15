@@ -62,47 +62,10 @@ public class TrackerController {
         return "instructor/instructor";
     }
 
-    @GetMapping(path="/{username}")
-    public String dashboard(ModelMap map, Principal principal, @PathVariable String username) {
-        LOG.info("dashboard - starting - username: {}; principle.name: {}", username, principal.getName());
-        if(!principal.getName().equals(username)) {
-            return "404";
-        }
-        User user = userRepository.findByUsername(username);
-        map.addAttribute("user", user);
-        Iterable<Course> courseList = courseRepository.findAll();
-        map.addAttribute("courseList", courseList);
-        return "dashboard";
-    }
-
     @GetMapping(path="/all")
     public @ResponseBody Iterable<User> getAllUsers() {
         // This returns a JSON or XML with the users
         return userRepository.findAll();
-    }
-
-    @GetMapping(value="/instructor/{courseName}/{courseSection}") // TODO: Course should also be identified by instructor name
-    public String getCourseByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection, ModelMap map) {
-        List<Course> courses = courseRepository.findByNameAndSection(courseName, courseSection);
-        if(courses.size() == 1) {
-            Iterable<Course> courseList = courseRepository.findAll();
-            map.addAttribute("courseList", courseList);
-            map.addAttribute("course", courses.get(0));
-            return "instructor/course";
-        }
-        return "404";
-    }
-
-    @GetMapping(value="/instructor/{courseName}") // TODO: Course should also be identified by instructor name
-    public String getCourseByName(@PathVariable String courseName, ModelMap map) {
-        List<Course> courses = courseRepository.findByName(courseName);
-        if(courses.size() == 1) {
-            Iterable<Course> courseList = courseRepository.findAll();
-            map.addAttribute("courseList", courseList);
-            map.addAttribute("course", courses.get(0));
-            return "instructor/course";
-        }
-        return "404";
     }
 
     @GetMapping(value="/courses/{courseId}")

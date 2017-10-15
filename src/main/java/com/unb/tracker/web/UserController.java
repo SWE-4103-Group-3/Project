@@ -1,6 +1,9 @@
 package com.unb.tracker.web;
 
+import com.unb.tracker.model.Course;
 import com.unb.tracker.model.User;
+import com.unb.tracker.repository.CourseRepository;
+import com.unb.tracker.repository.UserRepository;
 import com.unb.tracker.service.SecurityService;
 import com.unb.tracker.service.UserService;
 import com.unb.tracker.validator.UserValidator;
@@ -9,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,12 @@ public class UserController {
 
 	@Autowired
 	private UserValidator userValidator;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private CourseRepository courseRepository;
 
 	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
 	public String index(Model model, @RequestParam(value = "error", required = false) String error) {
@@ -59,5 +69,18 @@ public class UserController {
 	public String loginSucess(Principal principal) {
 		LOG.info("loginSucess - starting");
 		return "redirect:/" + principal.getName();
+	}
+
+	@GetMapping(path="/{username}")
+	public String dashboard(ModelMap map, Principal principal, @PathVariable String username) {
+		LOG.info("dashboard - starting - username: {}; principle.name: {}", username, principal.getName());
+		if(!principal.getName().equals(username)) {
+			return "404";
+		}
+		User user = userRepository.findByUsername(username);
+		map.addAttribute("user", user);
+		Iterable<Course> courseList = courseRepository.findAll();
+		map.addAttribute("courseList", courseList);
+		return "dashboard";
 	}
 }
