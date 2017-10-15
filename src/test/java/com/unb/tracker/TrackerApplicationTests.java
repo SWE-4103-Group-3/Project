@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -64,7 +65,8 @@ public class TrackerApplicationTests {
     }
     @Test
     public void saveCourse() throws Exception {
-        String name = "name";
+        // Random name to be safe when retrieving
+        String name = "DGDUSMMYVK";
         String timeSlot = "8:30";
         String startDate = "2017-01-01";
         String endDate = "2017-01-01";
@@ -91,7 +93,8 @@ public class TrackerApplicationTests {
                 .andExpect(view().name("instructor/instructor"));
 
         Iterable<Course> courses = courseRepository.findAll();
-        assertThat(Iterables.contains(courses, myCourse));
+        // TODO: Refactor this into something more sustainable and less silly
+        assertThat(Arrays.stream(Iterables.toArray(courses, Course.class)).filter(course -> course.getName().equals(myCourse.getName())).toArray().length).isEqualTo(1);
     }
 
     private Date convertToSqlDate(String dateString) throws Exception {

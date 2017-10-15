@@ -11,7 +11,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-  //TODO: Add link to users table when it actually exists
+    //TODO: Add link to users table when it actually exists
     //private User Professor;
 
     //TODO: Add link to seat plan table when it actually exists
