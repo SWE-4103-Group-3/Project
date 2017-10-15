@@ -11,7 +11,7 @@
 
 {% block body %}
     <nav class="navbar navbar-dark justify-content-between">
-        <a href="/instructor" class="navbar-brand" style="font-size: 20pt;">Attendance Tracker</a>
+        <a href="/{{ user.username }}" class="navbar-brand" style="font-size: 20pt;">Attendance Tracker</a>
         <div class="float-right">
             <img src="https://thumb9.shutterstock.com/display_pic_with_logo/78238/78238,1255878221,16/stock-photo-cyber-woman-with-a-corn-39094327.jpg" class="rounded-circle hoverable" style="width:35px;height:35px;">
             <button class="btn btn-outline-success btn-sm my-0" onclick="location.href='/logout'">Logout</button>
