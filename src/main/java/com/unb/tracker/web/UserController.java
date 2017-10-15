@@ -18,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Map;
 
 @Controller
 @EnableAutoConfiguration
@@ -64,7 +63,7 @@ public class UserController {
 		userService.save(userForm);
 		securityService.autologin(userForm.getUsername(), userForm.getPasswordConfirm());
 
-		return "redirect:/";
+		return "redirect:/" + userForm.getUsername();
 	}
 
 	@GetMapping(value = "/login/success")
