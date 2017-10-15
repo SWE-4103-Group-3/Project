@@ -20,6 +20,15 @@
     {% include '/templates/courselist.twig' %}
     <div class="instructor-body">
         {% block content %}
+            <div class="welcome-text">
+                <h1>Welcome Back, {{ user.username }}!</h1>
+                {% if user.hasExtendedPrivilages %}
+                    <p>Select a course from the course list, or create a course.</p>
+                    <button type="button" onclick="location.href='/'" class="btn btn-primary">Create Course</button>
+                {% else %}
+                    <p>Select a course from the course list.</p>
+                {% endif %}
+            </div>
         {% endblock %}
     </div>
 {% endblock %}

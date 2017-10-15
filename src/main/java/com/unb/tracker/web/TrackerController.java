@@ -1,23 +1,31 @@
 package com.unb.tracker.web;
 
 
+import com.unb.tracker.TrackerApplication;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
 import com.unb.tracker.model.User;
 import com.unb.tracker.repository.CourseRepository;
 import com.unb.tracker.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @EnableAutoConfiguration
 public class TrackerController {
+    private static final Logger LOG = LoggerFactory.getLogger(TrackerController.class);
+
     @Autowired
     private CourseRepository courseRepository;
 
@@ -54,11 +62,17 @@ public class TrackerController {
         return "instructor/instructor";
     }
 
-    @GetMapping(path="/student")
-    public String student(ModelMap map) {
+    @GetMapping(path="/{username}")
+    public String dashboard(ModelMap map, Principal principal, @PathVariable String username) {
+        LOG.info("dashboard - starting - username: {}; principle.name: {}", username, principal.getName());
+        if(!principal.getName().equals(username)) {
+            return "404";
+        }
+        User user = userRepository.findByUsername(username);
+        map.addAttribute("user", user);
         Iterable<Course> courseList = courseRepository.findAll();
         map.addAttribute("courseList", courseList);
-        return "student/student";
+        return "dashboard";
     }
 
     @GetMapping(path="/all")

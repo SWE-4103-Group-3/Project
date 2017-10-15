@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Map;
 
 @Controller
@@ -52,5 +53,11 @@ public class UserController {
 		securityService.autologin(userForm.getUsername(), userForm.getPasswordConfirm());
 
 		return "redirect:/";
+	}
+
+	@GetMapping(value = "/login/success")
+	public String loginSucess(Principal principal) {
+		LOG.info("loginSucess - starting");
+		return "redirect:/" + principal.getName();
 	}
 }
