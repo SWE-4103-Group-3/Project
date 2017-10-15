@@ -12,7 +12,7 @@
             <div id="sign-in-form" class="form-elegant">
                 <div id="sign-in-card" class="card">
                     <div class="card-body mx-4">
-                        <form modelAttribute="sign-in-form" method="GET" action="/login">
+                        <form modelAttribute="sign-in-form" method="POST" action="/">
                             <div class="text-center">
                                 <h3 class="dark-grey-text mb-5"><strong>Sign in</strong></h3>
                             </div>
@@ -25,9 +25,9 @@
                                 <label class="input-form-label active" for="sign-in-password" name="password">Your password</label>
                                 <p class="font-small blue-text d-flex justify-content-end">Forgot <a href="#" class="blue-text ml-1"> Password?</a></p>
                             </div>
-                            {% if(loginError) %}
+                            {% if loginError %}
                                 <div id="login-error">
-                                    <p class="font-small red-text" style="margin:0;">{{loginError}}</p>
+                                    <p class="font-small red-text" style="margin:0;">{{ loginError }}</p>
                                     <p class="font-small red-text">Please try again.</p>
                                 </div>
                             {% endif %}
