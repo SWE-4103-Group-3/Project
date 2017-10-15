@@ -1,9 +1,6 @@
 package com.unb.tracker.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class User {
@@ -17,6 +14,7 @@ public class User {
 
     private String password;
 
+    @Transient
     private String passwordConfirm;
 
     private boolean hasExtendedPrivileges;
@@ -53,10 +51,12 @@ public class User {
         this.password = password;
     }
 
+    @Transient
     public String getPasswordConfirm() {
         return passwordConfirm;
     }
 
+    @Transient
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
     }
