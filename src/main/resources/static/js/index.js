@@ -2,6 +2,9 @@ window.onload = function() {
     document.getElementById('student-login-button').addEventListener('click', function() {
         $('#sign-in-form').slideDown(400, function() {
             $('#sign-in-form').css('display', 'flex');
+            $('#sign-up-header-text').text(function(index, text) {
+                return "Student Sign Up";
+            });
 
             if($('#user-type-selector').length)
                 $('#user-type-selector').remove();
@@ -13,6 +16,9 @@ window.onload = function() {
     document.getElementById('instructor-login-button').addEventListener('click', function() {
         $('#sign-in-form').slideDown(400, function() {
                 $('#sign-in-form').css('display', 'flex');
+                $('#sign-up-header-text').text(function(index, text) {
+                    return "Instructor Sign Up";
+                });
 
                 if($('#user-type-selector').length)
                     $('#user-type-selector').remove();
@@ -26,4 +32,4 @@ window.onload = function() {
             $('#sign-up-card').css('display', 'flex');
         });
     });
-}
+};
