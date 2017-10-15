@@ -39,7 +39,7 @@ public class UserController {
 	@Autowired
 	private CourseRepository courseRepository;
 
-	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/", "/signup"}, method = RequestMethod.GET)
 	public String index(Model model, @RequestParam(value = "error", required = false) String error) {
 		LOG.info("index - starting - error: {}", error);
 		model.addAttribute("sign-in-form", new User());
