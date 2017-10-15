@@ -28,10 +28,13 @@ public class UserController {
 	private UserValidator userValidator;
 
 	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
-	public String index(Model model, @RequestParam(value = "error", required = false) String error, @RequestParam(value = "logout", required = false) String logout) {
-		LOG.info("index - starting - error: {}, logout: {}", error, logout);
+	public String index(Model model, @RequestParam(value = "error", required = false) String error) {
+		LOG.info("index - starting - error: {}", error);
 		model.addAttribute("sign-in-form", new User());
 		model.addAttribute("sign-up-form", new User());
+		if(error != null) {
+			model.addAttribute("loginError", "Invalid username or password");
+		}
 		return "index";
 	}
 
