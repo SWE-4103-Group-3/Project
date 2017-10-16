@@ -24,14 +24,15 @@
         {% block body %}
         {% endblock %}
 
-        <footer class="page-footer center-on-small-only pt-0">
-            {% block footer %}
-            <div class="footer-copyright">
-                <div class="container-fluid">
-                    © 2017 Copyright: <a href="http://localhost:8080/"> localhost:8080 </a>
+
+        {% block footer %}
+            <footer class="page-footer center-on-small-only pt-0">
+                <div class="footer-copyright">
+                    <div class="container-fluid">
+                        © 2017 Copyright: <a href="http://localhost:8080/"> localhost:8080 </a>
+                    </div>
                 </div>
-            </div>
-            {% endblock %}
-        </footer>
+            </footer>
+        {% endblock %}
     </body>
 </html>

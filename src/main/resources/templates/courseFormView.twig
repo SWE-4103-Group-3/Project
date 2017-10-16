@@ -1,4 +1,4 @@
-{% extends 'base.twig' %}
+{% extends '/templates/base.twig' %}
 
 {% block title %}
    <div>
@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block body %}
-    <div style="width: 40%">
+    <button type="button" data-target="#courseForm" class="btn btn-primary" data-toggle="collapse" aria-expanded="false" aria-controls="courseForm">Create Course</button>
+    <div style="width: 40%; margin: auto;" class="collapse" id="courseForm" >
         <form action="/course" method="post">
             <div class="md-form">
                 <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName">
@@ -34,7 +35,8 @@
             </div>
 
             <div class="md-form">
-                <input type="submit" class="btn btn-primary form-control" value="Submit">
+                {# the css expects two seperate class descriptions like this for some reason #}
+                <input type="submit" class="btn btn-primary" value="Submit" class="form-control" >
             </div>
         </form>
     </div>
@@ -48,6 +50,9 @@
             $('.timepicker').pickatime({
                 twelvehour: true
             });
+
         });
     </script>
+{% endblock %}
+{% block footer %}
 {% endblock %}
