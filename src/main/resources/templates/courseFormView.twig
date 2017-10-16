@@ -1,4 +1,4 @@
-<div style="width: 40%; margin: auto;" class="collapse" id="courseForm" >
+<div style="width:50%; margin: auto;" class="collapse" id="courseForm" >
     <form action="/course" method="post">
         <div class="md-form">
             <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName">
@@ -26,8 +26,11 @@
 
         <div class="md-form">
             {# the css expects two seperate class descriptions like this for some reason #}
+            <button type="button" data-target="#courseForm" class="btn btn-blue-grey" data-toggle="collapse" aria-expanded="false" aria-controls="courseForm">Cancel</button>
             <input type="submit" class="btn btn-primary" value="Submit" class="form-control" >
         </div>
+
+
     </form>
 </div>
 
