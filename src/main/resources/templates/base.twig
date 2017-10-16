@@ -12,18 +12,19 @@
 
         {% block style %}
         {% endblock %}
+
+
+    </head>
+    <body>
         <script type="text/javascript" src="/js/tether.min.js"></script>
         <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="/js/popper.min.js"></script>
         <script type="text/javascript" src="/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/js/mdb.min.js"></script>
-        {% block script %}
-        {% endblock %}
-    </head>
-    <body>
         {% block body %}
         {% endblock %}
-
+        {% block script %}
+        {% endblock %}
 
         {% block footer %}
             <footer class="page-footer center-on-small-only pt-0">

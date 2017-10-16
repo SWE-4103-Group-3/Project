@@ -7,52 +7,9 @@
 {% endblock %}
 
 {% block body %}
-    <button type="button" data-target="#courseForm" class="btn btn-primary" data-toggle="collapse" aria-expanded="false" aria-controls="courseForm">Create Course</button>
-    <div style="width: 40%; margin: auto;" class="collapse" id="courseForm" >
-        <form action="/course" method="post">
-            <div class="md-form">
-                <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName">
-            </div>
 
-            <div class="md-form">
-                <input placeholder="Timeslot" type="text" name="timeSlot" class="form-control timepicker">
-            </div>
 
-            <div class="md-form">
-                <input placeholder="Start Date" name="startDate" type="text" class="form-control datepicker">
-            </div>
 
-            <div class="md-form">
-                <input placeholder="End Date" name="endDate" type="text" class="form-control datepicker">
-            </div>
-
-            <div class="md-form">
-                <input placeholder="Rows" name="rows" type="number" class="form-control">
-            </div>
-
-            <div class="md-form">
-                <input placeholder="Columns" name="cols" type="number" class="form-control">
-            </div>
-
-            <div class="md-form">
-                {# the css expects two seperate class descriptions like this for some reason #}
-                <input type="submit" class="btn btn-primary" value="Submit" class="form-control" >
-            </div>
-        </form>
-    </div>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.datepicker').pickadate({
-                formatSubmit: 'yyyy-mm-dd',
-                hiddenName: true
-            });
-            $('.timepicker').pickatime({
-                twelvehour: true
-            });
-
-        });
-    </script>
 {% endblock %}
 {% block footer %}
 {% endblock %}
