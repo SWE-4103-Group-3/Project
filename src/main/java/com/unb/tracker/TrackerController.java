@@ -76,9 +76,10 @@ public class TrackerController {
     }
 
     @PostMapping("/course")
-    public String courseSave(@ModelAttribute Course course) {
+    public String courseSave(@ModelAttribute Course course, ModelMap map) {
         courseRepository.save(course);
-        return "instructor/instructor";
+        map.addAttribute("course", course);
+        return "instructor/course";
     }
 
 
