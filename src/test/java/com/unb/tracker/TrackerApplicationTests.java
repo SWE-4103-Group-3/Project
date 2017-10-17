@@ -90,7 +90,7 @@ public class TrackerApplicationTests {
                 .param("rows", rows.toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("instructor/instructor"));
+                .andExpect(view().name("instructor/course"));
 
         Iterable<Course> courses = courseRepository.findAll();
         // TODO: Refactor this into something more sustainable and less silly
