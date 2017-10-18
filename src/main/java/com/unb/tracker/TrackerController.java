@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Controller
 @EnableAutoConfiguration
@@ -67,6 +67,21 @@ public class TrackerController {
         // This returns a JSON or XML with the users
         return userRepository.findAll();
     }
+
+
+    @GetMapping(path="/course")
+    public String courseForm(Model model) {
+        model.addAttribute("course", new Course());
+        return "courseFormView";
+    }
+
+    @PostMapping("/course")
+    public String courseSave(@ModelAttribute Course course, ModelMap map) {
+        courseRepository.save(course);
+        map.addAttribute("course", course);
+        return "instructor/course";
+    }
+
 
     @GetMapping(value="/instructor/{courseName}/{courseSection}") // TODO: Course should also be identified by instructor name
     public String getCourseByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection, ModelMap map) {
