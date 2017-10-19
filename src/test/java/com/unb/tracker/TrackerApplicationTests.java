@@ -74,14 +74,7 @@ public class TrackerApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(404));
     }
-
-    @Test
-    public void loadCourseFormView() throws Exception {
-        this.mockMvc.perform(get("/course"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("courseFormView"));
-    }
+    
     @Test
     public void saveCourse() throws Exception {
         // Random name to be safe when retrieving
