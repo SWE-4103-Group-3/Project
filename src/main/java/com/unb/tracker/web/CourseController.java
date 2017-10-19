@@ -89,16 +89,12 @@ public class CourseController {
         return courseRepository.findAll();
     }
 
-    @GetMapping(path="/course")
-    public String courseForm(Model model) {
-        model.addAttribute("course", new Course());
-        return "courseFormView";
-    }
-
     @PostMapping("/course")
-    public String courseSave(@ModelAttribute Course course, ModelMap map) {
+    public String courseSave(@ModelAttribute Course course, ModelMap map, Principal principal) {
+        User instructor = userRepository.findByUsername(principal.getName());
+        course.setInstructor(instructor);
         courseRepository.save(course);
         map.addAttribute("course", course);
-        return "course";
+        return "redirect:/" + instructor.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
 }
