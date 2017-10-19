@@ -32,6 +32,9 @@ public class CourseController {
     public String getCourseByName(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
         LOG.info("getCourseByName - starting - username: {}, courseName: {}", username, courseName);
 
+        Iterable<Course> allCourses = courseRepository.findAll();
+        map.addAttribute("courseList", allCourses);
+
         User user = userRepository.findByUsername(principal.getName());
         map.addAttribute("user", user);
 
@@ -49,6 +52,9 @@ public class CourseController {
     @GetMapping(value="/{username}/{courseName}/{courseSection}")
     public String getCourseByNameAndSection(@PathVariable String username, @PathVariable String courseName, @PathVariable String courseSection, ModelMap map, Principal principal) {
         LOG.info("getCourseByName - starting - username: {}, courseName: {}; courseSection: {}", username, courseName, courseSection);
+
+        Iterable<Course> allCourses = courseRepository.findAll();
+        map.addAttribute("courseList", allCourses);
 
         User user = userRepository.findByUsername(principal.getName());
         map.addAttribute("user", user);
