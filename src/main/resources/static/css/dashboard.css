@@ -3,6 +3,7 @@ div.dashboard-body {
     margin-left: 275px;
     width: calc(100% - 275px);
     position: fixed;
+    z-index: 2;
 }
 
 div.welcome-text {
