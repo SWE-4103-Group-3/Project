@@ -33,7 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 				.antMatchers("/signup").permitAll()
 				.antMatchers("/static/**").permitAll()
 				.antMatchers("/favicon.ico").permitAll()
-				.antMatchers("/courses").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
