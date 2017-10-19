@@ -1,12 +1,30 @@
 package com.unb.tracker;
 
+import com.google.common.collect.Iterables;
+import com.unb.tracker.model.Course;
+import com.unb.tracker.repository.CourseRepository;
+import com.unb.tracker.web.CourseController;
+import com.unb.tracker.web.UserController;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
 @RunWith(SpringRunner.class)
@@ -14,17 +32,32 @@ import java.text.SimpleDateFormat;
 @AutoConfigureMockMvc
 public class TrackerApplicationTests {
     protected final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    /*
+
     @Autowired
-	private TrackerController controller;
+	private CourseController courseController;
+    @Autowired
+    private UserController userController;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private CourseRepository courseRepository;
 
+    //Things to test:
+            //- Loading the index(login) should render
+            //- Selecting one of the buttons should render the login card
+            //- Selecting sign up should render the sign up card
+            //- logging in with invalid credentials should redirect to index with error message
+            //- attempting to create an account without an email address, username or password should redirect to index with error message
+            //- test username and password validation (unique username with 6 to 32 length, matching passwords with length 8 to 32)
+            //- Creating a new user should correctly store their information in the database
+            //- Creating a new student should redirect to their student view
+            //- Creating a new instructor should redirect to their instructor view
+            //- Attempting to login as instructor or user should redirect them correctly
+
     @Test
 	public void contextLoads() throws Exception {
-		assertThat(controller).isNotNull();
+		assertThat(courseController).isNotNull();
+        assertThat(userController).isNotNull();
 	}
 
     @Test
@@ -106,6 +139,6 @@ public class TrackerApplicationTests {
                 //TODO: Add this back once we have validation setup correctly
                 //.andExpect(model().attributeHasErrors("startDate"));
 
-    }*/
+    }
 
 }

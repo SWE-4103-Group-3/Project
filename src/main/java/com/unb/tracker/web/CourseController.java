@@ -99,6 +99,6 @@ public class CourseController {
     public String courseSave(@ModelAttribute Course course, ModelMap map) {
         courseRepository.save(course);
         map.addAttribute("course", course);
-        return "instructor/course";
+        return "course";
     }
 }
