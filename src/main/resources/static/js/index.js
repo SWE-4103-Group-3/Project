@@ -2,11 +2,6 @@ window.onload = function() {
     $('#student-login-button').click(function() {
         var $userTypeSelector = $('#user-type-selector');
 
-        //Change Sign Up Card Header
-        $('#sign-in-header-text').text(function(index, text) {
-            return "Student Sign In";
-        });
-
         $('#sign-up-header-text').text(function(index, text) {
             return "Student Sign Up";
         });
@@ -28,10 +23,6 @@ window.onload = function() {
     $('#instructor-login-button').click(function() {
         var $userTypeSelector = $('#user-type-selector');
 
-        $('#sign-in-header-text').text(function(index, text) {
-            return "Instructor Sign In";
-        });
-
         $('#sign-up-header-text').text(function(index, text) {
             return "Instructor Sign Up";
         });
@@ -51,8 +42,14 @@ window.onload = function() {
     });
 
     $('#sign-up').click(function() {
-        $('#sign-up-card').show('slide', {direction: 'left'}, 400, function() {
-            $(this).css('display', 'flex');
-        });
+        //If user had a signin error and wants to sign up, redirect to homepage to select account type
+        if($('#login-error').length === 0)
+        {
+            $('#sign-up-card').show('slide', {direction: 'left'}, 400, function() {
+                $(this).css('display', 'flex');
+            });
+        }
+        else
+            window.location.replace("/");
     });
 };
