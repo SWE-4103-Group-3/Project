@@ -45,7 +45,7 @@ public class UserController {
 		model.addAttribute("sign-in-form", new User());
 		model.addAttribute("sign-up-form", new User());
 		if(error != null) {
-			model.addAttribute("loginError", "Invalid username or password");
+			model.addAttribute("loginError", "Invalid username or password.");
 		}
 		return "index";
 	}

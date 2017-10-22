@@ -19,6 +19,7 @@
         <div id = index-main" class="flex-center flex-column">
             {% if loginError or accountCreationError %}
                 <div id="sign-in-form" class="form-elegant" style="display:flex;">
+                <input type="hidden" id="loginError" value="{{ loginError }}"/>
             {% else %}
                 <div id="sign-in-form" class="form-elegant">
             {% endif %}
@@ -30,7 +31,7 @@
                     <div class="card-body mx-4">
                         <form modelAttribute="sign-in-form" method="POST" action="/">
                             <div class="text-center">
-                                <h3 class="dark-grey-text mb-5"><strong id="sign-in-header-text">{{ accountType }} Sign in</strong></h3>
+                                <h3 class="dark-grey-text mb-5"><strong id="sign-in-header-text">Sign in</strong></h3>
                             </div>
                             <div class="md-form">
                                 <input type="text" id="sign-in-username" class="form-control" name="username">
