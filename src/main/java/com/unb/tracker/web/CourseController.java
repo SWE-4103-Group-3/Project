@@ -97,7 +97,12 @@ public class CourseController {
 
     @PostMapping("/course")
     public String courseSave(@ModelAttribute Course course, ModelMap map, Principal principal) {
+        LOG.info("courseSave - starting - principle.name: {}", principal.getName());
         User instructor = userRepository.findByUsername(principal.getName());
+        if(instructor == null) {
+            //TODO: throw an error instead! reference: https://stackoverflow.com/questions/25422255/how-to-return-404-response-status-in-spring-boot-responsebody-method-return-t
+            return "error";
+        }
         course.setInstructor(instructor);
         courseRepository.save(course);
         map.addAttribute("course", course);

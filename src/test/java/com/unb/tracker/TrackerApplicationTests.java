@@ -2,20 +2,36 @@ package com.unb.tracker;
 
 import com.google.common.collect.Iterables;
 import com.unb.tracker.model.Course;
+import com.unb.tracker.model.User;
 import com.unb.tracker.repository.CourseRepository;
+import com.unb.tracker.repository.UserRepository;
+import com.unb.tracker.service.SecurityService;
+import com.unb.tracker.service.UserService;
+import com.unb.tracker.validator.UserValidator;
 import com.unb.tracker.web.CourseController;
 import com.unb.tracker.web.UserController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.FilterChainProxy;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.sql.Date;
 import java.text.DateFormat;
@@ -23,22 +39,24 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
 public class TrackerApplicationTests {
     protected final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     @Autowired
-	private CourseController courseController;
+    private CourseController courseController;
 
     @Autowired
     private UserController userController;
@@ -48,10 +66,13 @@ public class TrackerApplicationTests {
 
     private MockMvc mockMvc;
 
-    @Autowired
+    @MockBean
     private CourseRepository courseRepository;
 
-    //Things to test:
+    @MockBean
+    private UserRepository userRepository;
+
+    //TODO:
             //- Loading the index(login) should render
             //- Selecting one of the buttons should render the login card
             //- Selecting sign up should render the sign up card
@@ -72,31 +93,38 @@ public class TrackerApplicationTests {
     }
 
     @Test
-	public void contextLoads() throws Exception {
-		assertThat(courseController).isNotNull();
+    public void contextLoads() throws Exception {
+        assertThat(courseController).isNotNull();
         assertThat(userController).isNotNull();
-	}
+    }
 
-    // TODO: Fix this! I have no clue why it would be failing but it's receiving a 404
-    /*@Test
+
+    @Test
     public void shouldReturnIndex() throws Exception {
-        this.mockMvc.perform(get("/"))
+        this.mockMvc
+                .perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"));
-    }*/
+    }
 
     @Test
     public void shouldBeRedirected() throws Exception {
         this.mockMvc.perform(get("/thisdoesnotexist"))
                 .andDo(print())
-                .andExpect(status().isFound());
+                .andExpect(status().isFound()); // redirected
     }
 
     // TODO: This is failing because there is no authentication
-    /*@Test
+    @Test
+    @WithMockUser("test")
     public void saveCourse() throws Exception {
-        // Random name to be safe when retrieving
+        User instructor = new User();
+        instructor.setUsername("test");
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
+
+        when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
+
         String name = "DGDUSMMYVK";
         String timeSlot = "8:30";
         String startDate = "2017-01-01";
@@ -114,7 +142,6 @@ public class TrackerApplicationTests {
         myCourse.setTimeSlot(timeSlot);
 
         this.mockMvc.perform(post("/course")
-                .principal(principle)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("name", name)
                 .param("timeSlot", timeSlot)
@@ -124,19 +151,30 @@ public class TrackerApplicationTests {
                 .param("rows", rows.toString())
                 .param("section", section))
                 .andDo(print())
-                .andExpect(status().isFound());
-
-        Iterable<Course> courses = courseRepository.findAll();
-        // TODO: Refactor this into something more sustainable and less silly
-        assertThat(Arrays.stream(Iterables.toArray(courses, Course.class)).filter(course -> course.getName().equals(myCourse.getName())).toArray().length).isEqualTo(1);
-    }*/
+                .andExpect(status().isFound()); //redirected
+    }
 
     private Date convertToSqlDate(String dateString) throws Exception {
             return new java.sql.Date(dateFormat.parse(dateString).getTime());
     }
 
-    // TODO: This is failing because there is no authentication
-    /*@Test
+    @Test
+    public void testSignup() throws Exception{
+        when(userRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
+
+        this.mockMvc.perform(post("/signup")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("email", "test@unb.ca")
+                .param("username", "name")
+                .param("password", "password")
+                .param("passwordConfirm", "passwordConfirm")
+                .param("hasExtendedPrivileges", "false"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser("test")
     public void hitCourseValidation() throws Exception {
         String name = "name";
         String timeSlot = "8:30";
@@ -151,10 +189,8 @@ public class TrackerApplicationTests {
                 .param("startDate", startDate)
                 .param("endDate", endDate))
                 .andDo(print())
-                .andExpect(status().is(400));
-                //TODO: Add this back once we have validation setup correctly
-                //.andExpect(model().attributeHasErrors("startDate"));
+                .andExpect(status().isBadRequest());
 
-    }*/
+    }
 
 }

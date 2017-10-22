@@ -39,7 +39,7 @@ public class UserController {
 	@Autowired
 	private CourseRepository courseRepository;
 
-	@RequestMapping(value = {"/", "/signup"}, method = RequestMethod.GET)
+	@GetMapping(value = {"/", "/signup"})
 	public String index(Model model, @RequestParam(value = "error", required = false) String error) {
 		LOG.info("index - starting - error: {}", error);
 		model.addAttribute("sign-in-form", new User());
@@ -50,7 +50,7 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	@PostMapping(value = "/signup")
 	public String registration(@ModelAttribute("sign-up-form") User userForm, BindingResult bindingResult, Model model) {
 		userValidator.validate(userForm, bindingResult);
 
