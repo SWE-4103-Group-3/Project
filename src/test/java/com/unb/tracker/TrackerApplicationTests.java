@@ -36,13 +36,19 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -112,10 +118,10 @@ public class TrackerApplicationTests {
     public void shouldBeRedirected() throws Exception {
         this.mockMvc.perform(get("/thisdoesnotexist"))
                 .andDo(print())
-                .andExpect(status().isFound()); // redirected
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("http://localhost/")); // redirected
     }
 
-    // TODO: This is failing because there is no authentication
     @Test
     @WithMockUser("test")
     public void saveCourse() throws Exception {
@@ -151,11 +157,8 @@ public class TrackerApplicationTests {
                 .param("rows", rows.toString())
                 .param("section", section))
                 .andDo(print())
-                .andExpect(status().isFound()); //redirected
-    }
-
-    private Date convertToSqlDate(String dateString) throws Exception {
-            return new java.sql.Date(dateFormat.parse(dateString).getTime());
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/test/DGDUSMMYVK/section")); //redirected
     }
 
     @Test
@@ -167,7 +170,7 @@ public class TrackerApplicationTests {
                 .param("email", "test@unb.ca")
                 .param("username", "name")
                 .param("password", "password")
-                .param("passwordConfirm", "passwordConfirm")
+                .param("passwordConfirm", "password")
                 .param("hasExtendedPrivileges", "false"))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -191,6 +194,50 @@ public class TrackerApplicationTests {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
+    }
+
+    @Test
+    @WithMockUser("test")
+    public void coursePage() throws Exception {
+        User intructor = new User();
+        intructor.setUsername("test");
+        Course course = new Course();
+        course.setInstructor(intructor);
+        course.setName("test");
+        when(courseRepository.findByInstructorUsernameAndName("test", "test")).thenReturn(new ArrayList<Course>(){{add(course);}});
+
+        mockMvc.perform(get("/test/test"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser("test")
+    public void coursePageWithSection() throws Exception {
+        User intructor = new User();
+        intructor.setUsername("test");
+        Course course = new Course();
+        course.setInstructor(intructor);
+        course.setSection("test");
+        course.setName("test");
+        when(courseRepository.findByInstructorUsernameAndNameAndSection("test", "test", "test")).thenReturn(new ArrayList<Course>(){{add(course);}});
+
+        mockMvc.perform(get("/test/test/test"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser("test")
+    public void loginRedirect() throws Exception {
+        mockMvc.perform(get("/login/success"))
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/test"));
+    }
+
+    private Date convertToSqlDate(String dateString) throws Exception {
+        return new java.sql.Date(dateFormat.parse(dateString).getTime());
     }
 
 }

@@ -59,7 +59,7 @@ public class CourseController {
         User user = userRepository.findByUsername(principal.getName());
         map.addAttribute("user", user);
 
-        List<Course> courses = courseRepository.findByNameAndSection(courseName, courseSection);
+        List<Course> courses = courseRepository.findByInstructorUsernameAndNameAndSection(username, courseName, courseSection);
         if (courses.size() == 0) {
             return "404";
         } else if(courses.size() == 1) {
