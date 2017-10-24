@@ -31,6 +31,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -105,11 +107,12 @@ public class TrackerApplicationTests {
                 .andExpect(redirectedUrl("http://localhost/")); // redirected
     }
 
-    /*@Test
+    @Test
     @WithMockUser("test")
     public void saveCourse() throws Exception {
         User instructor = new User();
         instructor.setUsername("test");
+        instructor.setHasExtendedPrivileges(true);
         when(userRepository.findByUsername("test")).thenReturn(instructor);
 
         when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
@@ -142,7 +145,7 @@ public class TrackerApplicationTests {
                 .andDo(print())
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/test/DGDUSMMYVK/section")); //redirected
-    }*/
+    }
 
     @Test
     public void testSignup() throws Exception{
@@ -228,7 +231,8 @@ public class TrackerApplicationTests {
                 .andExpect(status().isOk());
     }
 
-    /*@Test
+    @Test
+    @WithMockUser("test")
     public void getCourseThatExists() throws Exception {
         Course course = new Course();
         course.setId(1l);
@@ -239,6 +243,7 @@ public class TrackerApplicationTests {
     }
 
     @Test
+    @WithMockUser("test")
     public void getCourseThatDoesNotExists() throws Exception {
         Course course = new Course();
         course.setId(1l);
@@ -246,6 +251,14 @@ public class TrackerApplicationTests {
         mockMvc.perform(get("/courses/1"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    /*@Test
+    public void testLogin() throws Exception {
+        mockMvc.perform(formLogin("/").user("jsmith21").password("jsmith21jsmith21"))
+                .andDo(print())
+                .andExpect(authenticated())
+                .andExpect(redirectedUrl("/jsmith21"));
     }*/
 
     @Test
