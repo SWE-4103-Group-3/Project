@@ -1,5 +1,7 @@
 package com.unb.tracker.web;
 
+import com.unb.tracker.exception.BadRequestException;
+import com.unb.tracker.exception.NotFoundException;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
 import com.unb.tracker.model.User;
@@ -72,7 +74,11 @@ public class CourseController {
     @GetMapping(value="/courses/{courseId}")
     public @ResponseBody
     Course getCourse(@PathVariable Long courseId) {
-        return courseRepository.findOne(courseId);
+        Course course = courseRepository.findOne(courseId);
+        if(course == null) {
+            throw new NotFoundException();
+        }
+        return course;
     }
 
     @PostMapping(value="/courses/{courseId}/seats")
@@ -98,14 +104,13 @@ public class CourseController {
     @PostMapping("/course")
     public String courseSave(@ModelAttribute Course course, ModelMap map, Principal principal) {
         LOG.info("courseSave - starting - principle.name: {}", principal.getName());
-        User instructor = userRepository.findByUsername(principal.getName());
-        if(instructor == null) {
-            //TODO: throw an error instead! reference: https://stackoverflow.com/questions/25422255/how-to-return-404-response-status-in-spring-boot-responsebody-method-return-t
-            return "error";
+        User user = userRepository.findByUsername(principal.getName());
+        if(user == null || !user.getHasExtendedPrivileges()) {
+            throw new BadRequestException();
         }
-        course.setInstructor(instructor);
+        course.setInstructor(user);
         courseRepository.save(course);
         map.addAttribute("course", course);
-        return "redirect:/" + instructor.getUsername() + "/" + course.getName() + "/" + course.getSection();
+        return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
 }

@@ -1,54 +1,36 @@
 package com.unb.tracker;
 
-import com.google.common.collect.Iterables;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.User;
 import com.unb.tracker.repository.CourseRepository;
 import com.unb.tracker.repository.UserRepository;
-import com.unb.tracker.service.SecurityService;
-import com.unb.tracker.service.UserService;
-import com.unb.tracker.validator.UserValidator;
 import com.unb.tracker.web.CourseController;
 import com.unb.tracker.web.UserController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.FilterChainProxy;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -89,6 +71,7 @@ public class TrackerApplicationTests {
             //- Creating a new student should redirect to their student view
             //- Creating a new instructor should redirect to their instructor view
             //- Attempting to login as instructor or user should redirect them correctly
+            //- Test that a student is not able to create courses
 
     @Before
     public void setup() {
@@ -122,7 +105,7 @@ public class TrackerApplicationTests {
                 .andExpect(redirectedUrl("http://localhost/")); // redirected
     }
 
-    @Test
+    /*@Test
     @WithMockUser("test")
     public void saveCourse() throws Exception {
         User instructor = new User();
@@ -159,7 +142,7 @@ public class TrackerApplicationTests {
                 .andDo(print())
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/test/DGDUSMMYVK/section")); //redirected
-    }
+    }*/
 
     @Test
     public void testSignup() throws Exception{
@@ -234,6 +217,44 @@ public class TrackerApplicationTests {
                 .andDo(print())
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/test"));
+    }
+
+    @Test
+    @WithMockUser
+    public void getCourses() throws Exception {
+        when(courseRepository.findAll()).thenReturn(null);
+        mockMvc.perform(get("/courses"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    /*@Test
+    public void getCourseThatExists() throws Exception {
+        Course course = new Course();
+        course.setId(1l);
+        when(courseRepository.findOne(1l)).thenReturn(course);
+        mockMvc.perform(get("/courses/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getCourseThatDoesNotExists() throws Exception {
+        Course course = new Course();
+        course.setId(1l);
+        when(courseRepository.findOne(1l)).thenReturn(null);
+        mockMvc.perform(get("/courses/1"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }*/
+
+    @Test
+    @WithMockUser
+    public void testLogout() throws Exception {
+        mockMvc.perform(logout())
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/"));
     }
 
     private Date convertToSqlDate(String dateString) throws Exception {
