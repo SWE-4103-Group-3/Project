@@ -15,8 +15,8 @@
 {% endblock %}
 
 {% block body %}
-    <div style="height: 100vh">
-        <div id = index-main" class="flex-center flex-column">
+    <div style="height: 100vh; display: block;">
+        <div id="index-main" class="flex-center flex-column">
             {% if loginError or accountCreationError %}
                 <div id="sign-in-form" class="form-elegant" style="display:flex;">
                 <input type="hidden" id="loginError" value="{{ loginError }}"/>
@@ -24,7 +24,7 @@
                 <div id="sign-in-form" class="form-elegant">
             {% endif %}
                 {% if loginError or accountCreationError %}
-                    <div id="sign-in-card" class="card" style="display:flex;">
+                    <div id="sign-in-card" class="card" style="display: block;">
                 {% else %}
                     <div id="sign-in-card" class="card">
                 {% endif %}
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 {% if accountCreationError %}
-                    <div id="sign-up-card" class="card" style="display:flex;">
+                    <div id="sign-up-card" class="card" style="display: block;">
                 {% else %}
                     <div id="sign-up-card" class="card">
                 {% endif %}

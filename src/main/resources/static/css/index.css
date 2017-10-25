@@ -4,8 +4,9 @@ div.md-form {
 }
 
 div#index-main {
-    margin-bottom: 60px;
-    height: calc(100% - 60px);
+    padding-bottom: 60px;
+    width: 100%;
+    height: 100%;
 }
 
 div#authentication-container {
@@ -15,12 +16,14 @@ div#authentication-container {
 div#sign-in-card {
     margin-right: 2px;
     float: left;
+    height: 500px;
 }
 
 div#sign-up-card {
     margin-left: 2px;
     float: right;
     display: none;
+    height: 500px;
 }
 
 div#sign-in-form {
