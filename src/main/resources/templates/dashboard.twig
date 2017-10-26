@@ -18,8 +18,8 @@
             <button class="btn btn-outline-success btn-sm my-0" onclick="location.href='/logout'">Logout</button>
         </div>
     </nav>
-    {% include '/templates/courselist.twig' %}
     <div class="dashboard-body">
+        {% include '/templates/courselist.twig' %}
         {% block content %}
             <div class="welcome-text">
                 <h1>Welcome back, {{ user.username }}!</h1>
