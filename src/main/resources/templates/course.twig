@@ -1,0 +1,76 @@
+{% extends 'dashboard.twig' %}
+
+{% block style %}
+    {{ parent() }}
+    <link href="/static/css/course.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col text-left">
+            <div><h1>{{ course.name }}</h1></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div id="grid"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button id="editsave" type="button" class="btn btn-primary">Edit</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript" src="/static/js/grid.js"></script>
+    <script>
+        $(document).ready(function() {
+            var grid;
+            $.ajax({
+                type: "get",
+                url: "/courses/{{ course.id }}",
+                dataType: "json",
+                success: function(data, status) {
+                    grid = new Grid({
+                        rows: data.rows,
+                        cols: data.cols,
+                        seats: data.seats,
+                        states: ["open", "closed", "reserved"]
+                    });
+                    $('#grid').append(grid.el);
+                },
+                error: function(data, status) {
+                    console.log(data);
+                }
+            });
+
+            $('#editsave').on('click', function(e) {
+                if(grid.editable) {
+                    grid.editable = false;
+                    $('#editsave').html('Edit');
+                    var seats = grid.getSeats();
+                    console.log(seats);
+                    $.ajax({
+                        type: "post",
+                        url: "/courses/{{ course.id }}/seats",
+                        data: JSON.stringify(seats),
+                        contentType: "application/json",
+                        error: function(data, status) {
+                            console.log(data);
+                        }
+                    });
+
+                } else {
+                    grid.editable = true;
+                    $('#editsave').html('Save');
+                }
+            });
+        });
+    </script>
+{% endblock %}
+

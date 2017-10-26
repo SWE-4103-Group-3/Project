@@ -1,0 +1,12 @@
+div.dashboard-body {
+    top: 65px;
+    margin-left: 275px;
+    width: calc(100% - 275px);
+    z-index: 2;
+}
+
+div.welcome-text {
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 40px;
+}

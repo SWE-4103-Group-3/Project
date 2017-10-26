@@ -1,0 +1,11 @@
+language: java
+
+before_install:
+  - chmod +x mvnw
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS db_example'
+
+os:
+- linux
+
+services:
+- mysql

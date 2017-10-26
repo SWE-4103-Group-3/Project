@@ -1,0 +1,13 @@
+a.navbar-brand {
+    color: #000!important;
+}
+a.navbar-brand:hover {
+    color: #454545!important;
+}
+
+footer.page-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
