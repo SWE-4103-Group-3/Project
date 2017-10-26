@@ -6,20 +6,14 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col text-left">
-            <div><h1>{{ course.name }}</h1></div>
+    <div class="course-editor-body">
+        <div class="course-editor-title">
+            <h1>{{ course.name }}</h1>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
+        <div class="course-editor-grid">
             <div id="grid"></div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
+        <div class="course-editor-controls">
             <button id="editsave" type="button" class="btn btn-primary">Edit</button>
         </div>
     </div>

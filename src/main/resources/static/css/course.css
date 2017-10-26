@@ -1,14 +1,15 @@
+.course-editor-body {
+    margin-bottom: 65px;
+    margin-left: 275px;
+    padding: 20px;
+}
+
 #grid {
     width: 40%;
 }
 
 #edit {
     margin: auto;
-}
-
-.dashboard-body {
-    padding-top: 10px;
-    padding-left: 30px;
 }
 
 table {
