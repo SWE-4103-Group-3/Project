@@ -1,0 +1,111 @@
+{% extends 'base.twig' %}
+
+{% block title %}
+    <title>Attendance Tracker - Welcome!</title>
+{% endblock %}
+
+{% block style %}
+    {{ parent() }}
+    <link href="/static/css/index.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript" src="/static/js/index.js"></script>
+{% endblock %}
+
+{% block body %}
+    <div style="height: 100vh; display: block;">
+        <div id="index-main" class="flex-center flex-column">
+            {% if loginError or accountCreationError %}
+                <div id="sign-in-form" class="form-elegant" style="display:flex;">
+                <input type="hidden" id="loginError" value="{{ loginError }}"/>
+            {% else %}
+                <div id="sign-in-form" class="form-elegant">
+            {% endif %}
+                {% if loginError or accountCreationError %}
+                    <div id="sign-in-card" class="card" style="display: block;">
+                {% else %}
+                    <div id="sign-in-card" class="card">
+                {% endif %}
+                    <div class="card-body mx-4">
+                        <form modelAttribute="sign-in-form" method="POST" action="/">
+                            <div class="text-center">
+                                <h3 class="dark-grey-text mb-5"><strong id="sign-in-header-text">Sign in</strong></h3>
+                            </div>
+                            <div class="md-form">
+                                <input type="text" id="sign-in-username" class="form-control" name="username">
+                                <label class="input-form-label active" for="sign-in-username" name="username">Your Username</label>
+                            </div>
+                            <div class="md-form pb-3">
+                                <input type="password" id="sign-in-password" class="form-control" name="password">
+                                <label class="input-form-label active" for="sign-in-password" name="password">Your password</label>
+                                <p class="font-small blue-text d-flex justify-content-end">Forgot <a href="#" class="blue-text ml-1"> Password?</a></p>
+                            </div>
+                            {% if loginError %}
+                                <div id="login-error">
+                                    <p class="font-small red-text" style="margin:0;">{{ loginError }}</p>
+                                    <p class="font-small red-text">Please try again.</p>
+                                </div>
+                            {% endif %}
+                            <div class="text-center mb-3">
+                                <button type="submit" class="btn btn-primary">Sign in</button>
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer mx-5 pt-3 mb-1">
+                        <p class="font-small grey-text d-flex justify-content-end">Not a member? <span id="sign-up"> Sign Up</span></p>
+                    </div>
+                </div>
+                {% if accountCreationError %}
+                    <div id="sign-up-card" class="card" style="display: block;">
+                {% else %}
+                    <div id="sign-up-card" class="card">
+                {% endif %}
+                    <div class="card-body mx-4">
+                        <form id="sign-up-form" modelAttribute="sign-up-form" method="POST" action="/signup">
+                            <div class="text-center">
+                                <h3 class="dark-grey-text mb-5"><strong id="sign-up-header-text">{{ accountType }} Sign up</strong></h3>
+                            </div>
+                            <div class="md-form">
+                                <input type="text" id="sign-up-email" class="form-control" name="email">
+                                <label class="input-form-label active" for="sign-up-email" name="email">Your Email Address</label>
+                            </div>
+                            <div class="md-form">
+                                <input type="text" id="sign-up-username" class="form-control" name="username">
+                                <label class="input-form-label active" for="sign-up-username" name="username">New Username</label>
+                            </div>
+                            <div class="md-form">
+                                <input type="password" id="sign-up-password" class="form-control" name="password">
+                                <label class="input-form-label active" for="sign-up-password" name="password">New password</label>
+                            </div>
+                            <div class="md-form pb-3">
+                                <input type="password" id="sign-up-password-confirm" class="form-control" name="passwordConfirm">
+                                <label class="input-form-label active" for="sign-up-password-confirm" name="passwordConfirm">Confirm password</label>
+                            </div>
+                            {% if accountType == "Instructor" %}
+                                <input id="user-type-selector" type="checkbox" name="hasExtendedPrivileges" value="true" style="display:none;" checked/>
+                            {% else %}
+                                <input id="user-type-selector" type="checkbox" name="hasExtendedPrivileges" value="false" style="display:none;"/>
+                            {% endif %}
+                            {% if accountCreationError %}
+                                <div class="sign-up-error">
+                                    <p class="font-small red-text" style="margin:0;">{{accountCreationError}}</p>
+                                    <p class="font-small red-text">Please try again.</p>
+                                </div>
+                            {% endif %}
+                            <div class="text-center mb-3">
+                                <button type="submit" class="btn btn-primary">SIGN UP</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="index-button-container">
+                <button id="student-login-button" type="button" class="btn btn-primary">I'm a Student</button>
+                <button id="instructor-login-button" type="button" class="btn btn-primary">I'm a Teacher</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
