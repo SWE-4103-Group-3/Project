@@ -27,9 +27,9 @@ public class Course {
     private String section;
     private Integer rows;
     private Integer cols;
-    @OneToMany(cascade = {CascadeType.ALL}) //necessary for hibernate when updating course that does not already have a seat plan
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER) //necessary for hibernate when updating course that does not already have a seat plan
     private List<Seat> seats;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User instructor;
 
     public User getInstructor() {

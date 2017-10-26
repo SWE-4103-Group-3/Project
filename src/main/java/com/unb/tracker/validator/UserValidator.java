@@ -37,7 +37,7 @@ public class UserValidator implements Validator {
 			errors.rejectValue("username", "Someone already has that username.");
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "Password field cannot be empty.");
-		if (user.getPassword().length() <= 8 || user.getPassword().length() >= 32)
+		if (user.getPassword().length() < 8 || user.getPassword().length() > 32)
 			errors.rejectValue("password", "Password must be between 8 and 32 characters in length.");
 
 		if (!user.getPasswordConfirm().equals(user.getPassword()))

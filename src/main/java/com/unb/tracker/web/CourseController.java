@@ -72,8 +72,8 @@ public class CourseController {
     }
 
     @GetMapping(value="/courses/{courseId}")
-    public @ResponseBody
-    Course getCourse(@PathVariable Long courseId) {
+    public @ResponseBody Course getCourse(@PathVariable Long courseId) {
+        LOG.info("getCourse - starting - courseId: {}", courseId);
         Course course = courseRepository.findOne(courseId);
         if(course == null) {
             throw new NotFoundException();
