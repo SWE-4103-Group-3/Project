@@ -2,7 +2,7 @@ div.courselist {
     margin-right: calc(100% - 275px);
     width: 275px;
     height: 100%;
-    position: fixed;
+    position: absolute;
     z-index: 1;
     top: 65px;
     left: 0;

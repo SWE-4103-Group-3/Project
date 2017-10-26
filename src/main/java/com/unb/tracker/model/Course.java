@@ -1,4 +1,4 @@
-package com.unb.tracker;
+package com.unb.tracker.model;
 
 
 import java.sql.Date;
@@ -27,8 +27,18 @@ public class Course {
     private String section;
     private Integer rows;
     private Integer cols;
-    @OneToMany(cascade = {CascadeType.ALL}) //necessary for hibernate when updating course that does not already have a seat plan
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER) //necessary for hibernate when updating course that does not already have a seat plan
     private List<Seat> seats;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User instructor;
+
+    public User getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(User instructor) {
+        this.instructor = instructor;
+    }
 
     public String getSection() {
         return section;

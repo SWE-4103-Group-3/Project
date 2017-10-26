@@ -1,0 +1,50 @@
+div.md-form {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+div#index-main {
+    padding-bottom: 60px;
+    width: 100%;
+    height: 100%;
+}
+
+div#authentication-container {
+    display: flex;
+}
+
+div#sign-in-card {
+    margin-right: 2px;
+    float: left;
+    height: 500px;
+}
+
+div#sign-up-card {
+    margin-left: 2px;
+    float: right;
+    display: none;
+    height: 500px;
+}
+
+div#sign-in-form {
+    display: none;
+    padding-bottom: 10px;
+}
+
+span#sign-up {
+    color: #2196F3!important;
+    margin-left: .25rem!important;
+    cursor: pointer;
+}
+
+.form-elegant .font-small {
+  font-size: 0.8rem; }
+
+.form-elegant .z-depth-1a {
+  -webkit-box-shadow: 0 2px 5px 0 rgba(55, 161, 255, 0.26), 0 4px 12px 0 rgba(121, 155, 254, 0.25);
+  box-shadow: 0 2px 5px 0 rgba(55, 161, 255, 0.26), 0 4px 12px 0 rgba(121, 155, 254, 0.25); }
+
+.form-elegant .z-depth-1-half,
+.form-elegant .btn:hover {
+  -webkit-box-shadow: 0 5px 11px 0 rgba(85, 182, 255, 0.28), 0 4px 15px 0 rgba(36, 133, 255, 0.15);
+  box-shadow: 0 5px 11px 0 rgba(85, 182, 255, 0.28), 0 4px 15px 0 rgba(36, 133, 255, 0.15); }
