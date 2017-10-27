@@ -1,8 +1,8 @@
-window.onload = function() {
-    $('#student-login-button').click(function() {
+window.onload = function () {
+    $('#student-login-button').click(function () {
         var $userTypeSelector = $('#user-type-selector');
 
-        $('#sign-up-header-text').text(function(index, text) {
+        $('#sign-up-header-text').text(function (index, text) {
             return "Student Sign Up";
         });
 
@@ -11,7 +11,7 @@ window.onload = function() {
         $userTypeSelector.prop('checked', false);
 
         //Do not slide toggle if switching to different context (instructor to student)
-        if(prev)
+        if (prev)
             return;
 
         $('#sign-in-form').slideToggle(400, function () {
@@ -20,10 +20,10 @@ window.onload = function() {
         });
     });
 
-    $('#instructor-login-button').click(function() {
+    $('#instructor-login-button').click(function () {
         var $userTypeSelector = $('#user-type-selector');
 
-        $('#sign-up-header-text').text(function(index, text) {
+        $('#sign-up-header-text').text(function (index, text) {
             return "Instructor Sign Up";
         });
 
@@ -32,20 +32,19 @@ window.onload = function() {
         $userTypeSelector.prop('checked', true);
 
         //Do not slide toggle if switching to different context (student to instructor)
-        if(prev)
+        if (prev)
             return;
 
-        $('#sign-in-form').slideToggle(400, function() {
-            if($(this).is(':visible'))
+        $('#sign-in-form').slideToggle(400, function () {
+            if ($(this).is(':visible'))
                 $(this).css('display', 'flex');
         });
     });
 
-    $('#sign-up').click(function() {
+    $('#sign-up').click(function () {
         //If user had a signin error and wants to sign up, redirect to homepage to select account type
-        if($('#login-error').length === 0)
-        {
-            $('#sign-up-card').show('slide', {direction: 'left'}, 400, function() {
+        if ($('#login-error').length === 0) {
+            $('#sign-up-card').show('slide', {direction: 'left'}, 400, function () {
                 $(this).css('display', 'flex');
             });
         }

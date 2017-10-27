@@ -7,7 +7,7 @@ div.courselist {
     top: 65px;
     left: 0;
     overflow-x: hidden;
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, .125);
     border-top-right-radius: 1px;
 }
 

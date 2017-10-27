@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +29,7 @@ public class CourseController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping(value="/{username}/{courseName}")
+    @GetMapping(value = "/{username}/{courseName}")
     public String getCourseByName(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
         LOG.info("getCourseByName - starting - username: {}, courseName: {}", username, courseName);
 
@@ -42,16 +41,16 @@ public class CourseController {
 
         List<Course> courses = courseRepository.findByInstructorUsernameAndName(username, courseName);
         LOG.debug("courses size: {}", courses.size());
-        if (courses.size() == 0){
+        if (courses.size() == 0) {
             return "404";
-        } else if(courses.size() == 1) {
+        } else if (courses.size() == 1) {
             map.addAttribute("course", courses.get(0));
             return "course";
         }
         return "error";
     }
 
-    @GetMapping(value="/{username}/{courseName}/{courseSection}")
+    @GetMapping(value = "/{username}/{courseName}/{courseSection}")
     public String getCourseByNameAndSection(@PathVariable String username, @PathVariable String courseName, @PathVariable String courseSection, ModelMap map, Principal principal) {
         LOG.info("getCourseByName - starting - username: {}, courseName: {}; courseSection: {}", username, courseName, courseSection);
 
@@ -64,40 +63,43 @@ public class CourseController {
         List<Course> courses = courseRepository.findByInstructorUsernameAndNameAndSection(username, courseName, courseSection);
         if (courses.size() == 0) {
             return "404";
-        } else if(courses.size() == 1) {
+        } else if (courses.size() == 1) {
             map.addAttribute("course", courses.get(0));
             return "course";
         }
         return "error";
     }
 
-    @GetMapping(value="/courses/{courseId}")
-    public @ResponseBody Course getCourse(@PathVariable Long courseId) {
+    @GetMapping(value = "/courses/{courseId}")
+    public @ResponseBody
+    Course getCourse(@PathVariable Long courseId) {
         LOG.info("getCourse - starting - courseId: {}", courseId);
         Course course = courseRepository.findOne(courseId);
-        if(course == null) {
+        if (course == null) {
             throw new NotFoundException();
         }
         return course;
     }
 
-    @PostMapping(value="/courses/{courseId}/seats")
-    public @ResponseBody Course postCourseSeats(@PathVariable Long courseId, @RequestBody List<Seat> seats) {
+    @PostMapping(value = "/courses/{courseId}/seats")
+    public @ResponseBody
+    Course postCourseSeats(@PathVariable Long courseId, @RequestBody List<Seat> seats) {
         Course course = courseRepository.findOne(courseId);
         course.setSeats(seats);
         courseRepository.save(course);
         return course;
     }
 
-    @PostMapping(value="/courses")
+    @PostMapping(value = "/courses")
     @ResponseBody
     public String postCourse(@RequestBody Course course) {
         courseRepository.save(course);
         return "Saved";
     }
 
-    @GetMapping(value="/courses")
-    public @ResponseBody Iterable<Course> getCourses() {
+    @GetMapping(value = "/courses")
+    public @ResponseBody
+    Iterable<Course> getCourses() {
         return courseRepository.findAll();
     }
 
@@ -105,7 +107,7 @@ public class CourseController {
     public String courseSave(@ModelAttribute Course course, ModelMap map, Principal principal) {
         LOG.info("courseSave - starting - principle.name: {}", principal.getName());
         User user = userRepository.findByUsername(principal.getName());
-        if(user == null || !user.getHasExtendedPrivileges()) {
+        if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();
         }
         course.setInstructor(user);

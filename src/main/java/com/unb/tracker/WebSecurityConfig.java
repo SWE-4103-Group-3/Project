@@ -12,42 +12,40 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
-{
-	@Autowired
-	private UserDetailsService userDetailsService;
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception
-	{
-		//TODO: Should ensure we are only exposing static content (css & js) for pages accessible to everyone (index page)
-		http
-			.csrf()
-				.disable()
-			.authorizeRequests()
-				.antMatchers("/signup").permitAll()
-				.antMatchers("/static/**").permitAll()
-				.antMatchers("/favicon.ico").permitAll()
-				.anyRequest().authenticated()
-				.and()
-			.formLogin()
-				.loginPage("/")
-				.defaultSuccessUrl("/login/success")
-				.permitAll()
-				.and()
-			.logout()
-				.logoutUrl("/logout")
-				.logoutSuccessUrl("/")
-				.permitAll();
-	}
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        //TODO: Should ensure we are only exposing static content (css & js) for pages accessible to everyone (index page)
+        http
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/signup").permitAll()
+                .antMatchers("/static/**").permitAll()
+                .antMatchers("/favicon.ico").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/")
+                .defaultSuccessUrl("/login/success")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .permitAll();
+    }
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
-	}
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+    }
 }

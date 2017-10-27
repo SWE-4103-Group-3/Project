@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity
 public class Seat {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private Integer row;
     private Integer col;

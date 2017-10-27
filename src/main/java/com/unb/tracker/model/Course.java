@@ -1,15 +1,15 @@
 package com.unb.tracker.model;
 
 
-import java.sql.Date;
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.List;
 
 
 @Entity // This tells Hibernate to make a table out of this class
 public class Course {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     //TODO: Add link to users table when it actually exists
     //private User Professor;
@@ -27,7 +27,8 @@ public class Course {
     private String section;
     private Integer rows;
     private Integer cols;
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER) //necessary for hibernate when updating course that does not already have a seat plan
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    //necessary for hibernate when updating course that does not already have a seat plan
     private List<Seat> seats;
     @ManyToOne(fetch = FetchType.EAGER)
     private User instructor;
@@ -80,9 +81,13 @@ public class Course {
         this.id = id;
     }
 
-    public String getTimeSlot() { return timeSlot; }
+    public String getTimeSlot() {
+        return timeSlot;
+    }
 
-    public void setTimeSlot(String timeSlot) { this.timeSlot = timeSlot; }
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
+    }
 
     public Date getStartDate() {
         return startDate;
