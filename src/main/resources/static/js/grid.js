@@ -6,6 +6,7 @@ function Cell(opt) {
     this.col = opt.col;
     this.states = opt.states;
     this.parent = opt.parent;
+    this.rows = opt.rows;
     this.state = 0;
 
     this.setState = function (state) {
@@ -28,7 +29,7 @@ function Cell(opt) {
 
     this.render = function () {
         this.el.css('width', this.percent + '%');
-        this.el.css('padding-bottom', this.percent + '%');
+        this.el.css('height', 'calc((85vh - 200px) / ' + this.rows + ')');
         this.el.addClass(this.states[this.state]);
     };
 
@@ -76,7 +77,8 @@ function Grid(opt) {
                     col: j,
                     percent: percent,
                     states: this.states,
-                    parent: this
+                    parent: this,
+                    rows: this.rows
                 });
                 row.append(cell.el);
                 this.cells[i][j] = cell;

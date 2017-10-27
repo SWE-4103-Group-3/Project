@@ -5,7 +5,7 @@
 }
 
 #grid {
-    width: 40%;
+    width: 100%;
 }
 
 #edit {
@@ -17,11 +17,7 @@ table {
 }
 
 td {
-    border: 1px;
-    border-style: solid;
-    border-color: #e0e0e0;
-    max-width: 20px;
-    max-height: 20px;
+    border: 1px solid #e0e0e0;
 }
 
 .open {
