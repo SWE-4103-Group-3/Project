@@ -4,19 +4,22 @@
     padding: 20px;
 }
 
-#grid {
+#course-seating-grid {
     width: 100%;
+    height: calc(85vh - 200px);
+    overflow: auto;
 }
 
 #edit {
     margin: auto;
 }
 
-table {
+table#course-seating-table {
+    display: table;
     width: 100%;
 }
 
-td {
+td.course-seat {
     border: 1px solid #e0e0e0;
 }
 
@@ -32,7 +35,7 @@ td {
     background-color: #d3d494;
 }
 
-td:hover {
+td.course-seat:hover {
     filter: brightness(120%);
 }
 

@@ -11,7 +11,7 @@
             <h1>{{ course.name }}</h1>
         </div>
         <div class="course-editor-grid">
-            <div id="grid"></div>
+            <div id="course-seating-grid"></div>
         </div>
         <div class="course-editor-controls">
             <button id="editsave" type="button" class="btn btn-primary">Edit</button>
@@ -36,7 +36,7 @@
                         seats: data.seats,
                         states: ["open", "closed", "reserved"]
                     });
-                    $('#grid').append(grid.el);
+                    $('#course-seating-grid').append(grid.el);
                 },
                 error: function (data, status) {
                     console.log(data);

@@ -1,5 +1,5 @@
 function Cell(opt) {
-    this.el = $('<td/>');
+    this.el = $('<td class="course-seat"/>');
 
     this.percent = opt.percent;
     this.row = opt.row;
@@ -28,8 +28,14 @@ function Cell(opt) {
     });
 
     this.render = function () {
+        //Compute largest of ((85vh - 200) / rows) and (30px)
+        var minHeight = ($(window).height() * 0.85) - 200;
+        minHeight = minHeight / this.rows;
+        minHeight = (minHeight < 30) ? 30 : minHeight;
+
         this.el.css('width', this.percent + '%');
-        this.el.css('height', 'calc((85vh - 200px) / ' + this.rows + ')');
+        this.el.css('height', minHeight + 'px');
+        this.el.css('min-width', '80px');
         this.el.addClass(this.states[this.state]);
     };
 
@@ -37,7 +43,7 @@ function Cell(opt) {
 }
 
 function Grid(opt) {
-    this.el = $('<table/>');
+    this.el = $('<table id="course-seating-table"/>');
 
     this.rows = opt.rows;
     this.cols = opt.cols;
