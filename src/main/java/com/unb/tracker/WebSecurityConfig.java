@@ -24,25 +24,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //TODO: Should ensure we are only exposing static content (css & js) for pages accessible to everyone (index page)
-        http
-                .csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers("/signup").permitAll()
-                .antMatchers("/static/**").permitAll()
-                .antMatchers("/favicon.ico").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/")
-                .defaultSuccessUrl("/login/success")
-                .permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .permitAll();
-    }
+
+        //@formatter:off
+		http
+			.csrf()
+				.disable()
+			.authorizeRequests()
+				.antMatchers("/signup").permitAll()
+				.antMatchers("/static/**").permitAll()
+				.antMatchers("/favicon.ico").permitAll()
+				.anyRequest().authenticated()
+				.and()
+			.formLogin()
+				.loginPage("/")
+				.defaultSuccessUrl("/login/success")
+				.permitAll()
+				.and()
+			.logout()
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/")
+				.permitAll();
+	}
+    //@formatter:on
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
