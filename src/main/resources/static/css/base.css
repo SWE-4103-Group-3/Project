@@ -1,8 +1,9 @@
 a.navbar-brand {
-    color: #000!important;
+    color: #000 !important;
 }
+
 a.navbar-brand:hover {
-    color: #454545!important;
+    color: #454545 !important;
 }
 
 footer.page-footer {

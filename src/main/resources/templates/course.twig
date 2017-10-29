@@ -29,13 +29,13 @@
     {{ parent() }}
     <script type="text/javascript" src="/static/js/grid.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var grid;
             $.ajax({
                 type: "get",
                 url: "/courses/{{ course.id }}",
                 dataType: "json",
-                success: function(data, status) {
+                success: function (data, status) {
                     grid = new Grid({
                         rows: data.rows,
                         cols: data.cols,
@@ -44,13 +44,13 @@
                     });
                     $('#grid').append(grid.el);
                 },
-                error: function(data, status) {
+                error: function (data, status) {
                     console.log(data);
                 }
             });
 
-            $('#editsave').on('click', function(e) {
-                if(grid.editable) {
+            $('#editsave').on('click', function (e) {
+                if (grid.editable) {
                     grid.editable = false;
                     $('#editsave').html('Edit');
                     var seats = grid.getSeats();
@@ -60,7 +60,7 @@
                         url: "/courses/{{ course.id }}/seats",
                         data: JSON.stringify(seats),
                         contentType: "application/json",
-                        error: function(data, status) {
+                        error: function (data, status) {
                             console.log(data);
                         }
                     });

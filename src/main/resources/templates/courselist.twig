@@ -1,10 +1,11 @@
 <link href="/static/css/courselist.css" rel="stylesheet"/>
 
 {% block courselist %}
-<div class="list-group courselist">
-    <p class="list-group-item active">Course List</p>
-    {% for course in courseList %}
-        <a href="/{{ course.instructor.username }}/{{ course.name }}{% if course.section %}/{{ course.section }}{% endif %}" class="list-group-item courselist-item">{{ course.getName() }}</a>
-    {% endfor %}
-</div>
+    <div class="list-group courselist">
+        <p class="list-group-item active">Course List</p>
+        {% for course in courseList %}
+            <a href="/{{ course.instructor.username }}/{{ course.name }}{% if course.section %}/{{ course.section }}{% endif %}"
+               class="list-group-item courselist-item">{{ course.getName() }}</a>
+        {% endfor %}
+    </div>
 {% endblock %}

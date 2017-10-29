@@ -27,12 +27,8 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,17 +59,17 @@ public class TrackerApplicationTests {
     private UserRepository userRepository;
 
     //TODO:
-            //- Loading the index(login) should render
-            //- Selecting one of the buttons should render the login card
-            //- Selecting sign up should render the sign up card
-            //- logging in with invalid credentials should redirect to index with error message
-            //- attempting to create an account without an email address, username or password should redirect to index with error message
-            //- test username and password validation (unique username with 6 to 32 length, matching passwords with length 8 to 32)
-            //- Creating a new user should correctly store their information in the database
-            //- Creating a new student should redirect to their student view
-            //- Creating a new instructor should redirect to their instructor view
-            //- Attempting to login as instructor or user should redirect them correctly
-            //- Test that a student is not able to create courses
+    //- Loading the index(login) should render
+    //- Selecting one of the buttons should render the login card
+    //- Selecting sign up should render the sign up card
+    //- logging in with invalid credentials should redirect to index with error message
+    //- attempting to create an account without an email address, username or password should redirect to index with error message
+    //- test username and password validation (unique username with 6 to 32 length, matching passwords with length 8 to 32)
+    //- Creating a new user should correctly store their information in the database
+    //- Creating a new student should redirect to their student view
+    //- Creating a new instructor should redirect to their instructor view
+    //- Attempting to login as instructor or user should redirect them correctly
+    //- Test that a student is not able to create courses
 
     @Before
     public void setup() {
@@ -148,7 +144,7 @@ public class TrackerApplicationTests {
     }
 
     @Test
-    public void testSignup() throws Exception{
+    public void testSignup() throws Exception {
         when(userRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
 
         this.mockMvc.perform(post("/signup")
@@ -190,7 +186,9 @@ public class TrackerApplicationTests {
         Course course = new Course();
         course.setInstructor(intructor);
         course.setName("test");
-        when(courseRepository.findByInstructorUsernameAndName("test", "test")).thenReturn(new ArrayList<Course>(){{add(course);}});
+        when(courseRepository.findByInstructorUsernameAndName("test", "test")).thenReturn(new ArrayList<Course>() {{
+            add(course);
+        }});
 
         mockMvc.perform(get("/test/test"))
                 .andDo(print())
@@ -206,7 +204,9 @@ public class TrackerApplicationTests {
         course.setInstructor(intructor);
         course.setSection("test");
         course.setName("test");
-        when(courseRepository.findByInstructorUsernameAndNameAndSection("test", "test", "test")).thenReturn(new ArrayList<Course>(){{add(course);}});
+        when(courseRepository.findByInstructorUsernameAndNameAndSection("test", "test", "test")).thenReturn(new ArrayList<Course>() {{
+            add(course);
+        }});
 
         mockMvc.perform(get("/test/test/test"))
                 .andDo(print())

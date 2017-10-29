@@ -16,7 +16,7 @@ public class UrlHandlerMappingConfig extends WebMvcConfigurationSupport {
         RequestMappingHandlerMapping requestMappingHandlerMapping = super.requestMappingHandlerMapping();
         requestMappingHandlerMapping.setUseSuffixPatternMatch(false);
         requestMappingHandlerMapping.setUseTrailingSlashMatch(false);
-        requestMappingHandlerMapping.setOrder(Ordered.HIGHEST_PRECEDENCE-1);
+        requestMappingHandlerMapping.setOrder(Ordered.HIGHEST_PRECEDENCE - 1);
         return requestMappingHandlerMapping;
     }
 
