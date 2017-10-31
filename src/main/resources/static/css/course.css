@@ -1,26 +1,26 @@
-#grid {
-    width: 40%;
+.course-editor-body {
+    margin-bottom: 65px;
+    margin-left: 275px;
+    padding: 20px;
+}
+
+#course-seating-grid {
+    width: 100%;
+    height: calc(85vh - 200px);
+    overflow: auto;
 }
 
 #edit {
     margin: auto;
 }
 
-.dashboard-body {
-    padding-top: 10px;
-    padding-left: 30px;
-}
-
-table {
+table#course-seating-table {
+    display: table;
     width: 100%;
 }
 
-td {
-    border: 1px;
-    border-style: solid;
-    border-color: #e0e0e0;
-    max-width: 20px;
-    max-height: 20px;
+td.course-seat {
+    border: 1px solid #e0e0e0;
 }
 
 .open {
@@ -35,7 +35,7 @@ td {
     background-color: #d3d494;
 }
 
-td:hover {
+td.course-seat:hover {
     filter: brightness(120%);
 }
 
