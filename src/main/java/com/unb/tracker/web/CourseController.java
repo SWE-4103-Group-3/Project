@@ -6,6 +6,7 @@ import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
 import com.unb.tracker.model.User;
 import com.unb.tracker.repository.CourseRepository;
+import com.unb.tracker.repository.SeatRepository;
 import com.unb.tracker.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

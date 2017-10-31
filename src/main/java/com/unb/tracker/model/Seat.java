@@ -10,7 +10,7 @@ public class Seat {
     private Integer row;
     private Integer col;
     private Integer state;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User student;
 
     public Integer getId() {

@@ -29,6 +29,7 @@
                 url: "/courses/{{ course.id }}",
                 dataType: "json",
                 success: function (data, status) {
+                	console.log(data.seats);
                     grid = new Grid({
                         rows: data.rows,
                         cols: data.cols,

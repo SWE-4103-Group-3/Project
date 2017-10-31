@@ -23,6 +23,28 @@ function Cell(opt) {
         }
     };
 
+    this.getSeat = function() {
+        return {
+            "id": this.id,
+            "row": this.row,
+            "col": this.col,
+            "state": this.state,
+            "user": {
+                "id": this.getUserID()
+            }
+        }
+    };
+
+    this.setID = function(id) {
+        this.id = id;
+    };
+
+    this.getUserID = function() {
+        if(this.user) {
+            return this.user.id;
+        }
+    };
+
     this.el.on('click', {cell: this}, function (e) {
         cell = e.data.cell;
         if (cell.parent.editable) {
@@ -33,7 +55,22 @@ function Cell(opt) {
             }
             cell.el.addClass(cell.states[cell.state]);
         } else if(cell.parent.selectable) {
-            cell.setUser(user);
+            if(confirm("are you sure?")) {
+                var seat = cell.getSeat();
+                console.log(seat)
+                $.ajax({
+                    type: "post",
+                    url: "/seats",
+                    data: JSON.stringify(seat),
+                    contentType: "application/json",
+                    success: function() {
+                        cell.setUser(user);
+                    },
+                    error: function (data, status) {
+                        console.log(data);
+                    }
+                });
+            }
         }
     });
 
@@ -47,6 +84,9 @@ function Cell(opt) {
         this.el.css('height', minHeight + 'px');
         this.el.css('min-width', '80px');
         this.el.addClass(this.states[this.state]);
+        if(this.user) {
+            this.el.html(this.user.username);
+        }
     };
 
     this.render();
@@ -67,21 +107,19 @@ function Grid(opt) {
         var seats = [];
         for (var i = 0; i < this.cells.length; i++) {
             for (var j = 0; j < this.cells[i].length; j++) {
-                seats.push({
-                    "row": this.cells[i][j].row,
-                    "col": this.cells[i][j].col,
-                    "state": this.cells[i][j].state
-                });
+                seats.push(this.cells[i][j].getSeat());
             }
         }
         return seats;
     };
 
     this.setSeats = function (seats) {
+        console.log(seats);
         for (var i = 0; i < seats.length; i++) {
             var cell = this.cells[seats[i].row][seats[i].col];
             cell.setState(seats[i].state);
             cell.setUser(seats[i].student);
+            cell.setID(seats[i].id);
         }
     };
 
