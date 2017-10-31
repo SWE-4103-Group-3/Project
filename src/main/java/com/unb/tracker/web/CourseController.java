@@ -57,17 +57,23 @@ public class CourseController {
         Iterable<Course> allCourses = courseRepository.findAll();
         map.addAttribute("courseList", allCourses);
 
-        User user = userRepository.findByUsername(principal.getName());
-        map.addAttribute("user", user);
+
+        User loggedInUser = userRepository.findByUsername(principal.getName());
+        map.addAttribute("user", loggedInUser);
 
         List<Course> courses = courseRepository.findByInstructorUsernameAndNameAndSection(username, courseName, courseSection);
         if (courses.size() == 0) {
             return "404";
         } else if (courses.size() == 1) {
             map.addAttribute("course", courses.get(0));
-            return "course";
+            if(loggedInUser.getHasExtendedPrivileges()) {
+                return "courseInstructor";
+            } else {
+                return "courseStudent";
+            }
+
         }
-        return "error";
+        throw new BadRequestException();
     }
 
     @GetMapping(value = "/courses/{courseId}")

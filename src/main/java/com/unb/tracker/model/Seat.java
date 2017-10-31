@@ -1,9 +1,6 @@
 package com.unb.tracker.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Seat {
@@ -13,6 +10,8 @@ public class Seat {
     private Integer row;
     private Integer col;
     private Integer state;
+    @ManyToOne
+    private User student;
 
     public Integer getId() {
         return id;

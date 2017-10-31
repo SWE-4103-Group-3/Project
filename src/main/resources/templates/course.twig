@@ -13,9 +13,8 @@
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>
         </div>
-        <div class="course-editor-controls">
-            <button id="editsave" type="button" class="btn btn-primary">Edit</button>
-        </div>
+        {% block buttons %}
+        {% endblock %}
     </div>
 {% endblock %}
 
@@ -23,8 +22,8 @@
     {{ parent() }}
     <script type="text/javascript" src="/static/js/grid.js"></script>
     <script>
+    	var grid;
         $(document).ready(function () {
-            var grid;
             $.ajax({
                 type: "get",
                 url: "/courses/{{ course.id }}",
@@ -34,34 +33,13 @@
                         rows: data.rows,
                         cols: data.cols,
                         seats: data.seats,
+                        selectable: true,
                         states: ["open", "closed", "reserved"]
                     });
                     $('#course-seating-grid').append(grid.el);
                 },
                 error: function (data, status) {
                     console.log(data);
-                }
-            });
-
-            $('#editsave').on('click', function (e) {
-                if (grid.editable) {
-                    grid.editable = false;
-                    $('#editsave').html('Edit');
-                    var seats = grid.getSeats();
-                    console.log(seats);
-                    $.ajax({
-                        type: "post",
-                        url: "/courses/{{ course.id }}/seats",
-                        data: JSON.stringify(seats),
-                        contentType: "application/json",
-                        error: function (data, status) {
-                            console.log(data);
-                        }
-                    });
-
-                } else {
-                    grid.editable = true;
-                    $('#editsave').html('Save');
                 }
             });
         });

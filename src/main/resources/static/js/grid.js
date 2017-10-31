@@ -8,11 +8,19 @@ function Cell(opt) {
     this.parent = opt.parent;
     this.rows = opt.rows;
     this.state = 0;
+    this.user;
 
     this.setState = function (state) {
         this.el.removeClass(this.states[this.state]);
         this.state = state;
         this.el.addClass(this.states[this.state]);
+    };
+
+    this.setUser = function(user) {
+        if(user) {
+            this.user = user;
+            this.el.html(user.username);
+        }
     };
 
     this.el.on('click', {cell: this}, function (e) {
@@ -24,6 +32,8 @@ function Cell(opt) {
                 cell.state = 0;
             }
             cell.el.addClass(cell.states[cell.state]);
+        } else if(cell.parent.selectable) {
+            cell.setUser(user);
         }
     });
 
@@ -49,6 +59,7 @@ function Grid(opt) {
     this.cols = opt.cols;
     this.states = opt.states;
     this.editable = opt.editable;
+    this.selectable = opt.selectable;
 
     this.cells = new Array(); // init cell 2D array
 
@@ -68,7 +79,9 @@ function Grid(opt) {
 
     this.setSeats = function (seats) {
         for (var i = 0; i < seats.length; i++) {
-            this.cells[seats[i].row][seats[i].col].setState(seats[i].state);
+            var cell = this.cells[seats[i].row][seats[i].col];
+            cell.setState(seats[i].state);
+            cell.setUser(seats[i].student);
         }
     };
 

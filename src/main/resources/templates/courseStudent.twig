@@ -1,0 +1,12 @@
+{% extends 'course.twig' %}
+
+{% block script %}
+{{ parent() }}
+<script>
+	var user = {
+    	id: {{ user.id }},
+    	username: '{{ user.username }}'
+    }
+    console.log(user);
+</script>
+{% endblock %}
