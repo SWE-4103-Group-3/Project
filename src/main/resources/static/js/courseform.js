@@ -40,6 +40,18 @@ $(document).ready(function() {
         $('#courseForm').slideToggle();
     });
 
+    $("#course-form-submit").click(function() {
+
+        if(document.forms["courseForm"]["section"] == "") {
+            document.forms["courseForm"]["section"] = null;
+        }
+
+        alert(document.forms["courseForm"]["startDate"].value);
+        if(document.forms["courseForm"]["startDate"].value == ""){
+            document.forms["courseForm"]["startDate"].value = "1970-01-01";
+        }
+    });
+
     $('#reuse-grid-button').on('click', function (e) {
         displayCourseSearchModal();
 
@@ -125,7 +137,7 @@ function queryAndPopulateCourses(query) {
                     .addClass('list-group-item-action')
                     .addClass('course-list-queried-item')
                     .addClass('cid-' + data[index].id)
-                    .text('Course: ' + data[index].name + ', Section: ' + data[index].section);
+                    .text('Course: ' + data[index].name + (data[index].section ? ', Section: ' + data[index].section : ''));
 
                 $el.on('click', courseLineEventHandler);
                 courseList.append($el);

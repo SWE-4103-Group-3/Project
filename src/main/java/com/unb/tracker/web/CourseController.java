@@ -152,37 +152,46 @@ public class CourseController {
             redir.addFlashAttribute("courseCreationError", bindingResult.getFieldError().getCode());
             redir.addFlashAttribute("courseName", course.getName());
             redir.addFlashAttribute("sectionName", course.getSection());
-            redir.addFlashAttribute("startDate", course.getStartDate().toString());
+            if(course.getStartDate().toString().equals("1970-01-01")) {
+                redir.addFlashAttribute("startDate", "");
+            } else {
+                redir.addFlashAttribute("startDate", course.getStartDate().toString());
+            }
             redir.addFlashAttribute("rowsAmount", course.getRows());
             redir.addFlashAttribute("colsAmount", course.getCols());
-        }
 
-        // Are we trying to create a course?
-        if (course.getId() == null) {
-            course.setInstructor(user);
-            if(bindingResult.hasErrors()) {
-                return "redirect:/" + user.getUsername();
-            } else {
+            return "redirect:/" + user.getUsername();
+        } else {
+
+            // Are we trying to create a course?
+            if (course.getId() == null) {
+                course.setInstructor(user);
+
                 Long courseGridReuseID = course.getCourseGridReuseID();
                 if(courseGridReuseID != null) {
                     Course otherCourse = courseRepository.findOne(courseGridReuseID);
                     reuseCourseGridHelper(course, otherCourse);
                 }
+            } else {
+                Course c = courseRepository.findOne(course.getId());
+                List<Seat> seatsToRemove = c.getOutOfBoundsSeats(course.getRows(), course.getCols());
+                c.removeSeats(seatsToRemove);
+                LOG.debug("removing {} seats", seatsToRemove.size());
+                seatRepository.save(seatsToRemove);
             }
 
-        } else {
-            Course c = courseRepository.findOne(course.getId());
-            List<Seat> seatsToRemove = c.getOutOfBoundsSeats(course.getRows(), course.getCols());
-            c.removeSeats(seatsToRemove);
-            LOG.debug("removing {} seats", seatsToRemove.size());
-            seatRepository.save(seatsToRemove);
-        }
+            if (course.getSection().isEmpty()) {
+                course.setSection("");
 
-        if(!bindingResult.hasErrors()) {
-            courseRepository.save(course);
+                courseRepository.save(course);
+                map.addAttribute("course", course);
+                return "redirect:/" + user.getUsername() + "/" + course.getName();
+            } else {
+                courseRepository.save(course);
+                map.addAttribute("course", course);
+                return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
+            }
         }
-
-        return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
 
     @GetMapping("/courses/query/{queryString}")
