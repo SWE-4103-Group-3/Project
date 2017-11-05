@@ -9,7 +9,7 @@
     <input type="hidden" id="courseID" name="courseID" value="{{ course.id }}"/>
     <div class="course-editor-body">
         <div class="course-editor-title">
-            <h1>{{ course.name }}</h1>
+            <h1>{{ course.name }} <span style="color: grey;font-size:smaller;">{{ course.section }}</span></h1>
         </div>
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>

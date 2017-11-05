@@ -60,7 +60,7 @@ $(document).ready(function () {
             });
 
         $('#modal-danger-clear-student-continue').on('click', function(e){
-            //GATED BY ISSUE#SWE43
+            /* GATED BY https://github.com/SWE-4103-Group-3/Project/issues/43
             var seats = grid.getSeats();
             $.ajax({
                 type: "post",
@@ -74,6 +74,7 @@ $(document).ready(function () {
                     toastr.success("Successfully cleared student seating!");
                 }
             });
+            */
         });
     });
 
