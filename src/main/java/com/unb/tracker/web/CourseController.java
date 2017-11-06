@@ -124,9 +124,9 @@ public class CourseController {
     }
 
     @PostMapping(value = "/courses/{courseId}/delete")
-    public String deleteCourse(@PathVariable Long courseId) {
+    public String deleteCourse(@PathVariable Long courseId, Principal principal) {
         courseRepository.delete(courseId);
-        return "dashboard";
+        return "redirect:/" + principal.getName();
     }
 
 }

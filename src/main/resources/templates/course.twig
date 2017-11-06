@@ -16,9 +16,13 @@
         <div class="course-editor-controls">
             <button id="editsave" type="button" class="btn btn-primary">Edit</button>
             <form action="/courses/{{ course.id }}/delete"  method="post">
-                <button type="submit" class="btn btn-blue-grey">
+                <button id="deleteButton" disabled="true" type="submit" class="btn btn-blue-grey">
                     Delete
                 </button>
+                <div style="padding: 15px">
+                    <input id="confirmDelete" type="checkbox">
+                    <label for="confirmDelete">Check to confirm delete</label>
+                </div>
             </form>
         </div>
         <button type="button" data-target="#courseForm" class="btn btn-primary" data-toggle="collapse"
@@ -73,6 +77,10 @@
                     $('#editsave').html('Save');
                 }
             });
+        });
+
+        $('#confirmDelete').change(function() {
+            $('#deleteButton').attr('disabled',!this.checked);
         });
     </script>
 {% endblock %}
