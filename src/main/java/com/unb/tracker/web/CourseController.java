@@ -122,4 +122,11 @@ public class CourseController {
             return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
         }
     }
+
+    @PostMapping(value = "/courses/{courseId}/delete")
+    public String deleteCourse(@PathVariable Long courseId) {
+        courseRepository.delete(courseId);
+        return "dashboard";
+    }
+
 }
