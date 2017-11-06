@@ -16,6 +16,10 @@
         <div class="course-editor-controls">
             <button id="editsave" type="button" class="btn btn-primary">Edit</button>
         </div>
+        <button type="button" data-target="#courseForm" class="btn btn-primary" data-toggle="collapse"
+                aria-expanded="false" aria-controls="courseForm">Create Course
+        </button>
+        {% include '/templates/courseFormView.twig' with {course: course}%}
     </div>
 {% endblock %}
 

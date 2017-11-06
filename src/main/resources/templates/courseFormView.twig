@@ -1,31 +1,31 @@
 <div style="width:50%; margin: auto; padding-bottom: 60px;" class="collapse" id="courseForm">
     <form action="/course" method="post">
         <div class="md-form">
-            <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName">
+            <input value="{{ course.name }}" placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName">
         </div>
 
         <div class="md-form">
-            <input placeholder="Section" type="text" name="section" class="form-control">
+            <input  value="{{ course.section }}" placeholder="Section" type="text" name="section" class="form-control">
         </div>
 
         <div class="md-form">
-            <input placeholder="Timeslot" type="text" name="timeSlot" class="form-control timepicker">
+            <input  value="{{ course.timeSlot }}" placeholder="Timeslot" type="text" name="timeSlot" class="form-control timepicker">
         </div>
 
         <div class="md-form">
-            <input placeholder="Start Date" name="startDate" type="text" class="form-control datepicker">
+            <input  value="{{ course.startDate }}" placeholder="Start Date" name="startDate" type="text" class="form-control datepicker">
         </div>
 
         <div class="md-form">
-            <input placeholder="End Date" name="endDate" type="text" class="form-control datepicker">
+            <input  value="{{ course.endDate }}" placeholder="End Date" name="endDate" type="text" class="form-control datepicker">
         </div>
 
         <div class="md-form">
-            <input placeholder="Rows" name="rows" type="number" class="form-control">
+            <input  value="{{ course.rows }}" placeholder="Rows" name="rows" type="number" class="form-control">
         </div>
 
         <div class="md-form">
-            <input placeholder="Columns" name="cols" type="number" class="form-control">
+            <input  value="{{ course.cols }}" placeholder="Columns" name="cols" type="number" class="form-control">
         </div>
 
         <div class="md-form">

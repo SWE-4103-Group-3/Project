@@ -110,9 +110,16 @@ public class CourseController {
         if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();
         }
-        course.setInstructor(user);
-        courseRepository.save(course);
-        map.addAttribute("course", course);
-        return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
+
+        if (course.getId() == null) {
+            course.setInstructor(user);
+            courseRepository.save(course);
+            map.addAttribute("course", course);
+            return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
+        } else {
+            courseRepository.save(course);
+            map.addAttribute("course", course);
+            return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
+        }
     }
 }
