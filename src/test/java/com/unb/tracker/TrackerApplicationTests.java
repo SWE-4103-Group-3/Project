@@ -1,6 +1,9 @@
 package com.unb.tracker;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.unb.tracker.model.Course;
+import com.unb.tracker.model.Seat;
 import com.unb.tracker.model.User;
 import com.unb.tracker.repository.CourseRepository;
 import com.unb.tracker.repository.UserRepository;
@@ -363,6 +366,89 @@ public class TrackerApplicationTests {
                 .andDo(print())
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    @WithMockUser("test")
+    public void testQueryCourses() throws Exception {
+        Course c1 = new Course();
+        c1.setSection("IRRELEVANT1");
+        c1.setName("SWE4103");
+        Course c2 = new Course();
+        c2.setSection("SWE4411");
+        c2.setName("IRRELEVANT2");
+        Course c3 = new Course();
+        c3.setSection("CS3113");
+        c3.setName("Lab");
+
+        when(courseRepository.findByPartialName("41")).thenReturn(new ArrayList<Course>() {{
+            add(c1);
+            add(c2);
+        }});
+
+        this.mockMvc.perform(get("/courses/query/41"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser("test")
+    public void testReuseCourseGrid() throws Exception {
+        User instructor = new User();
+        instructor.setUsername("test");
+        instructor.setHasExtendedPrivileges(true);
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
+        when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
+
+        Course c1 = new Course();
+        Course c2 = new Course();
+        Seat s1 = new Seat();
+        Seat s2 = new Seat();
+
+        s1.setRow(1);
+        s1.setCol(1);
+        s1.setState(0);
+        s2.setRow(2);
+        s2.setCol(2);
+        s2.setState(1);
+
+        c1.setSection("IRRELEVANT1");
+        c1.setName("SWE4103");
+        c1.setRows(10);
+        c1.setCols(10);
+        c1.setSeats(new ArrayList<Seat>() {{
+            add(s1);
+            add(s2);
+        }});
+
+        c2.setSection("SWE4411");
+        c2.setName("IRRELEVANT2");
+        c2.setRows(5);
+        c2.setCols(5);
+        c2.setSeats(new ArrayList<Seat>());
+
+        when(courseRepository.findOne(1L)).thenReturn(c1);
+        when(courseRepository.findOne(2L)).thenReturn(c2);
+        when(courseRepository.findOne(3L)).thenReturn(null);
+
+        ObjectMapper map = new ObjectMapper();
+        String body1 = map.writeValueAsString(ImmutableMap.builder().put("currentCourse", 2L).put("otherCourse", 1L).build());
+        String body2 = map.writeValueAsString(ImmutableMap.builder().put("currentCourse", 1L).put("otherCourse", 1L).build());
+        String body3 = map.writeValueAsString(ImmutableMap.builder().put("currentCourse", 1L).put("otherCourse", 3L).build());
+
+        this.mockMvc.perform(post("/course/gridReuse")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body1))
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/course/gridReuse")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body2))
+                .andExpect(status().isNotFound());
+
+        this.mockMvc.perform(post("/course/gridReuse")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body3))
+                .andExpect(status().isNotFound());
     }
 
     private Date convertToSqlDate(String dateString) throws Exception {

@@ -52,3 +52,11 @@ h1 {
     top: calc(50% - 350px);
     padding-top: 50px;
 }
+
+.modal#search-course-grid-modal {
+    padding-top: 150px !important;
+}
+
+#reuse-grid-button {
+    float: none !important;
+}
