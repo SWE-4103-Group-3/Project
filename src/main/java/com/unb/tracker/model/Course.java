@@ -27,7 +27,7 @@ public class Course {
     private String section;
     private Integer rows;
     private Integer cols;
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", fetch = FetchType.EAGER)
     //necessary for hibernate when updating course that does not already have a seat plan
     private List<Seat> seats;
     @ManyToOne(fetch = FetchType.EAGER)

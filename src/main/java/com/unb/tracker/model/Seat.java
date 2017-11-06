@@ -12,6 +12,8 @@ public class Seat {
     private Integer state;
     @ManyToOne(fetch = FetchType.EAGER)
     private User student;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Course course;
 
     public Integer getId() {
         return id;
@@ -43,5 +45,25 @@ public class Seat {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public User getStudent() {
+        return student;
+    }
+
+    public void setStudent(User student) {
+        this.student = student;
+    }
+
+    public void removeStudent() {
+        this.student = null;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

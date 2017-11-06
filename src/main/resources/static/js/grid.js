@@ -23,6 +23,13 @@ function Cell(opt) {
         }
     };
 
+    this.removeStudent = function() {
+        if(this.user){
+            this.user = undefined;
+            this.el.html("");
+        }
+    };
+
     this.getSeat = function() {
         return {
             "id": this.id,
@@ -45,6 +52,10 @@ function Cell(opt) {
         }
     };
 
+    this.hasUser = function () {
+        return this.user !== undefined;
+    }
+
     this.el.on('click', {cell: this}, function (e) {
         cell = e.data.cell;
         if (cell.parent.editable) {
@@ -55,7 +66,7 @@ function Cell(opt) {
             }
             cell.el.addClass(cell.states[cell.state]);
         } else if(cell.parent.selectable) {
-            if(confirm("are you sure?")) {
+            if(cell.state == 0 && !cell.hasUser() && confirm("are you sure?")) {
                 var seat = cell.getSeat();
                 console.log(seat)
                 $.ajax({
@@ -63,8 +74,14 @@ function Cell(opt) {
                     url: "/seats",
                     data: JSON.stringify(seat),
                     contentType: "application/json",
-                    success: function() {
-                        cell.setUser(user);
+                    success: function(data) {
+                        if(data === "saved"){
+                            cell.setUser(user);
+                        }
+                        if(data === "removed"){
+                            cell.removeStudent();
+                        }
+
                     },
                     error: function (data, status) {
                         console.log(data);
