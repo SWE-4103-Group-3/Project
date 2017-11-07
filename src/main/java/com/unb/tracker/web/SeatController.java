@@ -32,7 +32,7 @@ public class SeatController {
     @PostMapping(value = "/seats")
     public @ResponseBody
     String postCourseSeat(@RequestBody Seat seat, Principal principal) {
-        LOG.info("postCourseSeat - starting");
+        LOG.info("postCourseSeat - starting - seatId: {}", seat.getId());
 
         User user = userRepository.findByUsername(principal.getName());
         if(seat.getStudent() != null && user.getId() != seat.getStudent().getId()) {

@@ -38,6 +38,9 @@ function Cell(opt) {
             "state": this.state,
             "user": {
                 "id": this.getUserID()
+            },
+            "course": {
+                "id": this.parent.id
             }
         }
     };
@@ -71,7 +74,7 @@ function Cell(opt) {
                 console.log(seat)
                 $.ajax({
                     type: "post",
-                    url: "/seats",
+                    url: "/courses/"+this.parent.id+"/seat",
                     data: JSON.stringify(seat),
                     contentType: "application/json",
                     success: function(data) {
@@ -117,6 +120,7 @@ function Grid(opt) {
     this.states = opt.states;
     this.editable = opt.editable;
     this.selectable = opt.selectable;
+    this.id = opt.id;
 
     this.cells = new Array(); // init cell 2D array
 

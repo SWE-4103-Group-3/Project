@@ -1,5 +1,7 @@
 package com.unb.tracker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,7 +16,8 @@ public class Seat {
     @ManyToOne(fetch = FetchType.EAGER)
     private User student;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Course course;
 
     public Long getId() {

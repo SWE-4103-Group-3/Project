@@ -94,14 +94,26 @@ public class CourseController {
     @PostMapping(value = "/courses/{courseId}/seats")
     public @ResponseBody
     Course postCourseSeats(@PathVariable Long courseId, @RequestBody List<Seat> seats) {
+        LOG.info("postCourseSeats - starting");
         Course course = courseRepository.findOne(courseId);
-        course.setSeats(seats);
-        courseRepository.save(course);
+
         for(Seat s : seats) {
             s.setCourse(course);
         }
         seatRepository.save(seats);
+
+        course.setSeats(seats);
+        courseRepository.save(course);
+
         return course;
+    }
+
+    @PostMapping(value = "/courses/{courseId}/seat")
+    public @ResponseBody
+    String postCourseSeat(@PathVariable Long courseId, @RequestBody Seat seat) {
+        LOG.info("postCourseSeats - starting - seat id: {}", seat.getId());
+        seatRepository.save(seat);
+        return "saved";
     }
 
     @PostMapping(value = "/courses")

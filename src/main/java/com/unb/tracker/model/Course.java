@@ -1,6 +1,8 @@
 package com.unb.tracker.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
@@ -28,7 +30,7 @@ public class Course {
     private Integer rows;
     private Integer cols;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", fetch = FetchType.EAGER)
-    //necessary for hibernate when updating course that does not already have a seat plan
+    @JsonManagedReference
     private List<Seat> seats;
     @ManyToOne(fetch = FetchType.EAGER)
     private User instructor;
