@@ -28,6 +28,9 @@ public class CourseController {
     private CourseRepository courseRepository;
 
     @Autowired
+    private SeatRepository seatRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @GetMapping(value = "/{username}/{courseName}")
@@ -94,6 +97,10 @@ public class CourseController {
         Course course = courseRepository.findOne(courseId);
         course.setSeats(seats);
         courseRepository.save(course);
+        for(Seat s : seats) {
+            s.setCourse(course);
+        }
+        seatRepository.save(seats);
         return course;
     }
 

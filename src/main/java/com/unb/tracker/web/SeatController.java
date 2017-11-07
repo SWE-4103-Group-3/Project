@@ -67,4 +67,11 @@ public class SeatController {
         }
         return seat;
     }
+
+    @GetMapping("/seats")
+    public @ResponseBody Iterable<Seat> getSeats() {
+        LOG.info("getSeats - starting");
+        Iterable<Seat> seats = seatRepository.findAll();
+        return seats;
+    }
 }
