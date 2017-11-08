@@ -6,15 +6,66 @@
 {% endblock %}
 
 {% block content %}
+    <input type="hidden" id="courseID" name="courseID" value="{{ course.id }}"/>
     <div class="course-editor-body">
         <div class="course-editor-title">
-            <h1>{{ course.name }}</h1>
+            <h1>{{ course.name }} <span style="color: grey;font-size:smaller;">{{ course.section }}</span></h1>
         </div>
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>
         </div>
         <div class="course-editor-controls">
             <button id="editsave" type="button" class="btn btn-primary">Edit</button>
+            <button id="editclearseating" type="button" class="btn btn-primary">Clear Student Seating</button>
+            <button id="editcleartemplate" type="button" class="btn btn-primary">Reset Seat Template</button>
+        </div>
+    </div>
+    <!--Clear Student Seating Warning Modal-->
+    <div class="modal fade" id="modal-danger-clear-student" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-danger" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="heading lead">Clear Student Seating</p>
+                    <button type="button" id=modal-danger-clear-student-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                        <p>Are you sure you wish to clear student seating? This will remove students from their assigned seating.
+                        The grid dimensions and seat states will be preserved.</p>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a type="button" id="modal-danger-clear-student-continue" class="btn btn-primary-modal">Continue<i class="fa fa-diamond ml-1"></i></a>
+                    <a type="button" id="modal-danger-clear-student-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Take me back!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Reset Seating Template Warning Modal-->
+    <div class="modal fade" id="modal-danger-reset-template" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-danger" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="heading lead">Reset Seat Template</p>
+                    <button type="button" id="modal-danger-reset-template-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                        <p>Are you sure you wish to reset your seating template? This will remove students from their assigned seating
+                        and clear the states of all the seats in this template to 'open'.</p>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a type="button" id="modal-danger-reset-template-continue" class="btn btn-primary-modal">Continue<i class="fa fa-diamond ml-1"></i></a>
+                    <a type="button" id="modal-danger-reset-template-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Take me back!</a>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -22,49 +73,5 @@
 {% block script %}
     {{ parent() }}
     <script type="text/javascript" src="/static/js/grid.js"></script>
-    <script>
-        $(document).ready(function () {
-            var grid;
-            $.ajax({
-                type: "get",
-                url: "/courses/{{ course.id }}",
-                dataType: "json",
-                success: function (data, status) {
-                    grid = new Grid({
-                        rows: data.rows,
-                        cols: data.cols,
-                        seats: data.seats,
-                        states: ["open", "closed", "reserved"]
-                    });
-                    $('#course-seating-grid').append(grid.el);
-                },
-                error: function (data, status) {
-                    console.log(data);
-                }
-            });
-
-            $('#editsave').on('click', function (e) {
-                if (grid.editable) {
-                    grid.editable = false;
-                    $('#editsave').html('Edit');
-                    var seats = grid.getSeats();
-                    console.log(seats);
-                    $.ajax({
-                        type: "post",
-                        url: "/courses/{{ course.id }}/seats",
-                        data: JSON.stringify(seats),
-                        contentType: "application/json",
-                        error: function (data, status) {
-                            console.log(data);
-                        }
-                    });
-
-                } else {
-                    grid.editable = true;
-                    $('#editsave').html('Save');
-                }
-            });
-        });
-    </script>
+    <script type="text/javascript" src="/static/js/course.js"></script>
 {% endblock %}
-
