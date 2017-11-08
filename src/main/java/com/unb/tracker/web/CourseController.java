@@ -118,14 +118,15 @@ public class CourseController {
             return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
         } else {
             courseRepository.save(course);
-            return "redirect:/" + principal.getName();
+            return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
         }
     }
 
-    @PostMapping(value = "/courses/{courseId}/delete")
+    @PostMapping(value = "courses/{courseId}/delete")
+    @ResponseBody
     public String deleteCourse(@PathVariable Long courseId, Principal principal) {
         courseRepository.delete(courseId);
-        return "redirect:/" + principal.getName();
+        return "success";
     }
 
 }

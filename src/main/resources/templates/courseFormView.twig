@@ -6,31 +6,23 @@
         <input value="{{ course.instructor.id }}" type="hidden" name="instructor.id">
 
         <div class="md-form">
-            <input value="{{ course.name }}" placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName">
+            <input id="courseName" value="{{ course.name }}" type="text" name="name" class="form-control" id="courseFormName">
+            <label for="courseName">Name</label>
         </div>
 
         <div class="md-form">
-            <input  value="{{ course.section }}" placeholder="Section" type="text" name="section" class="form-control">
+            <input id="courseSection" value="{{ course.section }}"  type="text" name="section" class="form-control">
+            <label for="courseSection">Section</label>
         </div>
 
         <div class="md-form">
-            <input  value="{{ course.timeSlot }}" placeholder="Timeslot" type="text" name="timeSlot" class="form-control timepicker">
+            <input id="courseRows" value="{{ course.rows }}" name="rows" type="number" class="form-control">
+            <label for="courseRows">Rows</label>
         </div>
 
         <div class="md-form">
-            <input  value="{{ course.startDate }}" placeholder="Start Date" name="startDate" type="text" class="form-control datepicker">
-        </div>
-
-        <div class="md-form">
-            <input  value="{{ course.endDate }}" placeholder="End Date" name="endDate" type="text" class="form-control datepicker">
-        </div>
-
-        <div class="md-form">
-            <input  value="{{ course.rows }}" placeholder="Rows" name="rows" type="number" class="form-control">
-        </div>
-
-        <div class="md-form">
-            <input  value="{{ course.cols }}" placeholder="Columns" name="cols" type="number" class="form-control">
+            <input id="courseCols" value="{{ course.cols }}" name="cols" type="number" class="form-control">
+            <label for="courseCols">Columns</label>
         </div>
 
         <div class="md-form">
@@ -39,11 +31,47 @@
                     aria-expanded="false" aria-controls="courseForm">Cancel
             </button>
             <input type="submit" class="btn btn-primary" value="Submit" class="form-control">
+            {% if (course.id) %}
+                <div style="float:right">
+                    <button id="deleteButton" type="button" disabled="true" class="btn btn-blue-grey" >
+                        Delete
+                    </button>
+                    <div style="padding: 15px">
+                        <input id="confirmDelete" type="checkbox">
+                        <label for="confirmDelete">Check to confirm delete</label>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-
-
     </form>
+
 </div>
+
+<script>
+    $('#confirmDelete').change(function() {
+        $('#deleteButton').attr('disabled',!this.checked);
+    });
+
+    $('#deleteButton').click(function() {
+        $.ajax({
+            type: "post",
+            url: "/courses/{{course.id}}/delete",
+            contentType: "application/json",
+            error: function (data, status) {
+                console.error(data);
+            },
+            success: function (data){
+                toastr.success("Course successfully deleted.");
+                setTimeout(function(){
+                    window.location.replace("/{{ username }}");
+                },1600);
+
+            }
+        });
+    })
+
+
+</script>
 
 
 

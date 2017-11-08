@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -198,10 +199,10 @@ public class TrackerApplicationTests {
     @Test
     @WithMockUser("test")
     public void coursePageWithSection() throws Exception {
-        User intructor = new User();
-        intructor.setUsername("test");
+        User instructor = new User();
+        instructor.setUsername("test");
         Course course = new Course();
-        course.setInstructor(intructor);
+        course.setInstructor(instructor);
         course.setSection("test");
         course.setName("test");
         when(courseRepository.findByInstructorUsernameAndNameAndSection("test", "test", "test")).thenReturn(new ArrayList<Course>() {{
@@ -268,6 +269,41 @@ public class TrackerApplicationTests {
                 .andDo(print())
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    @WithMockUser("test")
+    public void courseEdit() throws Exception {
+
+        User instructor = new User();
+        instructor.setUsername("test");
+        instructor.setHasExtendedPrivileges(true);
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
+
+        when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
+
+        String name = "TestCourse";
+        String section = "section";
+        Integer rows = 2;
+        Integer cols = 2;
+        Course myCourse = new Course();
+        myCourse.setName(name);
+        myCourse.setRows(rows);
+        myCourse.setCols(cols);
+        myCourse.setSection(section);
+        myCourse.setInstructor(instructor);
+        courseRepository.save(myCourse);
+
+        this.mockMvc.perform(post("/course")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param("id", "1")
+            .param("name", "newname")
+            .param("cols", "3")
+            .param("rows", "3")
+            .param("section", "newsection"))
+            .andDo(print())
+            .andExpect(status().isFound())
+            .andExpect(redirectedUrl("/test/newname/newsection")); //redirected
     }
 
     private Date convertToSqlDate(String dateString) throws Exception {
