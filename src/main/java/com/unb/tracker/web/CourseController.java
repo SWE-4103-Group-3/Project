@@ -111,7 +111,8 @@ public class CourseController {
     @PostMapping(value = "/courses/{courseId}/seat")
     public @ResponseBody
     String postCourseSeat(@PathVariable Long courseId, @RequestBody Seat seat) {
-        LOG.info("postCourseSeats - starting - seat id: {}", seat.getId());
+        LOG.info("postCourseSeats - starting - seat.id: {}", seat.getId());
+        LOG.info("student in seat: {}", seat.getStudent());
         seatRepository.save(seat);
         return "saved";
     }

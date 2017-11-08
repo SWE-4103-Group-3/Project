@@ -1,4 +1,4 @@
-function Cell(opt) {
+function Seat(opt) {
     this.el = $('<td class="course-seat"/>');
 
     this.percent = opt.percent;
@@ -30,13 +30,14 @@ function Cell(opt) {
         }
     };
 
-    this.getSeat = function() {
+    this.getInfo = function() {
+        console.log(this.parent);
         return {
             "id": this.id,
             "row": this.row,
             "col": this.col,
             "state": this.state,
-            "user": {
+            "student": {
                 "id": this.getUserID()
             },
             "course": {
@@ -59,32 +60,27 @@ function Cell(opt) {
         return this.user !== undefined;
     }
 
-    this.el.on('click', {cell: this}, function (e) {
-        cell = e.data.cell;
-        if (cell.parent.editable) {
-            cell.el.removeClass(cell.states[cell.state]);
-            cell.state++;
-            if (!cell.states[cell.state]) {
-                cell.state = 0;
+    this.el.on('click', {seat: this}, function (e) {
+        var seat = e.data.seat;
+        if (seat.parent.editable) {
+            seat.el.removeClass(seat.states[seat.state]);
+            seat.state++;
+            if (!seat.states[seat.state]) {
+                seat.state = 0;
             }
-            cell.el.addClass(cell.states[cell.state]);
-        } else if(cell.parent.selectable) {
-            if(cell.state == 0 && !cell.hasUser() && confirm("are you sure?")) {
-                var seat = cell.getSeat();
-                console.log(seat)
+            seat.el.addClass(seat.states[seat.state]);
+        } else if(seat.parent.selectable) {
+            if(seat.state == 0 && !seat.hasUser() && confirm("are you sure?")) {
+                var info = seat.getInfo();
+                info.student.id = user.id;
+                console.log(info);
                 $.ajax({
                     type: "post",
-                    url: "/courses/"+this.parent.id+"/seat",
-                    data: JSON.stringify(seat),
+                    url: "/courses/"+seat.parent.id+"/seat",
+                    data: JSON.stringify(info),
                     contentType: "application/json",
                     success: function(data) {
-                        if(data === "saved"){
-                            cell.setUser(user);
-                        }
-                        if(data === "removed"){
-                            cell.removeStudent();
-                        }
-
+                        seat.setUser(user);
                     },
                     error: function (data, status) {
                         console.log(data);
@@ -122,13 +118,13 @@ function Grid(opt) {
     this.selectable = opt.selectable;
     this.id = opt.id;
 
-    this.cells = new Array(); // init cell 2D array
+    this.seats = new Array(); // init seat 2D array
 
     this.getSeats = function () {
         var seats = [];
-        for (var i = 0; i < this.cells.length; i++) {
-            for (var j = 0; j < this.cells[i].length; j++) {
-                seats.push(this.cells[i][j].getSeat());
+        for (var i = 0; i < this.seats.length; i++) {
+            for (var j = 0; j < this.seats[i].length; j++) {
+                seats.push(this.seats[i][j].getInfo());
             }
         }
         return seats;
@@ -137,10 +133,10 @@ function Grid(opt) {
     this.setSeats = function (seats) {
         console.log(seats);
         for (var i = 0; i < seats.length; i++) {
-            var cell = this.cells[seats[i].row][seats[i].col];
-            cell.setState(seats[i].state);
-            cell.setUser(seats[i].student);
-            cell.setID(seats[i].id);
+            var seat = this.seats[seats[i].row][seats[i].col];
+            seat.setState(seats[i].state);
+            seat.setUser(seats[i].student);
+            seat.setID(seats[i].id);
         }
     };
 
@@ -148,9 +144,9 @@ function Grid(opt) {
         var percent = 100 / this.cols;
         for (var i = 0; i < this.rows; i++) {
             var row = $('<tr/>');
-            this.cells[i] = new Array();
+            this.seats[i] = new Array();
             for (var j = 0; j < this.cols; j++) {
-                var cell = new Cell({
+                var seat = new Seat({
                     row: i,
                     col: j,
                     percent: percent,
@@ -158,8 +154,8 @@ function Grid(opt) {
                     parent: this,
                     rows: this.rows
                 });
-                row.append(cell.el);
-                this.cells[i][j] = cell;
+                row.append(seat.el);
+                this.seats[i][j] = seat;
             }
             this.el.append(row);
         }
