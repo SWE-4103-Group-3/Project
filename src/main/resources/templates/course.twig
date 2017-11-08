@@ -6,10 +6,14 @@
 {% endblock %}
 
 {% block content %}
+
     <div class="course-editor-body">
-        <div class="course-editor-title">
-            <h1>{{ course.name }}</h1>
-        </div>
+
+        <h1 style="display:inline">{{ course.name }}</h1>
+        <a data-toggle="collapse" href="#courseForm" aria-expanded="false" aria-controls="courseForm">
+            <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/1314-200.png" style="width:30px;height:30px; margin-bottom:20px">
+        </a>
+        {% include '/templates/courseFormView.twig' with {course: course}%}
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>
         </div>
@@ -25,10 +29,7 @@
                 </div>
             </form>
         </div>
-        <button type="button" data-target="#courseForm" class="btn btn-primary" data-toggle="collapse"
-                aria-expanded="false" aria-controls="courseForm">Create Course
-        </button>
-        {% include '/templates/courseFormView.twig' with {course: course}%}
+
     </div>
 {% endblock %}
 

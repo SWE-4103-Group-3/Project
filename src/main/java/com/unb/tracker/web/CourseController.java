@@ -118,8 +118,7 @@ public class CourseController {
             return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
         } else {
             courseRepository.save(course);
-            map.addAttribute("course", course);
-            return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
+            return "redirect:/" + principal.getName();
         }
     }
 
