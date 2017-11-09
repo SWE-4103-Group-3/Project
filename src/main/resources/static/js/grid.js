@@ -8,7 +8,7 @@ function Seat(opt) {
     this.parent = opt.parent;
     this.rows = opt.rows;
     this.state = 0;
-    this.user;
+    this.student;
 
     this.setState = function (state) {
         this.el.removeClass(this.states[this.state]);
@@ -16,16 +16,16 @@ function Seat(opt) {
         this.el.addClass(this.states[this.state]);
     };
 
-    this.setUser = function(user) {
-        if(user) {
-            this.user = user;
-            this.el.html(user.username);
+    this.setStudent = function(student) {
+        if(student) {
+            this.student = student;
+            this.el.html(student.username);
         }
     };
 
     this.removeStudent = function() {
-        if(this.user){
-            this.user = undefined;
+        if(this.student){
+            this.student = undefined;
             this.el.html("");
         }
     };
@@ -38,7 +38,7 @@ function Seat(opt) {
             "col": this.col,
             "state": this.state,
             "student": {
-                "id": this.getUserID()
+                "id": this.getStudentID()
             },
             "course": {
                 "id": this.parent.id
@@ -50,14 +50,14 @@ function Seat(opt) {
         this.id = id;
     };
 
-    this.getUserID = function() {
-        if(this.user) {
-            return this.user.id;
+    this.getStudentID = function() {
+        if(this.student) {
+            return this.student.id;
         }
     };
 
-    this.hasUser = function () {
-        return this.user !== undefined;
+    this.hasStudent = function () {
+        return this.student;
     }
 
     this.el.on('click', {seat: this}, function (e) {
@@ -70,17 +70,31 @@ function Seat(opt) {
             }
             seat.el.addClass(seat.states[seat.state]);
         } else if(seat.parent.selectable) {
-            if(seat.state == 0 && !seat.hasUser() && confirm("are you sure?")) {
+            if(seat.state == 0 && confirm("are you sure?")) {
+
                 var info = seat.getInfo();
-                info.student.id = user.id;
-                console.log(info);
+
+                // Does the seat already have a student?
+                if(seat.hasStudent()) {
+                    // Is the user clicking on their own seat?
+                    if(info.student.id === user.id) {
+                        info.student = null;
+                    } else {
+                        return;
+                    }
+                } else {
+                    info.student.id = user.id;
+                }
+
+                console.debug("seat info: " + info);
+
                 $.ajax({
                     type: "post",
                     url: "/courses/"+seat.parent.id+"/seat",
                     data: JSON.stringify(info),
                     contentType: "application/json",
                     success: function(data) {
-                        seat.setUser(user);
+                        window.location.reload();
                     },
                     error: function (data, status) {
                         console.log(data);
@@ -100,8 +114,8 @@ function Seat(opt) {
         this.el.css('height', minHeight + 'px');
         this.el.css('min-width', '80px');
         this.el.addClass(this.states[this.state]);
-        if(this.user) {
-            this.el.html(this.user.username);
+        if(this.student) {
+            this.el.html(this.student.username);
         }
     };
 
@@ -135,7 +149,7 @@ function Grid(opt) {
         for (var i = 0; i < seats.length; i++) {
             var seat = this.seats[seats[i].row][seats[i].col];
             seat.setState(seats[i].state);
-            seat.setUser(seats[i].student);
+            seat.setStudent(seats[i].student);
             seat.setID(seats[i].id);
         }
     };

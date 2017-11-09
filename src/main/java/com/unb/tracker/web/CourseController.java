@@ -1,6 +1,7 @@
 package com.unb.tracker.web;
 
 import com.unb.tracker.exception.BadRequestException;
+import com.unb.tracker.exception.InternalServerErrorException;
 import com.unb.tracker.exception.NotFoundException;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
@@ -110,10 +111,50 @@ public class CourseController {
 
     @PostMapping(value = "/courses/{courseId}/seat")
     public @ResponseBody
-    String postCourseSeat(@PathVariable Long courseId, @RequestBody Seat seat) {
+    String postCourseSeat(@PathVariable Long courseId, @RequestBody Seat seat, Principal principal) {
         LOG.info("postCourseSeats - starting - seat.id: {}", seat.getId());
-        LOG.info("student in seat: {}", seat.getStudent());
+
+        User user = userRepository.findByUsername(principal.getName());
+        if(seat.getStudent() != null && user.getId() != seat.getStudent().getId()) {
+            LOG.warn("{} trying to alter {}'s seat", user.getUsername(), seat.getStudent().getUsername());
+            throw new BadRequestException();
+        }
+
+        Course course = courseRepository.findOne(courseId);
+        List<Seat> seats = course.getSeats();
+
+        // Are we trying to remove a student?
+        if(seat.getStudent() == null) {
+            for(Seat s : seats) {
+                if(s.getId() == seat.getId()) {
+                    LOG.debug("Found the matching seat! Now confirming the logged in user owns that seat");
+                    if(s.getStudent().getId() == user.getId()) {
+                        LOG.debug("removing {} from their seat", user.getUsername());
+                        s.removeStudent();
+                        seatRepository.save(s);
+                        return "saved";
+                    } else {
+                        LOG.warn("{} is trying to remove {} from a seat", user.getUsername(), s.getStudent().getUsername());
+                        throw new BadRequestException("You cannot remove another student from their seat >:(");
+                    }
+                }
+            }
+            LOG.debug("no seat found with id: {}", seat.getId());
+            throw new InternalServerErrorException();
+        }
+
+        // Remove student from all other seats
+        for(Seat s : seats) {
+            if(s.getStudent() != null && s.getStudent().getId() == user.getId()) {
+                LOG.debug("removing {} from seat {}", user.getUsername(), s.getId());
+                s.removeStudent();
+                seatRepository.save(s);
+            }
+        }
+
+        LOG.debug("saving {} to seat {}", user.getUsername(), seat.getId());
         seatRepository.save(seat);
+
         return "saved";
     }
 
