@@ -106,64 +106,6 @@ public class CourseController {
         return course;
     }
 
-    @PostMapping(value = "/courses/{courseId}/seat")
-    public @ResponseBody
-    String postCourseSeat(@PathVariable Long courseId, @RequestBody Seat seat, Principal principal) {
-        LOG.info("postCourseSeats - starting - seat.id: {}", seat.getId());
-
-        User user = userRepository.findByUsername(principal.getName());
-        if(user.getHasExtendedPrivileges()) {
-            LOG.warn("instructor {} trying to choose a seat", user.getId());
-            throw new BadRequestException();
-        }
-
-        if(seat.getStudent() != null && !user.getId().equals(seat.getStudent().getId())) {
-            LOG.warn("{} trying to alter {}'s seat", user.getUsername(), seat.getStudent().getUsername());
-            throw new BadRequestException();
-        }
-
-        LOG.debug("student in seat: {}", seat.getStudent());
-
-
-        Course course = courseRepository.findOne(courseId);
-        List<Seat> seats = course.getSeats();
-
-        // Are we trying to remove a student?
-        if(seat.getStudent() == null) {
-            for(Seat s : seats) {
-                if(s.getId().equals(seat.getId())) {
-                    LOG.debug("Found the matching seat! Now confirming the logged in user owns that seat");
-                    if(s.getStudent().getId().equals(user.getId())) {
-                        LOG.debug("removing {} from their seat", user.getUsername());
-                        s.removeStudent();
-                        seatRepository.save(s);
-                        return "saved";
-                    } else {
-                        LOG.warn("{} is trying to remove {} from a seat", user.getUsername(), s.getStudent().getUsername());
-                        throw new BadRequestException("You cannot remove another student from their seat >:(");
-                    }
-                }
-            }
-            LOG.debug("no seat found with id: {}", seat.getId());
-            throw new InternalServerErrorException();
-        }
-
-        // Remove student from all other seats
-        for(Seat s : seats) {
-            if(s.getStudent() != null && s.getStudent().getId().equals(user.getId())) {
-                LOG.debug("removing {} from seat {}", user.getUsername(), s.getId());
-                s.removeStudent();
-                seatRepository.save(s);
-            }
-        }
-
-        LOG.debug("saving {} to seat {}", user.getUsername(), seat.getId());
-        seat.setStudent(user);
-        seatRepository.save(seat);
-
-        return "saved";
-    }
-
     @PostMapping(value = "/courses")
     @ResponseBody
     public String postCourse(@RequestBody Course course) {

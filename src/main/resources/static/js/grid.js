@@ -100,13 +100,13 @@ function Cell(opt) {
 
             $.ajax({
                 type: "post",
-                url: "/courses/"+seat.parent.id+"/seat",
+                url: "/seats",
                 data: JSON.stringify(info),
                 contentType: "application/json",
-                success: function(data) {
+                success: function() {
                     window.location.reload();
                 },
-                error: function (data, status) {
+                error: function (data) {
                     console.error(data);
                 }
             });
