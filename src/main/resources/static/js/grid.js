@@ -70,18 +70,17 @@ function Seat(opt) {
             }
             seat.el.addClass(seat.states[seat.state]);
         } else if(seat.parent.selectable) {
+            if(seat.hasStudent() && seat.getStudentID() !== user.id) {
+                return;
+            }
+
             if(seat.state == 0 && confirm("are you sure?")) {
 
                 var info = seat.getInfo();
 
-                // Does the seat already have a student?
+                // Is the student trying to remove himself?
                 if(seat.hasStudent()) {
-                    // Is the user clicking on their own seat?
-                    if(info.student.id === user.id) {
-                        info.student = null;
-                    } else {
-                        return;
-                    }
+                    info.student = null;
                 } else {
                     info.student.id = user.id;
                 }

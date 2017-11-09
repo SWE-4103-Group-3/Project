@@ -26,38 +26,6 @@ public class SeatController {
     @Autowired
     private SeatRepository seatRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @PostMapping(value = "/seats")
-    public @ResponseBody
-    String postCourseSeat(@RequestBody Seat seat, Principal principal) {
-        LOG.info("postCourseSeat - starting - seatId: {}", seat.getId());
-
-        User user = userRepository.findByUsername(principal.getName());
-        if(seat.getStudent() != null && user.getId() != seat.getStudent().getId()) {
-            throw new BadRequestException();
-        }
-
-        Course course = seat.getCourse();
-        List<Seat> seats = course.getSeats();
-
-        for(Seat s : seats) {
-            if(s.getId() == seat.getId() && s.getStudent().getId() == seat.getStudent().getId()){
-                seat.removeStudent();
-                return "removed";
-            }
-        }
-
-        for(Seat s : seats) {
-            if(s.getStudent().getId() == seat.getStudent().getId()) {
-                throw new InternalServerErrorException();
-            }
-        }
-        seatRepository.save(seat);
-        return "saved";
-    }
-
     @GetMapping("/seats/{seatId}")
     public @ResponseBody Seat getSeat(@PathVariable Long seatId) {
         LOG.info("getSeat - starting - seatId: {}", seatId);
