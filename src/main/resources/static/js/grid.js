@@ -1,4 +1,4 @@
-function Seat(opt) {
+function Cell(opt) {
     this.el = $('<td class="course-seat"/>');
 
     this.percent = opt.percent;
@@ -8,7 +8,6 @@ function Seat(opt) {
     this.parent = opt.parent;
     this.rows = opt.rows;
     this.state = 0;
-    this.student;
 
     this.setState = function (state) {
         this.el.removeClass(this.states[this.state]);
@@ -31,19 +30,19 @@ function Seat(opt) {
     };
 
     this.getInfo = function() {
-        console.log(this.parent);
-        return {
+        var seat = {
             "id": this.id,
             "row": this.row,
             "col": this.col,
             "state": this.state,
-            "student": {
-                "id": this.getStudentID()
-            },
             "course": {
                 "id": this.parent.id
             }
+        };
+        if(this.student) {
+            seat.student.id = this.student.id;
         }
+        return seat;
     };
 
     this.setID = function(id) {
@@ -57,8 +56,8 @@ function Seat(opt) {
     };
 
     this.hasStudent = function () {
-        return this.student;
-    }
+        return this.student !== undefined;
+    };
 
     this.el.on('click', {seat: this}, function (e) {
         var seat = e.data.seat;
@@ -70,36 +69,45 @@ function Seat(opt) {
             }
             seat.el.addClass(seat.states[seat.state]);
         } else if(seat.parent.selectable) {
+            if(user.hasExtendedPrivileges) {
+                return;
+            }
+
             if(seat.hasStudent() && seat.getStudentID() !== user.id) {
                 return;
             }
 
-            if(seat.state == 0 && confirm("are you sure?")) {
-
-                var info = seat.getInfo();
-
-                // Is the student trying to remove himself?
-                if(seat.hasStudent()) {
-                    info.student = null;
-                } else {
-                    info.student.id = user.id;
-                }
-
-                console.debug("seat info: " + info);
-
-                $.ajax({
-                    type: "post",
-                    url: "/courses/"+seat.parent.id+"/seat",
-                    data: JSON.stringify(info),
-                    contentType: "application/json",
-                    success: function(data) {
-                        window.location.reload();
-                    },
-                    error: function (data, status) {
-                        console.log(data);
-                    }
-                });
+            if(seat.state !== 0) {
+                return;
             }
+
+            if(!confirm("are you sure?")) {
+                return;
+            }
+
+            var info = seat.getInfo();
+
+            // Is the student trying to remove himself?
+            if(seat.hasStudent()) {
+                info.student = null;
+            } else {
+                info.student = {
+                    "id": user.id
+                };
+            }
+
+            $.ajax({
+                type: "post",
+                url: "/courses/"+seat.parent.id+"/seat",
+                data: JSON.stringify(info),
+                contentType: "application/json",
+                success: function(data) {
+                    window.location.reload();
+                },
+                error: function (data, status) {
+                    console.error(data);
+                }
+            });
         }
     });
 
@@ -124,42 +132,44 @@ function Seat(opt) {
 function Grid(opt) {
     this.el = $('<table id="course-seating-table"/>');
 
+    this.id = opt.id;
     this.rows = opt.rows;
     this.cols = opt.cols;
     this.states = opt.states;
     this.editable = opt.editable;
     this.selectable = opt.selectable;
-    this.id = opt.id;
-
-    this.seats = new Array(); // init seat 2D array
+    this.cells = new Array(); // init seat 2D array
 
     this.getSeats = function () {
         var seats = [];
-        for (var i = 0; i < this.seats.length; i++) {
-            for (var j = 0; j < this.seats[i].length; j++) {
-                seats.push(this.seats[i][j].getInfo());
+        for (var i = 0; i < this.cells.length; i++) {
+            for (var j = 0; j < this.cells[i].length; j++) {
+                seats.push(this.cells[i][j].getInfo());
             }
         }
         return seats;
     };
 
     this.setSeats = function (seats) {
-        console.log(seats);
+        if(!seats) {
+            return;
+        }
+
         for (var i = 0; i < seats.length; i++) {
-            var seat = this.seats[seats[i].row][seats[i].col];
-            seat.setState(seats[i].state);
-            seat.setStudent(seats[i].student);
-            seat.setID(seats[i].id);
+            var cell = this.cells[seats[i].row][seats[i].col];
+            cell.setState(seats[i].state);
+            cell.setStudent(seats[i].student);
+            cell.setID(seats[i].id);
         }
     };
 
-    this.render = function () {
+    this.render = function (opt) {
         var percent = 100 / this.cols;
         for (var i = 0; i < this.rows; i++) {
             var row = $('<tr/>');
-            this.seats[i] = new Array();
+            this.cells[i] = new Array();
             for (var j = 0; j < this.cols; j++) {
-                var seat = new Seat({
+                var cell = new Cell({
                     row: i,
                     col: j,
                     percent: percent,
@@ -167,15 +177,13 @@ function Grid(opt) {
                     parent: this,
                     rows: this.rows
                 });
-                row.append(seat.el);
-                this.seats[i][j] = seat;
+                row.append(cell.el);
+                this.cells[i][j] = cell;
             }
             this.el.append(row);
         }
     };
 
     this.render();
-    if (opt.seats) { // initializing seats
-        this.setSeats(opt.seats);
-    }
+    this.setSeats(opt.seats);
 }

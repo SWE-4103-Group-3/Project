@@ -24,12 +24,13 @@
     <script>
         var user = {
             id: {{ user.id }},
-            username: '{{ user.username }}'
+            username: '{{ user.username }}',
+            hasExtendedPrivileges: {{ user.hasExtendedPrivileges }}
         }
         console.log(user);
 
     	var grid;
-
+    	
         $(document).ready(function () {
             $.ajax({
                 type: "get",

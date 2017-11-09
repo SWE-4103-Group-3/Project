@@ -65,6 +65,7 @@ public class CourseController {
 
         User loggedInUser = userRepository.findByUsername(principal.getName());
         map.addAttribute("user", loggedInUser);
+        LOG.debug("username: {} -> user: {}", principal.getName(), loggedInUser);
 
         List<Course> courses = courseRepository.findByInstructorUsernameAndNameAndSection(username, courseName, courseSection);
         if (courses.size() == 0) {
@@ -101,9 +102,9 @@ public class CourseController {
         for(Seat s : seats) {
             s.setCourse(course);
         }
-        seatRepository.save(seats);
-
         course.setSeats(seats);
+
+        seatRepository.save(seats);
         courseRepository.save(course);
 
         return course;
@@ -115,10 +116,18 @@ public class CourseController {
         LOG.info("postCourseSeats - starting - seat.id: {}", seat.getId());
 
         User user = userRepository.findByUsername(principal.getName());
+        if(user.getHasExtendedPrivileges()) {
+            LOG.warn("instructor {} trying to choose a seat", user.getId());
+            throw new BadRequestException();
+        }
+
         if(seat.getStudent() != null && !user.getId().equals(seat.getStudent().getId())) {
             LOG.warn("{} trying to alter {}'s seat", user.getUsername(), seat.getStudent().getUsername());
             throw new BadRequestException();
         }
+
+        LOG.debug("student in seat: {}", seat.getStudent());
+
 
         Course course = courseRepository.findOne(courseId);
         List<Seat> seats = course.getSeats();
@@ -153,6 +162,7 @@ public class CourseController {
         }
 
         LOG.debug("saving {} to seat {}", user.getUsername(), seat.getId());
+        seat.setStudent(user);
         seatRepository.save(seat);
 
         return "saved";

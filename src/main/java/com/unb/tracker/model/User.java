@@ -68,4 +68,9 @@ public class User {
     public void setHasExtendedPrivileges(boolean hasExtendedPrivileges) {
         this.hasExtendedPrivileges = hasExtendedPrivileges;
     }
+
+    @Override
+    public String toString() {
+        return "id: "+id+"; username: "+username;
+    }
 }
