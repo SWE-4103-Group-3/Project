@@ -13,8 +13,11 @@
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>
         </div>
-        {% block buttons %}
-        {% endblock %}
+        {% if user.getHasExtendedPrivileges %}
+            <div class="course-editor-controls">
+                <button id="editsave" type="button" class="btn btn-primary">Edit</button>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 
@@ -53,6 +56,30 @@
                 }
             });
         });
+
+        {% if user.getHasExtendedPrivileges %}
+        $('#editsave').on('click', function (e) {
+            if (grid.editable) {
+                grid.editable = false;
+                $('#editsave').html('Edit');
+                var seats = grid.getSeats();
+                console.log(seats);
+                $.ajax({
+                    type: "post",
+                    url: "/courses/{{ course.id }}/seats",
+                    data: JSON.stringify(seats),
+                    contentType: "application/json",
+                    error: function (data, status) {
+                        console.error(data);
+                    }
+                });
+
+            } else {
+                grid.editable = true;
+                $('#editsave').html('Save');
+            }
+        });
+        {% endif %}
     </script>
 {% endblock %}
 

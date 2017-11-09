@@ -72,11 +72,7 @@ public class CourseController {
             return "404";
         } else if (courses.size() == 1) {
             map.addAttribute("course", courses.get(0));
-            if(loggedInUser.getHasExtendedPrivileges()) {
-                return "courseInstructor";
-            } else {
-                return "courseStudent";
-            }
+            return "course";
 
         }
         throw new BadRequestException();

@@ -13,7 +13,7 @@ public class Seat {
     private Integer col;
     private Integer state;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User student;
 
     @ManyToOne(fetch = FetchType.EAGER)
