@@ -24,7 +24,7 @@ function Cell(opt) {
 
     this.removeStudent = function() {
         if(this.student){
-            this.student = undefined;
+            this.student = null;
             this.el.html("");
         }
     };
@@ -40,7 +40,9 @@ function Cell(opt) {
             }
         };
         if(this.student) {
-            seat.student.id = this.student.id;
+            seat.student = {
+                "id": this.student.id
+            };
         }
         return seat;
     };
@@ -56,7 +58,7 @@ function Cell(opt) {
     };
 
     this.hasStudent = function () {
-        return this.student !== undefined;
+        return this.student;
     };
 
     this.el.on('click', {seat: this}, function (e) {
