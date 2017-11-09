@@ -115,7 +115,7 @@ public class CourseController {
         LOG.info("postCourseSeats - starting - seat.id: {}", seat.getId());
 
         User user = userRepository.findByUsername(principal.getName());
-        if(seat.getStudent() != null && user.getId() != seat.getStudent().getId()) {
+        if(seat.getStudent() != null && !user.getId().equals(seat.getStudent().getId())) {
             LOG.warn("{} trying to alter {}'s seat", user.getUsername(), seat.getStudent().getUsername());
             throw new BadRequestException();
         }
@@ -126,9 +126,9 @@ public class CourseController {
         // Are we trying to remove a student?
         if(seat.getStudent() == null) {
             for(Seat s : seats) {
-                if(s.getId() == seat.getId()) {
+                if(s.getId().equals(seat.getId())) {
                     LOG.debug("Found the matching seat! Now confirming the logged in user owns that seat");
-                    if(s.getStudent().getId() == user.getId()) {
+                    if(s.getStudent().getId().equals(user.getId())) {
                         LOG.debug("removing {} from their seat", user.getUsername());
                         s.removeStudent();
                         seatRepository.save(s);
@@ -145,7 +145,7 @@ public class CourseController {
 
         // Remove student from all other seats
         for(Seat s : seats) {
-            if(s.getStudent() != null && s.getStudent().getId() == user.getId()) {
+            if(s.getStudent() != null && s.getStudent().getId().equals(user.getId())) {
                 LOG.debug("removing {} from seat {}", user.getUsername(), s.getId());
                 s.removeStudent();
                 seatRepository.save(s);
