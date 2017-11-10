@@ -64,7 +64,7 @@ function Cell(opt) {
     this.el.on('click', {cell: this}, function (e) {
         var cell = e.data.cell;
         if (cell.parent.editable) {
-            cell.el.removeClass(seat.states[cell.state]);
+            cell.el.removeClass(cell.states[cell.state]);
             cell.state++;
             if (!cell.states[cell.state]) {
                 cell.state = 0;
