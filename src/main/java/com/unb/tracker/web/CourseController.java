@@ -125,6 +125,10 @@ public class CourseController {
     @PostMapping(value = "courses/{courseId}/delete")
     @ResponseBody
     public String deleteCourse(@PathVariable Long courseId, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName());
+        if (user == null || !user.getHasExtendedPrivileges()) {
+            throw new BadRequestException();
+        }
         courseRepository.delete(courseId);
         return "success";
     }

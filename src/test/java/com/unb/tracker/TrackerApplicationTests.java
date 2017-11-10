@@ -127,8 +127,6 @@ public class TrackerApplicationTests {
         myCourse.setCols(cols);
         myCourse.setSection(section);
         myCourse.setStartDate(convertToSqlDate(startDate));
-        myCourse.setEndDate(convertToSqlDate(endDate));
-        myCourse.setTimeSlot(timeSlot);
 
         this.mockMvc.perform(post("/course")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
