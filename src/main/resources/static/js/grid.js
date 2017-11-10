@@ -61,55 +61,47 @@ function Cell(opt) {
         return this.student;
     };
 
-    this.el.on('click', {seat: this}, function (e) {
-        var seat = e.data.seat;
-        if (seat.parent.editable) {
-            seat.el.removeClass(seat.states[seat.state]);
-            seat.state++;
-            if (!seat.states[seat.state]) {
-                seat.state = 0;
+    this.el.on('click', {cell: this}, function (e) {
+        var cell = e.data.cell;
+        if (cell.parent.editable) {
+            cell.el.removeClass(seat.states[cell.state]);
+            cell.state++;
+            if (!cell.states[cell.state]) {
+                cell.state = 0;
             }
-            seat.el.addClass(seat.states[seat.state]);
-        } else if(seat.parent.selectable) {
+            cell.el.addClass(cell.states[cell.state]);
+        } else if(cell.parent.selectable) {
             if(user.hasExtendedPrivileges) {
                 return;
             }
 
-            if(seat.hasStudent() && seat.getStudentID() !== user.id) {
+            if(cell.hasStudent() && cell.getStudentID() !== user.id) {
                 return;
             }
 
-            if(seat.state !== 0) {
+            if(cell.state !== 0) {
                 return;
             }
 
-            if(!confirm("are you sure?")) {
-                return;
-            }
-
-            var info = seat.getInfo();
+            var seat = cell.getInfo();
 
             // Is the student trying to remove himself?
-            if(seat.hasStudent()) {
-                info.student = null;
-            } else {
-                info.student = {
-                    "id": user.id
-                };
-            }
+            if(cell.hasStudent()) {
+                $('#'+removeModalId).modal();
+                $('#'+removeButtonId).on('click', function () {
+                    seat.student = null;
+                    postSeat(seat);
+                });
 
-            $.ajax({
-                type: "post",
-                url: "/seats",
-                data: JSON.stringify(info),
-                contentType: "application/json",
-                success: function() {
-                    window.location.reload();
-                },
-                error: function (data) {
-                    console.error(data);
-                }
-            });
+            } else {
+                $('#'+setModalId).modal();
+                $('#'+setButtonId).on('click', function () {
+                    seat.student = {
+                        "id": user.id
+                    };
+                    postSeat(seat);
+                });
+            }
         }
     });
 
@@ -134,13 +126,22 @@ function Cell(opt) {
 function Grid(opt) {
     this.el = $('<table id="course-seating-table"/>');
 
+    if(!removeButtonId || !removeModalId) {
+        throw 'place specify removeButtonId and removeModalId';
+    }
+
+    if(!setButtonId || !setModalId) {
+        throw 'place specify setButtonId and setModalId';
+    }
+
     this.id = opt.id;
     this.rows = opt.rows;
     this.cols = opt.cols;
     this.states = opt.states;
     this.editable = opt.editable;
     this.selectable = opt.selectable;
-    this.cells = new Array(); // init seat 2D array
+    this.seats = opt.seats;
+    this.cells = []; // init seat 2D array
 
     this.getSeats = function () {
         var seats = [];
@@ -169,7 +170,7 @@ function Grid(opt) {
         var percent = 100 / this.cols;
         for (var i = 0; i < this.rows; i++) {
             var row = $('<tr/>');
-            this.cells[i] = new Array();
+            this.cells[i] = [];
             for (var j = 0; j < this.cols; j++) {
                 var cell = new Cell({
                     row: i,
@@ -184,8 +185,8 @@ function Grid(opt) {
             }
             this.el.append(row);
         }
+        this.setSeats(this.seats);
     };
 
     this.render();
-    this.setSeats(opt.seats);
 }

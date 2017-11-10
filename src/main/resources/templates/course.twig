@@ -13,7 +13,7 @@
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>
         </div>
-        {% if user.getHasExtendedPrivileges %}
+        {% if user.hasExtendedPrivileges %}
             <div class="course-editor-controls">
                 <button id="editsave" type="button" class="btn btn-primary">Edit</button>
             </div>
@@ -21,19 +21,28 @@
     </div>
 {% endblock %}
 
+{% block modals %}
+    {% include 'danger.modal.twig' with {'id': 'remove-modal', 'title': 'Seating', 'message': 'Are you sure you want to remove yourself?', 'buttonId': 'remove-button'} %}
+    {% include 'good.modal.twig' with {'id': 'set-modal', 'title': 'Seating', 'message': 'Are you sure you want to choose this seat?', 'buttonId': 'set-button'} %}
+{% endblock %}
+
 {% block script %}
     {{ parent() }}
     <script type="text/javascript" src="/static/js/grid.js"></script>
     <script>
+        var removeModalId = 'remove-modal';
+        var setModalId = 'set-modal';
+
+        var removeButtonId = 'remove-button';
+        var setButtonId = 'set-button';
+
         var user = {
             id: {{ user.id }},
             username: '{{ user.username }}',
             hasExtendedPrivileges: {{ user.hasExtendedPrivileges }}
-        }
-        console.log(user);
+        };
 
     	var grid;
-    	
         $(document).ready(function () {
             $.ajax({
                 type: "get",
@@ -46,8 +55,12 @@
                         cols: course.cols,
                         id: course.id,
                         seats: course.seats,
+                        {% if user.getHasExtendedPrivileges %}
+                        selectable: false,
+                        {% else %}
                         selectable: true,
-                        states: ["open", "closed", "reserved"]
+                        {% endif %}
+                        states: ["open", "closed", "reserved"] // 0, 1, 2
                     });
                     $('#course-seating-grid').append(grid.el);
                 },
@@ -63,7 +76,6 @@
                 grid.editable = false;
                 $('#editsave').html('Edit');
                 var seats = grid.getSeats();
-                console.log(seats);
                 $.ajax({
                     type: "post",
                     url: "/courses/{{ course.id }}/seats",
