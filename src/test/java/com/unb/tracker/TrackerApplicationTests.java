@@ -205,11 +205,14 @@ public class TrackerApplicationTests {
     @Test
     @WithMockUser("test")
     public void coursePage() throws Exception {
-        User intructor = new User();
-        intructor.setUsername("test");
+        User instructor = new User();
+        instructor.setUsername("test");
         Course course = new Course();
-        course.setInstructor(intructor);
+        course.setInstructor(instructor);
         course.setName("test");
+
+        when(userRepository.findByUsername("test")).thenReturn(new User());
+
         when(courseRepository.findByInstructorUsernameAndName("test", "test")).thenReturn(new ArrayList<Course>() {{
             add(course);
         }});

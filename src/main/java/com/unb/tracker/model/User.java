@@ -109,8 +109,11 @@ public class User {
         if(this.getHasExtendedPrivileges()) {
             return this.courses;
         } else {
+            if(seats == null) {
+                return null;
+            }
+
             List<Course> courses = new ArrayList<>();
-            Hibernate.initialize(seats);
             for(Seat s : seats) {
                 courses.add(s.getCourse());
             }
