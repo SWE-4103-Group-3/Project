@@ -117,16 +117,6 @@ public class CourseController {
             throw new BadRequestException();
         }
 
-        //If user wishes to use grid from other course
-        Long courseGridReuseID = course.getCourseGridReuseID();
-        if(courseGridReuseID != null)
-        {
-            Course otherCourse = courseRepository.findOne(courseGridReuseID);
-            reuseCourseGridHelper(course, otherCourse);
-        }
-
-        course.setInstructor(user);
-
         courseValidator.validate(course, bindingResult);
         if (bindingResult.hasErrors()) {
             redir.addFlashAttribute("courseCreationError", bindingResult.getFieldError().getCode());
@@ -137,10 +127,20 @@ public class CourseController {
             redir.addFlashAttribute("colsAmount", course.getCols());
 
             return "redirect:/" + user.getUsername();
-        } else {
-            courseRepository.save(course);
-            return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
         }
+
+        course.setInstructor(user);
+        
+        //If user wishes to use grid from other course
+        Long courseGridReuseID = course.getCourseGridReuseID();
+        if(courseGridReuseID != null)
+        {
+            Course otherCourse = courseRepository.findOne(courseGridReuseID);
+            reuseCourseGridHelper(course, otherCourse);
+        }
+
+        courseRepository.save(course);
+        return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
 
     @GetMapping("/courses/query/{queryString}")
