@@ -1,11 +1,15 @@
 $(document).ready(function() {
+    $('#course-form-collapse-button').on('click', function() {
+        $('#courseForm').slideToggle();
+    });
+
     $('#reuse-grid-button').on('click', function (e) {
         displayCourseSearchModal();
 
         //Cancel, Close Modal, Restore Previous State
         $('#search-course-grid-modal-close-top')
             .add('#search-course-grid-modal-close-bottom')
-            .on('click', function () {
+            .one('click', function () {
                 displayCourseSearchModal(false);
 
                 $('#course-grid-id').val('');
@@ -14,11 +18,13 @@ $(document).ready(function() {
             });
 
         //Close Modal After Submit
-        $('#search-course-grid-modal-submit-bottom').on('click', function(e) {
+        $('#search-course-grid-modal-submit-bottom').one('click', function(e) {
             displayCourseSearchModal(false);
 
-            $('#course-form-rows').val('1').hide();
-            $('#course-form-cols').val('1').hide();
+            if($('#course-grid-id').val()) {
+                $('#course-form-rows').val('1').hide();
+                $('#course-form-cols').val('1').hide();
+            }
         });
 
         //Query for Courses Using Value From Input Field

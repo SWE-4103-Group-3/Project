@@ -39,9 +39,10 @@ $(document).ready(function () {
         $('#modal-danger-clear-student-close-top')
             .add('#modal-danger-clear-student-close-bottom')
             .add('#modal-danger-clear-student-continue')
-            .on('click', function(){displayResetModal(false)});
+            .one('click', function(){displayClearModal(false)});
 
-        $('#modal-danger-clear-student-continue').on('click', function(){
+        $('#modal-danger-clear-student-continue').one('click', function(){
+            displayClearModal(false);
             /* GATED BY https://github.com/SWE-4103-Group-3/Project/issues/43
             var seats = grid.getSeats();
             postSeats(courseID, seats);
@@ -55,9 +56,9 @@ $(document).ready(function () {
         $('#modal-danger-reset-template-close-top')
             .add('#modal-danger-reset-template-close-bottom')
             .add('#modal-danger-reset-template-continue')
-            .on('click', function(){displayResetModal(false)});
+            .one('click', function(){displayResetModal(false)});
 
-        $('#modal-danger-reset-template-continue').on('click', function() {
+        $('#modal-danger-reset-template-continue').one('click', function() {
             grid.clearSeats();
             postSeats(courseID, grid.getSeats());
         });
@@ -70,7 +71,7 @@ $(document).ready(function () {
         //Cancel, Close Modal, Restore Previous State
         $('#search-course-grid-modal-close-top')
             .add('#search-course-grid-modal-close-bottom')
-            .on('click', function () {
+            .one('click', function () {
                 displayCourseSearchModal(false);
 
                 //Reset Modal Properties
@@ -80,12 +81,23 @@ $(document).ready(function () {
             });
 
         //Close Modal After Submit
-        $('#search-course-grid-modal-submit-bottom').on('click', function() {
+        $('#search-course-grid-modal-submit-bottom').one('click', function() {
             displayCourseSearchModal(false);
+
+            //If no course selected
+            var courseGridID = $('#course-grid-id').val();
+            if(!courseGridID)
+                return;
+
+            if(courseGridID == courseID) {
+                $('#course-grid-id').val('');
+                toastr.error('Sorry, you can\'t do that :( Choose a different course.');
+                return;
+            }
 
             var postBody = {
                 "currentCourse": courseID,
-                "otherCourse": $('#course-grid-id').val()
+                "otherCourse": courseGridID
             };
 
             //Post and Reload Page on Success

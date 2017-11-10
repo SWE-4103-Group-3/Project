@@ -22,7 +22,10 @@ input#course-form-submit {
 
 .modal#search-course-grid-modal {
     top: calc(50% - 350px);
-    padding-top: 100px;
+}
+
+.modal-content {
+    position: absolute;
 }
 
 #course-list-queried {

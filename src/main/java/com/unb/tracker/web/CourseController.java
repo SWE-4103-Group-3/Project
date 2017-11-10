@@ -158,7 +158,7 @@ public class CourseController {
         Long courseReceiveID = courseIds.get("currentCourse");
         Long courseGiveID = courseIds.get("otherCourse");
 
-        if(courseReceiveID.equals(courseGiveID)) {
+        if(courseReceiveID == null || courseGiveID == null || courseReceiveID.equals(courseGiveID)) {
             throw new BadRequestException();
         }
 
