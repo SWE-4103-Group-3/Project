@@ -38,11 +38,10 @@ public class CourseController {
     public String getCourseByName(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
         LOG.info("getCourseByName - starting - username: {}, courseName: {}", username, courseName);
 
-        Iterable<Course> allCourses = courseRepository.findAll();
-        map.addAttribute("courseList", allCourses);
-
         User user = userRepository.findByUsername(principal.getName());
         map.addAttribute("user", user);
+
+        map.addAttribute("courseList", user.getCourses());
 
         List<Course> courses = courseRepository.findByInstructorUsernameAndName(username, courseName);
         LOG.debug("courses size: {}", courses.size());
@@ -59,13 +58,11 @@ public class CourseController {
     public String getCourseByNameAndSection(@PathVariable String username, @PathVariable String courseName, @PathVariable String courseSection, ModelMap map, Principal principal) {
         LOG.info("getCourseByName - starting - username: {}, courseName: {}; courseSection: {}", username, courseName, courseSection);
 
-        Iterable<Course> allCourses = courseRepository.findAll();
-        map.addAttribute("courseList", allCourses);
 
+        User user = userRepository.findByUsername(principal.getName());
+        map.addAttribute("user", user);
 
-        User loggedInUser = userRepository.findByUsername(principal.getName());
-        map.addAttribute("user", loggedInUser);
-        LOG.debug("username: {} -> user: {}", principal.getName(), loggedInUser);
+        map.addAttribute("courseList", user.getCourses());
 
         List<Course> courses = courseRepository.findByInstructorUsernameAndNameAndSection(username, courseName, courseSection);
         if (courses.size() == 0) {

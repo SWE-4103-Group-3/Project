@@ -71,12 +71,15 @@ public class SeatController {
 
         // Are we trying to remove a student?
         if(seat.getStudent() == null) {
+            LOG.debug("removing {} from seat", user.getUsername());
             return "removed";
         }
 
         LOG.debug("saving {} to seat {}", user.getUsername(), seat.getId());
         //seat.setStudent(user);
         seatRepository.save(seat);
+        user.getSeats().add(seat);
+        userRepository.save(user);
 
         return "saved";
     }
