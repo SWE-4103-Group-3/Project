@@ -1,9 +1,26 @@
-<div style="width:50%; margin: auto; padding-bottom: 60px;" class="collapse" id="courseForm">
+{% if courseCreationError %}
+    <script>
+        toastr.options.timeOut = 0;
+        toastr.error('{{ courseCreationError }}');
+    </script>
+{% endif %}
+
+<div style="width:50%; margin: auto; padding-bottom: 60px;" class="{% if not courseCreationError %}collapse{% endif %}" id="courseForm">
     <form action="/course" method="post">
+
 
         <input value="{{ course.id }}" type="hidden" name="id">
 
         <input value="{{ course.instructor.id }}" type="hidden" name="instructor.id">
+
+        <div class="md-form">
+            <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName"{% if courseCreationError %}value="{{ courseName }}"{% endif %}>
+        </div>
+
+        <div class="md-form">
+            <input placeholder="Section" type="text" name="section" class="form-control" {% if courseCreationError %}value="{{ sectionName }}"{% endif %}>
+        </div>
+
 
         <div class="md-form">
             <input id="courseName" value="{{ course.name }}" type="text" name="name" class="form-control" id="courseFormName">
@@ -11,6 +28,7 @@
         </div>
 
         <div class="md-form">
+
             <input id="courseSection" value="{{ course.section }}"  type="text" name="section" class="form-control">
             <label for="courseSection">Section</label>
         </div>
@@ -28,6 +46,20 @@
         <div class="md-form">
             <input id="courseCols" value="{{ course.cols }}" name="cols" type="number" class="form-control">
             <label for="courseCols">Columns</label>
+
+            <input placeholder="Start Date" name="startDate" type="text" class="form-control datepicker" >
+        </div>
+
+        <div class="md-form">
+            <input placeholder="End Date" name="endDate" type="text" class="form-control datepicker" >
+        </div>
+
+        <div class="md-form">
+            <input placeholder="Rows" name="rows" type="number" class="form-control" {% if courseCreationError %}value="{{ rowsAmount }}"{% endif %}>
+        </div>
+
+        <div class="md-form">
+            <input placeholder="Columns" name="cols" type="number" class="form-control" {% if courseCreationError %}value="{{ colsAmount }}"{% endif %}>
         </div>
 
         <div class="md-form">

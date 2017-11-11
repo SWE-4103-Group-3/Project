@@ -7,20 +7,73 @@
 
 {% block content %}
 
+    <input type="hidden" id="courseID" name="courseID" value="{{ course.id }}"/>
     <div class="course-editor-body">
-
-        <h1 style="display:inline">{{ course.name }}</h1>
-        {%  if  user.hasExtendedPrivileges %}
+        <div class="course-editor-title" style="display:inline">
+            <h1>{{ course.name }} <span style="color: grey;font-size:smaller;">{{ course.section }}</span></h1>
+        </div>
+         {%  if  user.hasExtendedPrivileges %}
             <a data-toggle="collapse" href="#courseForm" aria-expanded="false" aria-controls="courseForm">
                 <img src="/static/pencilicon.png" style="width:23px;height:23px; margin-bottom:24px">
             </a>
             {% include '/templates/courseFormView.twig' with {course: course}%}
         {% endif %}
+
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>
         </div>
         <div class="course-editor-controls">
             <button id="editsave" type="button" class="btn btn-primary">Edit</button>
+            <button id="editclearseating" type="button" class="btn btn-primary">Clear Student Seating</button>
+            <button id="editcleartemplate" type="button" class="btn btn-primary">Reset Seat Template</button>
+        </div>
+    </div>
+    <!--Clear Student Seating Warning Modal-->
+    <div class="modal fade" id="modal-danger-clear-student" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-danger" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="heading lead">Clear Student Seating</p>
+                    <button type="button" id=modal-danger-clear-student-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                        <p>Are you sure you wish to clear student seating? This will remove students from their assigned seating.
+                        The grid dimensions and seat states will be preserved.</p>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a type="button" id="modal-danger-clear-student-continue" class="btn btn-primary-modal">Continue<i class="fa fa-diamond ml-1"></i></a>
+                    <a type="button" id="modal-danger-clear-student-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Take me back!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Reset Seating Template Warning Modal-->
+    <div class="modal fade" id="modal-danger-reset-template" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-danger" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="heading lead">Reset Seat Template</p>
+                    <button type="button" id="modal-danger-reset-template-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                        <p>Are you sure you wish to reset your seating template? This will remove students from their assigned seating
+                        and clear the states of all the seats in this template to 'open'.</p>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a type="button" id="modal-danger-reset-template-continue" class="btn btn-primary-modal">Continue<i class="fa fa-diamond ml-1"></i></a>
+                    <a type="button" id="modal-danger-reset-template-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Take me back!</a>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -74,5 +127,5 @@
         });
 
     </script>
+    <script type="text/javascript" src="/static/js/course.js"></script>
 {% endblock %}
-

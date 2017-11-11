@@ -9,6 +9,11 @@
     <link href="/static/css/dashboard.css" rel="stylesheet"/>
 {% endblock %}
 
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript" src="/static/js/dashboard.js"></script>
+{% endblock %}
+
 {% block body %}
     <nav class="navbar navbar-dark justify-content-between">
         <a href="/{{ user.username }}" class="navbar-brand" style="font-size: 20pt;">Attendance Tracker</a>
@@ -25,7 +30,7 @@
                 <h1>Welcome back, {{ user.username }}!</h1>
                 {% if user.hasExtendedPrivileges %}
                     <p>Select a course from the course list, or create a course.</p>
-                    <button type="button" data-target="#courseForm" class="btn btn-primary" data-toggle="collapse"
+                    <button id="createButton" type="button" data-target="#courseForm" class="btn btn-primary"
                             aria-expanded="false" aria-controls="courseForm">Create Course
                     </button>
                     {% include '/templates/courseFormView.twig' %}

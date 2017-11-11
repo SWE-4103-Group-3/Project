@@ -4,6 +4,7 @@ import com.unb.tracker.model.Course;
 import com.unb.tracker.model.User;
 import com.unb.tracker.repository.CourseRepository;
 import com.unb.tracker.repository.UserRepository;
+import com.unb.tracker.service.CourseService;
 import com.unb.tracker.web.CourseController;
 import com.unb.tracker.web.UserController;
 import org.junit.Before;
@@ -55,6 +56,9 @@ public class TrackerApplicationTests {
 
     @MockBean
     private CourseRepository courseRepository;
+
+    @MockBean
+    private CourseService courseService;
 
     @MockBean
     private UserRepository userRepository;
@@ -165,7 +169,6 @@ public class TrackerApplicationTests {
         String startDate = "this isn't a real date";
         String endDate = "2017-01-01";
         //Dummy placeholder string to solve ambiguous argument problem
-        String s = null;
         this.mockMvc.perform(post("/course")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("name", name)
@@ -174,6 +177,98 @@ public class TrackerApplicationTests {
                 .param("endDate", endDate))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @WithMockUser("test")
+    public void hitCourseRowValidation() throws Exception {
+        User instructor = new User();
+        instructor.setUsername("test");
+        instructor.setHasExtendedPrivileges(true);
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
+
+        String name = "name";
+        String section = "section";
+        String timeSlot = "8:30";
+        String startDate = "2017-01-01";
+        String endDate = "2017-01-01";
+        Integer rows = 0;
+        Integer cols = 5;
+
+
+        this.mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("name", name)
+                .param("section", section)
+                .param("timeSlot", timeSlot)
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .param("rows", rows.toString())
+                .param("cols", cols.toString()))
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/test"));
+
+        rows = 50;
+        this.mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("name", name)
+                .param("section", section)
+                .param("timeSlot", timeSlot)
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .param("rows", rows.toString())
+                .param("cols", cols.toString()))
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/test"));
+
+    }
+
+    @Test
+    @WithMockUser("test")
+    public void hitCourseColumnValidation() throws Exception {
+        User instructor = new User();
+        instructor.setUsername("test");
+        instructor.setHasExtendedPrivileges(true);
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
+
+        String name = "name";
+        String section = "section";
+        String timeSlot = "8:30";
+        String startDate = "2017-01-01";
+        String endDate = "2017-01-01";
+        Integer rows = 5;
+        Integer cols = 0;
+
+
+        this.mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("name", name)
+                .param("section", section)
+                .param("timeSlot", timeSlot)
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .param("rows", rows.toString())
+                .param("cols", cols.toString()))
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/test"));
+
+        cols = 50;
+        this.mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("name", name)
+                .param("section", section)
+                .param("timeSlot", timeSlot)
+                .param("startDate", startDate)
+                .param("endDate", endDate)
+                .param("rows", rows.toString())
+                .param("cols", cols.toString()))
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/test"));
 
     }
 
