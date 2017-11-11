@@ -38,10 +38,10 @@
             <input type="submit" class="btn btn-primary" value="Submit" class="form-control">
             {% if (course.id) %}
                 <div style="float:right">
-                    <button id="deleteButton" type="button" disabled="true" class="btn btn-blue-grey" >
+                    <button id="deleteButton" type="button" disabled="true" class="btn btn-blue-grey" style="margin-bottom:0px">
                         Delete
                     </button>
-                    <div style="padding: 15px">
+                    <div>
                         <input id="confirmDelete" type="checkbox">
                         <label for="confirmDelete">Check to confirm delete</label>
                     </div>
@@ -73,7 +73,7 @@
 
             }
         });
-    })
+    });
 
     $(document).ready(function () {
         $('.datepicker').pickadate({
