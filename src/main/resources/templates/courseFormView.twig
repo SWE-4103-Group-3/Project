@@ -8,28 +8,18 @@
 <div style="width:50%; margin: auto; padding-bottom: 60px;" class="{% if not courseCreationError %}collapse{% endif %}" id="courseForm">
     <form action="/course" method="post">
 
-
         <input value="{{ course.id }}" type="hidden" name="id">
 
         <input value="{{ course.instructor.id }}" type="hidden" name="instructor.id">
 
         <div class="md-form">
-            <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName"{% if courseCreationError %}value="{{ courseName }}"{% endif %}>
-        </div>
-
-        <div class="md-form">
-            <input placeholder="Section" type="text" name="section" class="form-control" {% if courseCreationError %}value="{{ sectionName }}"{% endif %}>
-        </div>
-
-
-        <div class="md-form">
-            <input id="courseName" value="{{ course.name }}" type="text" name="name" class="form-control" id="courseFormName">
+            <input id="courseName" type="text" name="name" class="form-control" id="courseFormName" {% if courseCreationError %}value="{{ courseName }}" {% else %} value="{{ course.name }}" {% endif %}>
             <label for="courseName">Name</label>
         </div>
 
         <div class="md-form">
 
-            <input id="courseSection" value="{{ course.section }}"  type="text" name="section" class="form-control">
+            <input id="courseSection"  type="text" name="section" class="form-control" {% if courseCreationError %}value="{{ sectionName }}" {% else %} value="{{ course.section }}" {% endif %}>
             <label for="courseSection">Section</label>
         </div>
 
@@ -39,30 +29,15 @@
         </div>
 
         <div class="md-form">
-            <input id="courseRows" value="{{ course.rows }}" name="rows" type="number" class="form-control">
+            <input id="courseRows"  name="rows" type="number" class="form-control" {% if courseCreationError %}value="{{ rowsAmount }}" {% else %} value="{{ course.rows }}" {% endif %}>
             <label for="courseRows">Rows</label>
         </div>
 
         <div class="md-form">
-            <input id="courseCols" value="{{ course.cols }}" name="cols" type="number" class="form-control">
+            <input id="courseCols" name="cols" type="number" class="form-control" {% if courseCreationError %}value="{{ colsAmount }}" {% else %} value="{{ course.cols }}"  {% endif %}>
             <label for="courseCols">Columns</label>
-
-            <input placeholder="Start Date" name="startDate" type="text" class="form-control datepicker" >
         </div>
 
-        <div class="md-form">
-            <input placeholder="End Date" name="endDate" type="text" class="form-control datepicker" >
-        </div>
-
-        <div class="md-form">
-            <input placeholder="Rows" name="rows" type="number" class="form-control" {% if courseCreationError %}value="{{ rowsAmount }}"{% endif %}>
-        </div>
-
-        <div class="md-form">
-            <input placeholder="Columns" name="cols" type="number" class="form-control" {% if courseCreationError %}value="{{ colsAmount }}"{% endif %}>
-        </div>
-
-        <div class="md-form">
             {# the css expects two seperate class descriptions like this for some reason #}
             <button type="button" data-target="#courseForm" class="btn btn-blue-grey" data-toggle="collapse"
                     aria-expanded="false" aria-controls="courseForm">Cancel
@@ -79,9 +54,7 @@
                     </div>
                 </div>
             {% endif %}
-        </div>
     </form>
-
 </div>
 
 <script>

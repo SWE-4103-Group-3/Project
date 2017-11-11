@@ -13,14 +13,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.sql.Date;
 import java.util.List;
 
 @Controller
@@ -105,13 +103,14 @@ public class CourseController {
     }
 
     @PostMapping("/course")
-    public String courseSave(@ModelAttribute Course course, Model model, Principal principal, BindingResult bindingResult, RedirectAttributes redir) {
+    public String courseSave(@ModelAttribute Course course, ModelMap map, Principal principal, BindingResult bindingResult, RedirectAttributes redir) {
         LOG.info("courseSave - starting - principle.name: {}", principal.getName());
         User user = userRepository.findByUsername(principal.getName());
         if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();
         }
 
+        map.addAttribute("course", course);
         courseValidator.validate(course, bindingResult);
         if (bindingResult.hasErrors()) {
             redir.addFlashAttribute("courseCreationError", bindingResult.getFieldError().getCode());
@@ -120,18 +119,20 @@ public class CourseController {
             redir.addFlashAttribute("startDate", course.getStartDate().toString());
             redir.addFlashAttribute("rowsAmount", course.getRows());
             redir.addFlashAttribute("colsAmount", course.getCols());
-          
-            return "redirect:/" + user.getUsername();
-          
-        } else {
-          if (course.getId() == null) {
-              course.setInstructor(user);
-              map.addAttribute("course", course);
-          }
-          courseRepository.save(course);
-          return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
         }
+        if (course.getId() == null) {
+            course.setInstructor(user);
+            if(bindingResult.hasErrors()) {
+                return "redirect:/" + user.getUsername();
+            }
+
+        }
+        if(!bindingResult.hasErrors()) {
+            courseRepository.save(course);
+        }
+        return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
+
 
     @PostMapping(value = "courses/{courseId}/delete")
     @ResponseBody

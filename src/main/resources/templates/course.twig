@@ -6,18 +6,16 @@
 {% endblock %}
 
 {% block content %}
-
-    <input type="hidden" id="courseID" name="courseID" value="{{ course.id }}"/>
     <div class="course-editor-body">
-        <div class="course-editor-title" style="display:inline">
-            <h1>{{ course.name }} <span style="color: grey;font-size:smaller;">{{ course.section }}</span></h1>
+        <div class="course-editor-title">
+            <h1 style="display:inline">{{ course.name }} <span style="color: grey;font-size:smaller;">{{ course.section }}</span></h1>
+            {%  if  user.hasExtendedPrivileges %}
+                <a data-toggle="collapse" href="#courseForm" aria-expanded="false" aria-controls="courseForm">
+                    <img src="/static/pencilicon.png" style="width:23px;height:23px; margin-bottom:24px">
+                </a>
+                {% include '/templates/courseFormView.twig' with {course: course}%}
+            {% endif %}
         </div>
-         {%  if  user.hasExtendedPrivileges %}
-            <a data-toggle="collapse" href="#courseForm" aria-expanded="false" aria-controls="courseForm">
-                <img src="/static/pencilicon.png" style="width:23px;height:23px; margin-bottom:24px">
-            </a>
-            {% include '/templates/courseFormView.twig' with {course: course}%}
-        {% endif %}
 
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>
@@ -28,6 +26,8 @@
             <button id="editcleartemplate" type="button" class="btn btn-primary">Reset Seat Template</button>
         </div>
     </div>
+    <link href="/static/css/course.css" rel="stylesheet"/>
+    <input type="hidden" id="courseID" name="courseID" value="{{ course.id }}"/>
     <!--Clear Student Seating Warning Modal-->
     <div class="modal fade" id="modal-danger-clear-student" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-notify modal-danger" role="document">
@@ -81,7 +81,7 @@
 
 {% block script %}
     {{ parent() }}
-    <script type="text/javascript" src="/static/js/grid.js"></script>
+    <script type="text/javascript" src="/static/js/course.js"></script>
     <script>
         $(document).ready(function () {
             var grid;
@@ -127,5 +127,5 @@
         });
 
     </script>
-    <script type="text/javascript" src="/static/js/course.js"></script>
+    <script type="text/javascript" src="/static/js/grid.js"></script>
 {% endblock %}
