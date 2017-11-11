@@ -166,7 +166,21 @@ function Grid(opt) {
         }
     };
 
-    this.render = function (opt) {
+    this.clearSeats = function() {
+        for (var i = 0; i < this.cells.length; i++)
+            for(var j = 0; j < this.cells[i].length; j++)
+                this.cells[i][j].setState(0);
+    };
+
+    this.removeStudents = function () {
+        for (var i = 0; i < this.cells.length; i++) {
+            for(var j = 0; j < this.cells[i].length; j++) {
+                this.cells[i][j].removeStudent();
+            }
+        }
+    };
+
+    this.render = function () {
         var percent = 100 / this.cols;
         for (var i = 0; i < this.rows; i++) {
             var row = $('<tr/>');

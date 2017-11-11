@@ -30,6 +30,9 @@ public class Course {
     @JsonIgnore
     private User instructor;
 
+    @Transient
+    private Long courseGridReuseID;
+
     public User getInstructor() {
         return instructor;
     }
@@ -110,5 +113,13 @@ public class Course {
         this.name = name;
     }
 
+    @Transient
+    public Long getCourseGridReuseID() {
+        return courseGridReuseID;
+    }
 
+    @Transient
+    public void setCourseGridReuseID(Long courseGridReuseID) {
+        this.courseGridReuseID = courseGridReuseID;
+    }
 }

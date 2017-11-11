@@ -1,44 +1,74 @@
+{% if courseCreationError %}
+    <script>
+        toastr.options.timeOut = 0;
+        toastr.error('{{ courseCreationError }}');
+    </script>
+{% endif %}
+
 <div style="width:50%; margin: auto; padding-bottom: 60px;" class="collapse" id="courseForm">
     <form action="/course" method="post">
         <div class="md-form">
-            <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName">
+            <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName"{% if courseCreationError %}value="{{ courseName }}"{% endif %}>
         </div>
-
         <div class="md-form">
-            <input placeholder="Section" type="text" name="section" class="form-control">
+            <input placeholder="Section" type="text" name="section" class="form-control" {% if courseCreationError %}value="{{ sectionName }}"{% endif %}>
         </div>
-
         <div class="md-form">
             <input placeholder="Timeslot" type="text" name="timeSlot" class="form-control timepicker">
         </div>
-
         <div class="md-form">
-            <input placeholder="Start Date" name="startDate" type="text" class="form-control datepicker">
+            <input placeholder="Start Date" name="startDate" type="text" class="form-control datepicker" >
         </div>
-
         <div class="md-form">
-            <input placeholder="End Date" name="endDate" type="text" class="form-control datepicker">
+            <input placeholder="End Date" name="endDate" type="text" class="form-control datepicker" >
         </div>
-
         <div class="md-form">
-            <input placeholder="Rows" name="rows" type="number" class="form-control">
+            <input id="course-form-rows" placeholder="Rows" name="rows" type="number" class="form-control" {% if courseCreationError %}value="{{ rowsAmount }}"{% endif %}>
         </div>
-
         <div class="md-form">
-            <input placeholder="Columns" name="cols" type="number" class="form-control">
+            <input id="course-form-cols" placeholder="Columns" name="cols" type="number" class="form-control" {% if courseCreationError %}value="{{ colsAmount }}"{% endif %}>
         </div>
-
         <div class="md-form">
-            {# the css expects two seperate class descriptions like this for some reason #}
-            <button type="button" data-target="#courseForm" class="btn btn-blue-grey" data-toggle="collapse"
+            <input id="course-grid-id" name="courseGridReuseID" value="" type="number" style="display:none;">
+        </div>
+        <div style="display:inline-block;width: 100%;">
+            <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
+            <input type="submit" class="btn btn-primary" value="Submit" class="form-control" id="course-form-submit">
+            <button type="button" class="btn btn-blue-grey" id="course-form-collapse-button"
                     aria-expanded="false" aria-controls="courseForm">Cancel
             </button>
-            <input type="submit" class="btn btn-primary" value="Submit" class="form-control">
         </div>
-
-
     </form>
 </div>
-
+<!-- Modal for Searching for a Course Grid -->
+<div class="modal fade" id="search-course-grid-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="heading lead">Use Seat Grid From Other Course</p>
+                <button type="button" id="search-course-grid-modal-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                    <p>By choosing a course, the seat template will be reused in the course being created. The grid dimensions
+                    and seat states will be imported.</p>
+                </div>
+                <div class="md-form">
+                    <input type="text" id="search-course-field" class="form-control">
+                    <label for="search-course-field" class="">Search Course</label>
+                </div>
+                <div id="course-list-queried">
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a type="button" id="search-course-grid-modal-submit-bottom" class="btn btn-primary-modal">Submit<i class="fa fa-diamond ml-1"></i></a>
+                <a type="button" id="search-course-grid-modal-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 

@@ -1,4 +1,4 @@
-{% extends '/templates/base.twig' %}
+{% extends 'base.twig' %}
 
 {% block title %}
     <title>Dashboard - {{ user.username }}</title>
@@ -24,22 +24,8 @@
             <div class="welcome-text">
                 <h1>Welcome back, {{ user.username }}!</h1>
                 {% if user.hasExtendedPrivileges %}
-                    {% block script %}
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            $('.datepicker').pickadate({
-                                formatSubmit: 'yyyy-mm-dd',
-                                hiddenName: true
-                            });
-                            $('.timepicker').pickatime({
-                                twelvehour: true
-                            });
-
-                        });
-                    </script>
-                    {% endblock %}
                     <p>Select a course from the course list, or create a course.</p>
-                    <button type="button" data-target="#courseForm" class="btn btn-primary" data-toggle="collapse"
+                    <button id="createButton" type="button" data-target="#courseForm" class="btn btn-primary"
                             aria-expanded="false" aria-controls="courseForm">Create Course
                     </button>
                     {% include '/templates/courseFormView.twig' %}
@@ -49,4 +35,23 @@
             </div>
         {% endblock %}
     </div>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    {% if user.hasExtendedPrivileges %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').pickadate({
+                formatSubmit: 'yyyy-mm-dd',
+                hiddenName: true
+            });
+            $('.timepicker').pickatime({
+                twelvehour: true
+            });
+        });
+    </script>
+    {% endif %}
+    <script type="text/javascript" src="/static/js/courseform.js"></script>
+    <script type="text/javascript" src="/static/js/dashboard.js"></script>
 {% endblock %}

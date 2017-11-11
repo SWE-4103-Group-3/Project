@@ -48,3 +48,12 @@ td.course-seat:hover {
 h1 {
     font-size: 3rem;
 }
+
+.modal#modal-danger-clear-student,
+.modal#modal-danger-reset-template {
+    top: calc(50% - 350px);
+}
+
+#reuse-grid-button {
+    float: none !important;
+}

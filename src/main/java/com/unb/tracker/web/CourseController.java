@@ -9,16 +9,22 @@ import com.unb.tracker.model.User;
 import com.unb.tracker.repository.CourseRepository;
 import com.unb.tracker.repository.SeatRepository;
 import com.unb.tracker.repository.UserRepository;
+import com.unb.tracker.validator.CourseValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @EnableAutoConfiguration
@@ -29,10 +35,13 @@ public class CourseController {
     private CourseRepository courseRepository;
 
     @Autowired
-    private SeatRepository seatRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private CourseValidator courseValidator;
+
+    @Autowired
+    private SeatRepository seatRepository;
 
     @GetMapping(value = "/{username}/{courseName}")
     public String getCourseByName(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
@@ -103,13 +112,6 @@ public class CourseController {
         return course;
     }
 
-    @PostMapping(value = "/courses")
-    @ResponseBody
-    public String postCourse(@RequestBody Course course) {
-        courseRepository.save(course);
-        return "Saved";
-    }
-
     @GetMapping(value = "/courses")
     public @ResponseBody
     Iterable<Course> getCourses() {
@@ -117,15 +119,90 @@ public class CourseController {
     }
 
     @PostMapping("/course")
-    public String courseSave(@ModelAttribute Course course, ModelMap map, Principal principal) {
+    public String courseSave(@ModelAttribute Course course, Model model, Principal principal, BindingResult bindingResult, RedirectAttributes redir) {
         LOG.info("courseSave - starting - principle.name: {}", principal.getName());
         User user = userRepository.findByUsername(principal.getName());
         if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();
         }
+
+        courseValidator.validate(course, bindingResult);
+        if (bindingResult.hasErrors()) {
+            redir.addFlashAttribute("courseCreationError", bindingResult.getFieldError().getCode());
+            redir.addFlashAttribute("courseName", course.getName());
+            redir.addFlashAttribute("sectionName", course.getSection());
+            redir.addFlashAttribute("startDate", course.getStartDate().toString());
+            redir.addFlashAttribute("rowsAmount", course.getRows());
+            redir.addFlashAttribute("colsAmount", course.getCols());
+
+            return "redirect:/" + user.getUsername();
+        }
+
         course.setInstructor(user);
+        
+        //If user wishes to use grid from other course
+        Long courseGridReuseID = course.getCourseGridReuseID();
+        if(courseGridReuseID != null)
+        {
+            Course otherCourse = courseRepository.findOne(courseGridReuseID);
+            reuseCourseGridHelper(course, otherCourse);
+        }
+
         courseRepository.save(course);
-        map.addAttribute("course", course);
         return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
+    }
+
+    @GetMapping("/courses/query/{queryString}")
+    public @ResponseBody List<Course> queryCourses(@PathVariable String queryString) {
+        return courseRepository.findByPartialName(queryString);
+    }
+
+    @PostMapping("/course/gridReuse")
+    public @ResponseBody Course reuseCourseGrid(@RequestBody Map<String, Long> courseIds, Principal principal) throws BadRequestException {
+        User user = userRepository.findByUsername(principal.getName());
+        if (user == null || !user.getHasExtendedPrivileges()) {
+            throw new BadRequestException();
+        }
+
+        Long courseReceiveID = courseIds.get("currentCourse");
+        Long courseGiveID = courseIds.get("otherCourse");
+
+        if(courseReceiveID == null || courseGiveID == null || courseReceiveID.equals(courseGiveID)) {
+            throw new BadRequestException();
+        }
+
+        Course courseReceive = courseRepository.findOne(courseReceiveID);
+        Course courseGive = courseRepository.findOne(courseGiveID);
+
+        reuseCourseGridHelper(courseReceive, courseGive);
+        courseRepository.save(courseReceive);
+
+        return courseReceive;
+    }
+
+    private void reuseCourseGridHelper(Course courseReceive, Course courseGive) throws BadRequestException {
+        if(courseReceive == null || courseGive == null) {
+            throw new BadRequestException();
+        }
+
+        List<Seat> otherCourseSeats = courseGive.getSeats();
+        List<Seat> newCourseSeats = new ArrayList<>();
+
+        courseReceive.setRows(courseGive.getRows());
+        courseReceive.setCols(courseGive.getCols());
+
+        //Create a duplicate of each seat found in the original course grid
+        for(Seat seat : otherCourseSeats)
+        {
+            Seat newSeat = new Seat();
+
+            newSeat.setRow(seat.getRow());
+            newSeat.setCol(seat.getCol());
+            newSeat.setState(seat.getState());
+
+            newCourseSeats.add(newSeat);
+        }
+
+        courseReceive.setSeats(newCourseSeats);
     }
 }

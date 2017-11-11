@@ -6,9 +6,10 @@
 {% endblock %}
 
 {% block content %}
+    <input type="hidden" id="courseID" name="courseID" value="{{ course.id }}"/>
     <div class="course-editor-body">
         <div class="course-editor-title">
-            <h1>{{ course.name }}</h1>
+            <h1>{{ course.name }} <span style="color: grey;font-size:smaller;">{{ course.section }}</span></h1>
         </div>
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>
@@ -16,82 +17,111 @@
         {% if user.hasExtendedPrivileges %}
             <div class="course-editor-controls">
                 <button id="editsave" type="button" class="btn btn-primary">Edit</button>
+                <button id="editclearseating" type="button" class="btn btn-primary">Clear Student Seating</button>
+                <button id="editcleartemplate" type="button" class="btn btn-primary">Reset Seat Template</button>
+                <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
             </div>
         {% endif %}
+
     </div>
+
 {% endblock %}
 
 {% block modals %}
     {% include 'danger.modal.twig' with {'id': 'remove-modal', 'title': 'Seating', 'message': 'Are you sure you want to remove yourself?', 'buttonId': 'remove-button'} %}
     {% include 'good.modal.twig' with {'id': 'set-modal', 'title': 'Seating', 'message': 'Are you sure you want to choose this seat?', 'buttonId': 'set-button'} %}
+    <!--Clear Student Seating Warning Modal-->
+    <div class="modal fade" id="modal-danger-clear-student" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-danger" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="heading lead">Clear Student Seating</p>
+                    <button type="button" id="modal-danger-clear-student-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                        <p>Are you sure you wish to clear student seating? This will remove students from their assigned seating.
+                            The grid dimensions and seat states will be preserved.</p>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a type="button" id="modal-danger-clear-student-continue" class="btn btn-primary-modal">Continue<i class="fa fa-diamond ml-1"></i></a>
+                    <a type="button" id="modal-danger-clear-student-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Take me back!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Reset Seating Template Warning Modal-->
+    <div class="modal fade" id="modal-danger-reset-template" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-danger" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="heading lead">Reset Seat Template</p>
+                    <button type="button" id="modal-danger-reset-template-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                        <p>Are you sure you wish to reset your seating template? This will remove students from their assigned seating
+                            and clear the states of all the seats in this template to 'open'.</p>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a type="button" id="modal-danger-reset-template-continue" class="btn btn-primary-modal">Continue<i class="fa fa-diamond ml-1"></i></a>
+                    <a type="button" id="modal-danger-reset-template-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Take me back!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for Searching for a Course Grid -->
+    <div class="modal fade" id="search-course-grid-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-info" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="heading lead">Use Seat Grid From Other Course</p>
+                    <button type="button" id="search-course-grid-modal-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                        <p>By choosing a course, the seat template will be overwritten with the template from the chosen course. The grid dimensions
+                            and seat states will be imported.</p>
+                        <p>Do note that this action cannot be undone. Clicking Submit will overwrite the course seats for this course, and student
+                            ties to seats will be lost.</p>
+                    </div>
+                    <div class="md-form">
+                        <input type="text" id="search-course-field" class="form-control">
+                        <label for="search-course-field" class="">Search Course</label>
+                    </div>
+                    <div id="course-list-queried">
+                    </div>
+                    <input id="course-grid-id" name="courseGridReuseID" value="" type="number" style="display:none;">
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a type="button" id="search-course-grid-modal-submit-bottom" class="btn btn-primary-modal">Submit<i class="fa fa-diamond ml-1"></i></a>
+                    <a type="button" id="search-course-grid-modal-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block script %}
     {{ parent() }}
     <script type="text/javascript" src="/static/js/grid.js"></script>
     <script>
-        var removeModalId = 'remove-modal';
-        var setModalId = 'set-modal';
-
-        var removeButtonId = 'remove-button';
-        var setButtonId = 'set-button';
-
         var user = {
             id: {{ user.id }},
             username: '{{ user.username }}',
             hasExtendedPrivileges: {{ user.hasExtendedPrivileges }}
         };
-
-    	var grid;
-        $(document).ready(function () {
-            $.ajax({
-                type: "get",
-                url: "/courses/{{ course.id }}",
-                dataType: "json",
-                success: function (course, status) {
-                	console.log(course);
-                    grid = new Grid({
-                        rows: course.rows,
-                        cols: course.cols,
-                        id: course.id,
-                        seats: course.seats,
-                        {% if user.getHasExtendedPrivileges %}
-                        selectable: false,
-                        {% else %}
-                        selectable: true,
-                        {% endif %}
-                        states: ["open", "closed", "reserved"] // 0, 1, 2
-                    });
-                    $('#course-seating-grid').append(grid.el);
-                },
-                error: function (data, status) {
-                    console.log(data);
-                }
-            });
-        });
-
-        {% if user.getHasExtendedPrivileges %}
-        $('#editsave').on('click', function (e) {
-            if (grid.editable) {
-                grid.editable = false;
-                $('#editsave').html('Edit');
-                var seats = grid.getSeats();
-                $.ajax({
-                    type: "post",
-                    url: "/courses/{{ course.id }}/seats",
-                    data: JSON.stringify(seats),
-                    contentType: "application/json",
-                    error: function (data, status) {
-                        console.error(data);
-                    }
-                });
-
-            } else {
-                grid.editable = true;
-                $('#editsave').html('Save');
-            }
-        });
-        {% endif %}
     </script>
+    <script type="text/javascript" src="/static/js/course.js"></script>
 {% endblock %}
-
