@@ -82,50 +82,5 @@
 {% block script %}
     {{ parent() }}
     <script type="text/javascript" src="/static/js/course.js"></script>
-    <script>
-        $(document).ready(function () {
-            var grid;
-            $.ajax({
-                type: "get",
-                url: "/courses/{{ course.id }}",
-                dataType: "json",
-                success: function (data, status) {
-                    grid = new Grid({
-                        rows: data.rows,
-                        cols: data.cols,
-                        seats: data.seats,
-                        states: ["open", "closed", "reserved"]
-                    });
-                    $('#course-seating-grid').append(grid.el);
-                },
-                error: function (data, status) {
-                    console.log(data);
-                }
-            });
-
-            $('#editsave').on('click', function (e) {
-                if (grid.editable) {
-                    grid.editable = false;
-                    $('#editsave').html('Edit');
-                    var seats = grid.getSeats();
-                    console.log(seats);
-                    $.ajax({
-                        type: "post",
-                        url: "/courses/{{ course.id }}/seats",
-                        data: JSON.stringify(seats),
-                        contentType: "application/json",
-                        error: function (data, status) {
-                            console.log(data);
-                        }
-                    });
-
-                } else {
-                    grid.editable = true;
-                    $('#editsave').html('Save');
-                }
-            });
-        });
-
-    </script>
     <script type="text/javascript" src="/static/js/grid.js"></script>
 {% endblock %}
