@@ -16,7 +16,7 @@ button#reuse-grid-button {
 }
 
 button#course-form-collapse-button,
-input#course-form-submit {
+button#course-form-submit {
     float: right;
 }
 
