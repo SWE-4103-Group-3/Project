@@ -14,13 +14,22 @@
         <div class="course-editor-grid">
             <div id="course-seating-grid"></div>
         </div>
-        <div class="course-editor-controls">
-            <button id="editsave" type="button" class="btn btn-primary">Edit</button>
-            <button id="editclearseating" type="button" class="btn btn-primary">Clear Student Seating</button>
-            <button id="editcleartemplate" type="button" class="btn btn-primary">Reset Seat Template</button>
-            <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
-        </div>
+        {% if user.hasExtendedPrivileges %}
+            <div class="course-editor-controls">
+                <button id="editsave" type="button" class="btn btn-primary">Edit</button>
+                <button id="editclearseating" type="button" class="btn btn-primary">Clear Student Seating</button>
+                <button id="editcleartemplate" type="button" class="btn btn-primary">Reset Seat Template</button>
+                <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
+            </div>
+        {% endif %}
+
     </div>
+
+{% endblock %}
+
+{% block modals %}
+    {% include 'danger.modal.twig' with {'id': 'remove-modal', 'title': 'Seating', 'message': 'Are you sure you want to remove yourself?', 'buttonId': 'remove-button'} %}
+    {% include 'good.modal.twig' with {'id': 'set-modal', 'title': 'Seating', 'message': 'Are you sure you want to choose this seat?', 'buttonId': 'set-button'} %}
     <!--Clear Student Seating Warning Modal-->
     <div class="modal fade" id="modal-danger-clear-student" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-notify modal-danger" role="document">
@@ -35,7 +44,7 @@
                     <div class="text-center">
                         <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
                         <p>Are you sure you wish to clear student seating? This will remove students from their assigned seating.
-                        The grid dimensions and seat states will be preserved.</p>
+                            The grid dimensions and seat states will be preserved.</p>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">
@@ -59,7 +68,7 @@
                     <div class="text-center">
                         <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
                         <p>Are you sure you wish to reset your seating template? This will remove students from their assigned seating
-                        and clear the states of all the seats in this template to 'open'.</p>
+                            and clear the states of all the seats in this template to 'open'.</p>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">
@@ -91,7 +100,7 @@
                         <input type="text" id="search-course-field" class="form-control">
                         <label for="search-course-field" class="">Search Course</label>
                     </div>
-                        <div id="course-list-queried">
+                    <div id="course-list-queried">
                     </div>
                     <input id="course-grid-id" name="courseGridReuseID" value="" type="number" style="display:none;">
                 </div>
@@ -107,5 +116,12 @@
 {% block script %}
     {{ parent() }}
     <script type="text/javascript" src="/static/js/grid.js"></script>
+    <script>
+        var user = {
+            id: {{ user.id }},
+            username: '{{ user.username }}',
+            hasExtendedPrivileges: {{ user.hasExtendedPrivileges }}
+        };
+    </script>
     <script type="text/javascript" src="/static/js/course.js"></script>
 {% endblock %}

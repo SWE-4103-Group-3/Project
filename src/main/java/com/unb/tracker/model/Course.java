@@ -1,6 +1,9 @@
 package com.unb.tracker.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
@@ -11,15 +14,6 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    //TODO: Add link to users table when it actually exists
-    //private User Professor;
-
-    //TODO: Add link to seat plan table when it actually exists
-    //private SeatPlan seatPlan
-
-    //TODO: Investigate how to keep "Old seat Plan (another FK?)"
-    //private SeatPlan oldSeatPlan
-
     private String timeSlot;
     private Date startDate;
     private Date endDate;
@@ -27,10 +21,13 @@ public class Course {
     private String section;
     private Integer rows;
     private Integer cols;
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    //necessary for hibernate when updating course that does not already have a seat plan
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Seat> seats;
+
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
     private User instructor;
 
     @Transient

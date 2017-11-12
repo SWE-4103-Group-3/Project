@@ -1,5 +1,3 @@
-<script type="text/javascript" src="/static/js/courseform.js"></script>
-
 {% if courseCreationError %}
     <script>
         toastr.options.timeOut = 0;
@@ -35,7 +33,7 @@
         </div>
         <div style="display:inline-block;width: 100%;">
             <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
-            <input type="submit" class="btn btn-primary" value="Submit" class="form-control" id="course-form-submit">
+            <button type="submit" class="btn btn-primary" class="form-control" id="course-form-submit">Submit</button>
             <button type="button" class="btn btn-blue-grey" id="course-form-collapse-button"
                     aria-expanded="false" aria-controls="courseForm">Cancel
             </button>

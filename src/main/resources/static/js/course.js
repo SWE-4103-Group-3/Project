@@ -1,3 +1,9 @@
+var removeModalId = 'remove-modal';
+var setModalId = 'set-modal';
+
+var removeButtonId = 'remove-button';
+var setButtonId = 'set-button';
+
 $(document).ready(function () {
     var grid;
     var courseID = $('input#courseID').val();
@@ -6,11 +12,13 @@ $(document).ready(function () {
         type: "get",
         url: "/courses/" + courseID,
         dataType: "json",
-        success: function (data, status) {
+        success: function (course, status) {
             grid = new Grid({
-                rows: data.rows,
-                cols: data.cols,
-                seats: data.seats,
+                rows: course.rows,
+                cols: course.cols,
+                seats: course.seats,
+                id: course.id,
+                selectable: !user.hasExtendedPrivileges,
                 states: ["open", "closed", "reserved"]
             });
             $('#course-seating-grid').append(grid.el);
@@ -42,11 +50,9 @@ $(document).ready(function () {
             .one('click', function(){displayClearModal(false)});
 
         $('#modal-danger-clear-student-continue').one('click', function(){
-            displayClearModal(false);
-            /* GATED BY https://github.com/SWE-4103-Group-3/Project/issues/43
-            var seats = grid.getSeats();
-            postSeats(courseID, seats);
-            */
+            grid.removeStudents();
+            postSeats(courseID, grid.getSeats());
+
         });
     });
 

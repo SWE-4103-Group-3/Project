@@ -1,6 +1,7 @@
 package com.unb.tracker.web;
 
 import com.unb.tracker.exception.BadRequestException;
+import com.unb.tracker.exception.InternalServerErrorException;
 import com.unb.tracker.exception.NotFoundException;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
@@ -46,11 +47,10 @@ public class CourseController {
     public String getCourseByName(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
         LOG.info("getCourseByName - starting - username: {}, courseName: {}", username, courseName);
 
-        Iterable<Course> allCourses = courseRepository.findAll();
-        map.addAttribute("courseList", allCourses);
-
         User user = userRepository.findByUsername(principal.getName());
         map.addAttribute("user", user);
+
+        map.addAttribute("courseList", user.getCourses());
 
         List<Course> courses = courseRepository.findByInstructorUsernameAndName(username, courseName);
         LOG.debug("courses size: {}", courses.size());
@@ -67,11 +67,11 @@ public class CourseController {
     public String getCourseByNameAndSection(@PathVariable String username, @PathVariable String courseName, @PathVariable String courseSection, ModelMap map, Principal principal) {
         LOG.info("getCourseByName - starting - username: {}, courseName: {}; courseSection: {}", username, courseName, courseSection);
 
-        Iterable<Course> allCourses = courseRepository.findAll();
-        map.addAttribute("courseList", allCourses);
 
         User user = userRepository.findByUsername(principal.getName());
         map.addAttribute("user", user);
+
+        map.addAttribute("courseList", user.getCourses());
 
         List<Course> courses = courseRepository.findByInstructorUsernameAndNameAndSection(username, courseName, courseSection);
         if (courses.size() == 0) {
@@ -79,8 +79,9 @@ public class CourseController {
         } else if (courses.size() == 1) {
             map.addAttribute("course", courses.get(0));
             return "course";
+
         }
-        return "error";
+        throw new BadRequestException();
     }
 
     @GetMapping(value = "/courses/{courseId}")
@@ -97,9 +98,17 @@ public class CourseController {
     @PostMapping(value = "/courses/{courseId}/seats")
     public @ResponseBody
     Course postCourseSeats(@PathVariable Long courseId, @RequestBody List<Seat> seats) {
+        LOG.info("postCourseSeats - starting");
         Course course = courseRepository.findOne(courseId);
+
+        for(Seat s : seats) {
+            s.setCourse(course);
+        }
         course.setSeats(seats);
+
+        seatRepository.save(seats);
         courseRepository.save(course);
+
         return course;
     }
 

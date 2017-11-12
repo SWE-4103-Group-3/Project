@@ -80,8 +80,7 @@ public class UserController {
         }
         User user = userRepository.findByUsername(username);
         map.addAttribute("user", user);
-        Iterable<Course> courseList = courseRepository.findAll();
-        map.addAttribute("courseList", courseList);
+        map.addAttribute("courseList", user.getCourses());
         return "dashboard";
     }
 }

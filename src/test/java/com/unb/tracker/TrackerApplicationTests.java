@@ -18,18 +18,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
@@ -44,6 +53,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class TrackerApplicationTests {
     protected final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+    private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
     @Autowired
     private CourseController courseController;
@@ -77,6 +88,18 @@ public class TrackerApplicationTests {
     //- Creating a new instructor should redirect to their instructor view
     //- Attempting to login as instructor or user should redirect them correctly
     //- Test that a student is not able to create courses
+
+    @Autowired
+    void setConverters(HttpMessageConverter<?>[] converters) {
+
+        this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream()
+                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
+                .findAny()
+                .orElse(null);
+
+        assertNotNull("the JSON message converter must not be null",
+                this.mappingJackson2HttpMessageConverter);
+    }
 
     @Before
     public void setup() {
@@ -279,11 +302,14 @@ public class TrackerApplicationTests {
     @Test
     @WithMockUser("test")
     public void coursePage() throws Exception {
-        User intructor = new User();
-        intructor.setUsername("test");
+        User instructor = new User();
+        instructor.setUsername("test");
         Course course = new Course();
-        course.setInstructor(intructor);
+        course.setInstructor(instructor);
         course.setName("test");
+
+        when(userRepository.findByUsername("test")).thenReturn(new User());
+
         when(courseRepository.findByInstructorUsernameAndName("test", "test")).thenReturn(new ArrayList<Course>() {{
             add(course);
         }});
@@ -296,15 +322,17 @@ public class TrackerApplicationTests {
     @Test
     @WithMockUser("test")
     public void coursePageWithSection() throws Exception {
-        User intructor = new User();
-        intructor.setUsername("test");
+        User instructor = new User();
+        instructor.setUsername("test");
         Course course = new Course();
-        course.setInstructor(intructor);
+        course.setInstructor(instructor);
         course.setSection("test");
         course.setName("test");
         when(courseRepository.findByInstructorUsernameAndNameAndSection("test", "test", "test")).thenReturn(new ArrayList<Course>() {{
             add(course);
         }});
+
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
 
         mockMvc.perform(get("/test/test/test"))
                 .andDo(print())
@@ -349,6 +377,38 @@ public class TrackerApplicationTests {
         mockMvc.perform(get("/courses/1"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser("test")
+    public void postSeat() throws Exception {
+        Course course = new Course();
+        course.setId(1l);
+        when(courseRepository.findOne(1l)).thenReturn(course);
+
+        User user = new User();
+        user.setId(1);
+        when(userRepository.findByUsername("test")).thenReturn(user);
+
+        Seat seat = new Seat();
+        seat.setId(1l);
+        seat.setCourse(course);
+        seat.setStudent(user);
+        seat.setCol(7);
+
+        Seat s = new Seat();
+        s.setId(1l);
+
+        List<Seat> seats = new ArrayList<>();
+        seats.add(s);
+        course.setSeats(seats);
+
+        mockMvc.perform(get("/courses/1/seat")
+                .content(this.json(seat)))
+                .andDo(print())
+                .andExpect(status().isOk());
+                //.andExpect(content().string("saved"));
+
     }
 
     /*@Test
@@ -453,6 +513,13 @@ public class TrackerApplicationTests {
 
     private Date convertToSqlDate(String dateString) throws Exception {
         return new java.sql.Date(dateFormat.parse(dateString).getTime());
+    }
+
+    protected String json(Object o) throws IOException {
+        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
+        this.mappingJackson2HttpMessageConverter.write(
+                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
+        return mockHttpOutputMessage.getBodyAsString();
     }
 
 }
