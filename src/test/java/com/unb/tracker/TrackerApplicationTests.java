@@ -36,11 +36,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -431,6 +428,11 @@ public class TrackerApplicationTests {
     @WithMockUser("test")
     public void courseEdit() throws Exception {
 
+        User instructor = new User();
+        instructor.setUsername("test");
+        instructor.setHasExtendedPrivileges(true);
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
+
         when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
 
         String name = "TestCourse";
@@ -446,15 +448,15 @@ public class TrackerApplicationTests {
         courseRepository.save(myCourse);
 
         this.mockMvc.perform(post("/course")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("id", "1")
-            .param("name", "newname")
-            .param("cols", "3")
-            .param("rows", "3")
-            .param("section", "newsection"))
-            .andDo(print())
-            .andExpect(status().isFound())
-            .andExpect(redirectedUrl("/test/newname/newsection")); //redirected
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("name", "newname")
+                .param("cols", "3")
+                .param("rows", "3")
+                .param("section", "newsection"))
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/test/newname/newsection")); //redirected
     }
   
   

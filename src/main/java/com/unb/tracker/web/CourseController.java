@@ -1,7 +1,6 @@
 package com.unb.tracker.web;
 
 import com.unb.tracker.exception.BadRequestException;
-import com.unb.tracker.exception.InternalServerErrorException;
 import com.unb.tracker.exception.NotFoundException;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
@@ -139,33 +138,19 @@ public class CourseController {
             course.setInstructor(user);
             if(bindingResult.hasErrors()) {
                 return "redirect:/" + user.getUsername();
+            } else {
+                Long courseGridReuseID = course.getCourseGridReuseID();
+                if(courseGridReuseID != null)
+                {
+                    Course otherCourse = courseRepository.findOne(courseGridReuseID);
+                    reuseCourseGridHelper(course, otherCourse);
+                }
             }
 
         }
         if(!bindingResult.hasErrors()) {
             courseRepository.save(course);
         }
-        return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
-    }
-
-
-    @PostMapping(value = "courses/{courseId}/delete")
-    @ResponseBody
-    public String deleteCourse(@PathVariable Long courseId, Principal principal) {
-            return "redirect:/" + user.getUsername();
-        }
-
-        course.setInstructor(user);
-        
-        //If user wishes to use grid from other course
-        Long courseGridReuseID = course.getCourseGridReuseID();
-        if(courseGridReuseID != null)
-        {
-            Course otherCourse = courseRepository.findOne(courseGridReuseID);
-            reuseCourseGridHelper(course, otherCourse);
-        }
-
-        courseRepository.save(course);
         return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
 
@@ -180,8 +165,6 @@ public class CourseController {
         if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();
         }
-        courseRepository.delete(courseId);
-        return "success";
 
         Long courseReceiveID = courseIds.get("currentCourse");
         Long courseGiveID = courseIds.get("otherCourse");
@@ -223,6 +206,18 @@ public class CourseController {
         }
 
         courseReceive.setSeats(newCourseSeats);
+    }
+
+
+    @PostMapping(value = "courses/{courseId}/delete")
+    @ResponseBody
+    public String deleteCourse(@PathVariable Long courseId, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName());
+        if (user == null || !user.getHasExtendedPrivileges()) {
+            throw new BadRequestException();
+        }
+        courseRepository.delete(courseId);
+        return "success";
     }
 
 }
