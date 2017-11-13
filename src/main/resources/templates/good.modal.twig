@@ -1,0 +1,22 @@
+<div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-danger" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="heading lead">{{ title }}</p>
+                <button type="button" id=modal-danger-clear-student-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                    <p>{{ message }}</p>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a type="button" id="{{ buttonId }}" class="btn btn-primary-modal">Continue<i class="fa fa-diamond ml-1"></i></a>
+                <a type="button" id="modal-danger-clear-student-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Take me back!</a>
+            </div>
+        </div>
+    </div>
+</div>

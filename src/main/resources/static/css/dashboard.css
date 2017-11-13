@@ -10,3 +10,29 @@ div.welcome-text {
     padding-top: 40px;
     margin-left: 275px;
 }
+
+button#reuse-grid-button {
+    float: left;
+}
+
+button#course-form-collapse-button,
+button#course-form-submit {
+    float: right;
+}
+
+.modal#search-course-grid-modal {
+    top: calc(50% - 350px);
+}
+
+.modal-content {
+    position: absolute;
+}
+
+#course-list-queried {
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.course-list-queried-item {
+    text-align: left;
+}
