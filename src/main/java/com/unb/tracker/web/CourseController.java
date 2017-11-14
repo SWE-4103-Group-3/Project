@@ -149,7 +149,6 @@ public class CourseController {
         }
         if(!bindingResult.hasErrors()) {
             courseRepository.save(course);
-            seatRepository.save(course.getSeats());
         }
         return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
