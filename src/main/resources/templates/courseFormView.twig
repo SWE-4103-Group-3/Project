@@ -27,11 +27,11 @@
             <input  id="startDate" name="startDate" type="text" class="form-control datepicker" {% if courseCreationError %}value="{{ startDate }}" {% else %} value="{{ course.startDate }}" {% endif %}>
             <label for="startDate">Start Date</label>
         </div>
-        <div class="md-form">
+        <div id="course-form-rows" class="md-form">
             <input id="courseRows"  name="rows" type="number" class="form-control" {% if courseCreationError %}value="{{ rowsAmount }}" {% else %} value="{{ course.rows }}" {% endif %}>
             <label for="courseRows">Rows</label>
         </div>
-        <div class="md-form">
+        <div id="course-form-cols" class="md-form">
             <input id="courseCols" name="cols" type="number" class="form-control" {% if courseCreationError %}value="{{ colsAmount }}" {% else %} value="{{ course.cols }}"  {% endif %}>
             <label for="courseCols">Columns</label>
         </div>
@@ -92,42 +92,4 @@
         </div>
     </div>
 </div>
-
-<script>
-    $('#confirmDelete').change(function() {
-        $('#deleteButton').attr('disabled',!this.checked);
-    });
-
-    $('#deleteButton').click(function() {
-        $.ajax({
-            type: "post",
-            url: "/courses/{{course.id}}/delete",
-            contentType: "application/json",
-            error: function (data, status) {
-                console.error(data);
-            },
-            success: function (data){
-                toastr.success("Course successfully deleted.");
-                setTimeout(function(){
-                    window.location.replace("/{{ username }}");
-                },1600);
-
-            }
-        });
-    });
-
-    $(document).ready(function () {
-        $('.datepicker').pickadate({
-            formatSubmit: 'yyyy-mm-dd',
-            hiddenName: true
-        });
-        $('.timepicker').pickatime({
-            twelvehour: true
-        });
-
-    });
-
-
-</script>
-
 

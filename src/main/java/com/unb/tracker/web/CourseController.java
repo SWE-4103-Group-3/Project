@@ -140,8 +140,7 @@ public class CourseController {
                 return "redirect:/" + user.getUsername();
             } else {
                 Long courseGridReuseID = course.getCourseGridReuseID();
-                if(courseGridReuseID != null)
-                {
+                if(courseGridReuseID != null) {
                     Course otherCourse = courseRepository.findOne(courseGridReuseID);
                     reuseCourseGridHelper(course, otherCourse);
                 }
@@ -150,6 +149,7 @@ public class CourseController {
         }
         if(!bindingResult.hasErrors()) {
             courseRepository.save(course);
+            seatRepository.save(course.getSeats());
         }
         return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
@@ -177,7 +177,11 @@ public class CourseController {
         Course courseGive = courseRepository.findOne(courseGiveID);
 
         reuseCourseGridHelper(courseReceive, courseGive);
+        LOG.debug("courseReceive number of seats: {}", courseReceive.getSeats().size());
+
         courseRepository.save(courseReceive);
+
+        LOG.debug("courseReceive number of seats from db: {}", courseRepository.findOne(courseReceiveID).getSeats().size());
 
         return courseReceive;
     }
@@ -201,6 +205,8 @@ public class CourseController {
             newSeat.setRow(seat.getRow());
             newSeat.setCol(seat.getCol());
             newSeat.setState(seat.getState());
+            newSeat.setCourse(courseReceive);
+            LOG.trace("setting seat {} x {} -> state {}", seat.getRow(), seat.getCol(), seat.getState());
 
             newCourseSeats.add(newSeat);
         }
