@@ -1,3 +1,40 @@
+
+$(document).ready(function () {
+    var courseId = $('input#courseId').val();
+    var username = $('input#username').val();
+
+    $('#deleteButton').click(function() {
+        $.ajax({
+            type: "post",
+            url: "/courses/" + courseId + "/delete",
+            contentType: "application/json",
+            error: function (data, status) {
+                console.error(data);
+            },
+            success: function (data){
+                toastr.success("Course successfully deleted.");
+                setTimeout(function(){
+                    window.location.replace("/" + username);
+                },1600);
+
+            }
+        });
+    });
+
+    $('#confirmDelete').change(function() {
+        $('#deleteButton').attr('disabled',!this.checked);
+    });
+
+    $('.datepicker').pickadate({
+        formatSubmit: 'yyyy-mm-dd',
+        hiddenName: true
+    });
+    $('.timepicker').pickatime({
+        twelvehour: true
+    });
+
+});
+
 $(document).ready(function() {
     $('#course-form-collapse-button').on('click', function() {
         $('#courseForm').slideToggle();
