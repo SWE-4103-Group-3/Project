@@ -36,8 +36,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.when;
@@ -156,8 +154,6 @@ public class TrackerApplicationTests {
         myCourse.setCols(cols);
         myCourse.setSection(section);
         myCourse.setStartDate(convertToSqlDate(startDate));
-        myCourse.setEndDate(convertToSqlDate(endDate));
-        myCourse.setTimeSlot(timeSlot);
 
         this.mockMvc.perform(post("/course")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -430,6 +426,40 @@ public class TrackerApplicationTests {
 
     @Test
     @WithMockUser("test")
+    public void courseEdit() throws Exception {
+
+        User instructor = new User();
+        instructor.setUsername("test");
+        instructor.setHasExtendedPrivileges(true);
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
+
+        when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
+
+        String name = "TestCourse";
+        String section = "section";
+        Integer rows = 2;
+        Integer cols = 2;
+        Course myCourse = new Course();
+        myCourse.setName(name);
+        myCourse.setRows(rows);
+        myCourse.setCols(cols);
+        myCourse.setSection(section);
+        myCourse.setInstructor(instructor);
+        courseRepository.save(myCourse);
+
+        this.mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("name", "newname")
+                .param("cols", "3")
+                .param("rows", "3")
+                .param("section", "newsection"))
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/test/newname/newsection")); //redirected
+    }
+  
+  
     public void testQueryCourses() throws Exception {
         Course c1 = new Course();
         c1.setSection("IRRELEVANT1");

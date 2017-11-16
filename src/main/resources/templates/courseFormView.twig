@@ -4,40 +4,64 @@
         toastr.error('{{ courseCreationError }}');
     </script>
 {% endif %}
-
 <div style="width:50%; margin: auto; padding-bottom: 60px;" class="collapse" id="courseForm">
     <form action="/course" method="post">
-        <div class="md-form">
-            <input placeholder="Course Name" type="text" name="name" class="form-control" id="courseFormName"{% if courseCreationError %}value="{{ courseName }}"{% endif %}>
-        </div>
-        <div class="md-form">
-            <input placeholder="Section" type="text" name="section" class="form-control" {% if courseCreationError %}value="{{ sectionName }}"{% endif %}>
-        </div>
-        <div class="md-form">
-            <input placeholder="Timeslot" type="text" name="timeSlot" class="form-control timepicker">
-        </div>
-        <div class="md-form">
-            <input placeholder="Start Date" name="startDate" type="text" class="form-control datepicker" >
-        </div>
-        <div class="md-form">
-            <input placeholder="End Date" name="endDate" type="text" class="form-control datepicker" >
-        </div>
-        <div class="md-form">
-            <input id="course-form-rows" placeholder="Rows" name="rows" type="number" class="form-control" {% if courseCreationError %}value="{{ rowsAmount }}"{% endif %}>
-        </div>
-        <div class="md-form">
-            <input id="course-form-cols" placeholder="Columns" name="cols" type="number" class="form-control" {% if courseCreationError %}value="{{ colsAmount }}"{% endif %}>
-        </div>
+        <input id="courseId" value="{{ course.id }}" type="hidden" name="id">
+        <input id="username" value="{{ username }}" type="hidden" name="username">
+
+
+        <input value="{{ course.instructor.id }}" type="hidden" name="instructor.id">
+
         <div class="md-form">
             <input id="course-grid-id" name="courseGridReuseID" value="" type="number" style="display:none;">
         </div>
-        <div style="display:inline-block;width: 100%;">
-            <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
-            <button type="submit" class="btn btn-primary" class="form-control" id="course-form-submit">Submit</button>
-            <button type="button" class="btn btn-blue-grey" id="course-form-collapse-button"
+
+        <div class="md-form">
+            <input id="courseName" type="text" name="name" class="form-control" id="courseFormName" {% if courseCreationError %}value="{{ courseName }}" {% else %} value="{{ course.name }}" {% endif %}>
+            <label for="courseName">Name</label>
+        </div>
+        <div class="md-form">
+
+            <input id="courseSection"  type="text" name="section" class="form-control" {% if courseCreationError %}value="{{ sectionName }}" {% else %} value="{{ course.section }}" {% endif %}>
+            <label for="courseSection">Section</label>
+        </div>
+        <div class="md-form">
+            <input  id="startDate" name="startDate" type="text" class="form-control datepicker" {% if courseCreationError %}value="{{ startDate }}" {% else %} value="{{ course.startDate }}" {% endif %}>
+            <label for="startDate">Start Date</label>
+        </div>
+        <div class="md-form">
+            <input id="courseRows"  name="rows" type="number" class="form-control" {% if courseCreationError %}value="{{ rowsAmount }}" {% else %} value="{{ course.rows }}" {% endif %}>
+            <label for="courseRows">Rows</label>
+        </div>
+        <div class="md-form">
+            <input id="courseCols" name="cols" type="number" class="form-control" {% if courseCreationError %}value="{{ colsAmount }}" {% else %} value="{{ course.cols }}"  {% endif %}>
+            <label for="courseCols">Columns</label>
+        </div>
+
+        {% if (course.id) %}
+            <button type="button" data-target="#courseForm" class="btn btn-blue-grey" data-toggle="collapse"
                     aria-expanded="false" aria-controls="courseForm">Cancel
             </button>
-        </div>
+            <input type="submit" class="btn btn-primary" value="Submit" class="form-control">
+            <div style="float:right">
+                <button id="deleteButton" type="button" disabled="true" class="btn btn-blue-grey" style="margin-bottom:5px">
+                    Delete
+                </button>
+                <div>
+                    <input id="confirmDelete" type="checkbox">
+                    <label for="confirmDelete">Check to confirm delete</label>
+                </div>
+            </div>
+
+        {% else %}
+            <div style="display:inline-block;width: 100%;">
+                <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
+                <button type="submit" class="btn btn-primary" class="form-control" id="course-form-submit">Submit</button>
+                <button type="button" class="btn btn-blue-grey" id="course-form-collapse-button"
+                        aria-expanded="false" aria-controls="courseForm">Cancel
+                </button>
+            </div>
+        {% endif %}
     </form>
 </div>
 <!-- Modal for Searching for a Course Grid -->
@@ -54,7 +78,7 @@
                 <div class="text-center">
                     <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
                     <p>By choosing a course, the seat template will be reused in the course being created. The grid dimensions
-                    and seat states will be imported.</p>
+                        and seat states will be imported.</p>
                 </div>
                 <div class="md-form">
                     <input type="text" id="search-course-field" class="form-control">

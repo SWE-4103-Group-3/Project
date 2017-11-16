@@ -1,7 +1,6 @@
 package com.unb.tracker.web;
 
 import com.unb.tracker.exception.BadRequestException;
-import com.unb.tracker.exception.InternalServerErrorException;
 import com.unb.tracker.exception.NotFoundException;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -119,13 +117,14 @@ public class CourseController {
     }
 
     @PostMapping("/course")
-    public String courseSave(@ModelAttribute Course course, Model model, Principal principal, BindingResult bindingResult, RedirectAttributes redir) {
+    public String courseSave(@ModelAttribute Course course, ModelMap map, Principal principal, BindingResult bindingResult, RedirectAttributes redir) {
         LOG.info("courseSave - starting - principle.name: {}", principal.getName());
         User user = userRepository.findByUsername(principal.getName());
         if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();
         }
 
+        map.addAttribute("course", course);
         courseValidator.validate(course, bindingResult);
         if (bindingResult.hasErrors()) {
             redir.addFlashAttribute("courseCreationError", bindingResult.getFieldError().getCode());
@@ -134,21 +133,24 @@ public class CourseController {
             redir.addFlashAttribute("startDate", course.getStartDate().toString());
             redir.addFlashAttribute("rowsAmount", course.getRows());
             redir.addFlashAttribute("colsAmount", course.getCols());
-
-            return "redirect:/" + user.getUsername();
         }
+        if (course.getId() == null) {
+            course.setInstructor(user);
+            if(bindingResult.hasErrors()) {
+                return "redirect:/" + user.getUsername();
+            } else {
+                Long courseGridReuseID = course.getCourseGridReuseID();
+                if(courseGridReuseID != null)
+                {
+                    Course otherCourse = courseRepository.findOne(courseGridReuseID);
+                    reuseCourseGridHelper(course, otherCourse);
+                }
+            }
 
-        course.setInstructor(user);
-        
-        //If user wishes to use grid from other course
-        Long courseGridReuseID = course.getCourseGridReuseID();
-        if(courseGridReuseID != null)
-        {
-            Course otherCourse = courseRepository.findOne(courseGridReuseID);
-            reuseCourseGridHelper(course, otherCourse);
         }
-
-        courseRepository.save(course);
+        if(!bindingResult.hasErrors()) {
+            courseRepository.save(course);
+        }
         return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
 
@@ -205,4 +207,17 @@ public class CourseController {
 
         courseReceive.setSeats(newCourseSeats);
     }
+
+
+    @PostMapping(value = "courses/{courseId}/delete")
+    @ResponseBody
+    public String deleteCourse(@PathVariable Long courseId, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName());
+        if (user == null || !user.getHasExtendedPrivileges()) {
+            throw new BadRequestException();
+        }
+        courseRepository.delete(courseId);
+        return "success";
+    }
+
 }
