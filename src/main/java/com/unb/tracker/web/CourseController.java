@@ -145,6 +145,7 @@ public class CourseController {
         if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();
         }
+        course.setInstructor(user);
 
         map.addAttribute("course", course);
         courseValidator.validate(course, bindingResult);
@@ -162,7 +163,6 @@ public class CourseController {
 
             return "redirect:/" + user.getUsername();
         } else {
-
             // Are we trying to create a course?
             if (course.getId() == null) {
                 course.setInstructor(user);

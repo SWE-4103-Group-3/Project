@@ -45,8 +45,7 @@ $(document).ready(function() {
         if(document.forms["courseForm"]["section"] == "") {
             document.forms["courseForm"]["section"] = null;
         }
-
-        alert(document.forms["courseForm"]["startDate"].value);
+        
         if(document.forms["courseForm"]["startDate"].value == ""){
             document.forms["courseForm"]["startDate"].value = "1970-01-01";
         }

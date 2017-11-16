@@ -25,6 +25,10 @@ public class CourseValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"name", "Ensure all required fields are filled. (Check Course Name)");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"rows", "Ensure all required fields are filled. (Check Rows)");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"cols", "Ensure all required fields are filled. (Check Columns)");
+        
+        if (!courseService.findByInstructorUsernameAndNameAndSection(course.getInstructor().getUsername(), course.getName(), course.getSection()).isEmpty()) {
+            errors.rejectValue("name", "This section for this course already exists.");
+        }
 
         if (course.getStartDate().toString().equals("1970-01-01")) {
             errors.rejectValue("startDate", "Ensure all required fields are filled. (Check Start Date)"); //WTF</br></br>Ex: 'CS 4103'");
