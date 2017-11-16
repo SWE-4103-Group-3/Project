@@ -7,6 +7,13 @@
 {% block style %}
     {{ parent() }}
     <link href="/static/css/dashboard.css" rel="stylesheet"/>
+    <link href="/static/css/courselist.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript" src="/static/js/courseform.js"></script>
+    <script type="text/javascript" src="/static/js/dashboard.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -35,23 +42,4 @@
             </div>
         {% endblock %}
     </div>
-{% endblock %}
-
-{% block script %}
-    {{ parent() }}
-    {% if user.hasExtendedPrivileges %}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.datepicker').pickadate({
-                formatSubmit: 'yyyy-mm-dd',
-                hiddenName: true
-            });
-            $('.timepicker').pickatime({
-                twelvehour: true
-            });
-        });
-    </script>
-    {% endif %}
-    <script type="text/javascript" src="/static/js/courseform.js"></script>
-    <script type="text/javascript" src="/static/js/dashboard.js"></script>
 {% endblock %}

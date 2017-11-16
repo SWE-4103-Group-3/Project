@@ -1,3 +1,8 @@
+var user = {
+    id: Number($('#userID').val()),
+    hasExtendedPrivileges: $('#userExtendedPrivileges').val() === 'true'
+};
+
 function Cell(opt) {
     this.el = $('<td class="course-seat"/>');
 
@@ -87,15 +92,14 @@ function Cell(opt) {
 
             // Is the student trying to remove himself?
             if(cell.hasStudent()) {
-                $('#'+removeModalId).modal();
-                $('#'+removeButtonId).on('click', function () {
+                $('#remove-modal').modal();
+                $('#remove-button').one('click', function () {
                     seat.student = null;
                     postSeat(seat);
                 });
-
             } else {
-                $('#'+setModalId).modal();
-                $('#'+setButtonId).on('click', function () {
+                $('#set-modal').modal();
+                $('#set-button').one('click', function () {
                     seat.student = {
                         "id": user.id
                     };
@@ -125,15 +129,6 @@ function Cell(opt) {
 
 function Grid(opt) {
     this.el = $('<table id="course-seating-table"/>');
-
-    if(!removeButtonId || !removeModalId) {
-        throw 'place specify removeButtonId and removeModalId';
-    }
-
-    if(!setButtonId || !setModalId) {
-        throw 'place specify setButtonId and setModalId';
-    }
-
     this.id = opt.id;
     this.rows = opt.rows;
     this.cols = opt.cols;

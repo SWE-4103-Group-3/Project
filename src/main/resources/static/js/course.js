@@ -1,9 +1,3 @@
-var removeModalId = 'remove-modal';
-var setModalId = 'set-modal';
-
-var removeButtonId = 'remove-button';
-var setButtonId = 'set-button';
-
 $(document).ready(function () {
     var grid;
     var courseID = $('input#courseID').val();
@@ -13,12 +7,14 @@ $(document).ready(function () {
         url: "/courses/" + courseID,
         dataType: "json",
         success: function (course, status) {
+            var userPrivileges = $('#userExtendedPrivileges').val() === 'true';
+
             grid = new Grid({
                 rows: course.rows,
                 cols: course.cols,
                 seats: course.seats,
                 id: course.id,
-                selectable: !user.hasExtendedPrivileges,
+                selectable: !userPrivileges,
                 states: ["open", "closed", "reserved"]
             });
             $('#course-seating-grid').append(grid.el);
@@ -52,7 +48,6 @@ $(document).ready(function () {
         $('#modal-danger-clear-student-continue').one('click', function(){
             grid.removeStudents();
             postSeats(courseID, grid.getSeats());
-
         });
     });
 

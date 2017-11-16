@@ -1,4 +1,4 @@
-window.onload = function () {
+$(document).ready(function () {
     $('#student-login-button').click(function () {
         var $userTypeSelector = $('#user-type-selector');
 
@@ -51,4 +51,4 @@ window.onload = function () {
         else
             window.location.replace("/");
     });
-};
+});
