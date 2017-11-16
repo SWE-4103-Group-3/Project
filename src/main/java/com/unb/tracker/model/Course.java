@@ -15,16 +15,6 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    //TODO: Add link to users table when it actually exists
-    //private User Professor;
-
-    //TODO: Add link to seat plan table when it actually exists
-    //private SeatPlan seatPlan
-
-    //TODO: Investigate how to keep "Old seat Plan (another FK?)"
-    //private SeatPlan oldSeatPlan
-
     private Date startDate;
     private String name;
     private String section;
