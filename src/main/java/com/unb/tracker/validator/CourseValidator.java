@@ -31,15 +31,15 @@ public class CourseValidator implements Validator {
         }
 
         if (course.getStartDate().toString().equals("1970-01-01")) {
-            errors.rejectValue("startDate", "Ensure all required fields are filled. (Check Start Date)"); //WTF</br></br>Ex: 'CS 4103'");
+            errors.rejectValue("startDate", "Ensure all required fields are filled. (Check Start Date)");
         }
 
         if (course.getName().length() > 10) {
-            errors.rejectValue("name", "Course name should be less than 10 characters"); //WTF</br></br>Ex: 'CS 4103'");
+            errors.rejectValue("name", "Course name should be less than 10 characters");
         }
 
         if (course.getSection().length() > 10) {
-            errors.rejectValue("section", "Section should be less than 10 characters"); //WTF</br></br>Ex: 'CS 4103'");
+            errors.rejectValue("section", "Section should be less than 10 characters");
         }
 
         if (course.getRows() < 1 || course.getRows() > 18) {
