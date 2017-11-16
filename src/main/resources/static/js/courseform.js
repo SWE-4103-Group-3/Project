@@ -1,9 +1,8 @@
-
-$(document).ready(function () {
-    var courseId = $('input#courseId').val();
-    var username = $('input#username').val();
-
+$(document).ready(function() {
     $('#deleteButton').click(function() {
+        var courseId = $('input#courseId').val();
+        var username = $('input#username').val();
+
         $.ajax({
             type: "post",
             url: "/courses/" + courseId + "/delete",
@@ -16,7 +15,6 @@ $(document).ready(function () {
                 setTimeout(function(){
                     window.location.replace("/" + username);
                 },1600);
-
             }
         });
     });
@@ -29,13 +27,7 @@ $(document).ready(function () {
         formatSubmit: 'yyyy-mm-dd',
         hiddenName: true
     });
-    $('.timepicker').pickatime({
-        twelvehour: true
-    });
 
-});
-
-$(document).ready(function() {
     $('#course-form-collapse-button').on('click', function() {
         $('#courseForm').slideToggle();
     });

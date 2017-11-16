@@ -5,6 +5,12 @@
     <link href="/static/css/course.css" rel="stylesheet"/>
 {% endblock %}
 
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript" src="/static/js/grid.js"></script>
+    <script type="text/javascript" src="/static/js/course.js"></script>
+{% endblock %}
+
 {% block content %}
     <div class="course-editor-body">
         <div class="course-editor-title">
@@ -28,11 +34,10 @@
                 <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
             </div>
         {% endif %}
-
     </div>
-    <link href="/static/css/course.css" rel="stylesheet"/>
     <input type="hidden" id="courseID" name="courseID" value="{{ course.id }}"/>
-
+    <input type="hidden" id="userID" name="userID" value="{{ user.id }}"/>
+    <input type="hidden" id="userExtendedPrivileges" name="userExtendedPrivileges" value="{{ user.hasExtendedPrivileges }}"/>
 {% endblock %}
 
 {% block modals %}
@@ -120,17 +125,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block script %}
-    {{ parent() }}
-    <script type="text/javascript" src="/static/js/grid.js"></script>
-    <script>
-        var user = {
-            id: {{ user.id }},
-            username: '{{ user.username }}',
-            hasExtendedPrivileges: {{ user.hasExtendedPrivileges }}
-        };
-    </script>
-    <script type="text/javascript" src="/static/js/course.js"></script>
 {% endblock %}

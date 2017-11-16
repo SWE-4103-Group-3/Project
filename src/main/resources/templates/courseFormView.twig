@@ -8,9 +8,7 @@
     <form action="/course" method="post">
         <input id="courseId" value="{{ course.id }}" type="hidden" name="id">
         <input id="username" value="{{ username }}" type="hidden" name="username">
-
-
-        <input value="{{ course.instructor.id }}" type="hidden" name="instructor.id">
+        <input id="instructorId" value="{{ course.instructor.id }}" type="hidden" name="instructor.id">
 
         <div class="md-form">
             <input id="course-grid-id" name="courseGridReuseID" value="" type="number" style="display:none;">
@@ -52,7 +50,6 @@
                     <label for="confirmDelete">Check to confirm delete</label>
                 </div>
             </div>
-
         {% else %}
             <div style="display:inline-block;width: 100%;">
                 <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
@@ -94,5 +91,3 @@
         </div>
     </div>
 </div>
-
-
