@@ -42,11 +42,15 @@ public class CourseValidator implements Validator {
             errors.rejectValue("section", "Section should be less than 10 characters");
         }
 
-        if (course.getRows() < 1 || course.getRows() > 18) {
+        if (course.getRows() == null) {
+            errors.rejectValue("rows", "Ensure all required fields are filled. (Check Rows)");
+        } else if (course.getRows() < 1 || course.getRows() > 18) {
             errors.rejectValue("rows", "Please enter between 1 and 18 rows.");
         }
 
-        if (course.getCols() < 1 || course.getCols() > 31) {
+        if (course.getCols() == null) {
+            errors.rejectValue("cols", "Ensure all required fields are filled. (Check Columns)");
+        } else if (course.getCols() < 1 || course.getCols() > 31) {
             errors.rejectValue("cols", "Please enter between 1 and 31 columns.");
         }
 
