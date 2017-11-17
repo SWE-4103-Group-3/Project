@@ -55,4 +55,43 @@ public class AbsenceController {
 
         return course;
     }
+
+    @GetMapping(value = "/{courseName}")
+    public String getAllCourseAbsencesByName(@PathVariable String courseName) {
+        LOG.info("getAllCourseAbsences - starting - courseName: {}", courseName);
+
+    }
+    @GetMapping(value = "/{courseName}/{courseSection}")
+    public String getAllCourseAbsencesByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection) {
+        LOG.info("getAllCourseAbsences - starting - courseName: {}, courseSection: {}", courseName, courseSection);
+
+    }
+
+
+    @GetMapping(value = "/{courseName}/today")
+    public String getAllCourseAbsencesForTodayByName(@PathVariable String instructor, @PathVariable String courseName) {
+        LOG.info("getAllCourseAbsencesForToday - starting - courseName: {}", courseName);
+
+
+    }
+    @GetMapping(value = "/{courseName}/{courseSection}/today")
+    public String getAllCourseAbsencesForTodayByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection) {
+        LOG.info("getAllCourseAbsencesForToday - starting - courseName: {}, courseSection: {},", courseName, courseSection);
+
+
+    }
+
+
+    @GetMapping(value = "/{instructor}/{courseName}/{student}")
+    public String getAllStudentAbsencesByName(@PathVariable String instructor, @PathVariable String courseName, @PathVariable String courseSection, @PathVariable String student) {
+        LOG.info("getAllStudentAbsences - starting - courseName: {}", instructor, courseName, courseSection, student);
+
+
+    }
+    @GetMapping(value = "/{instructor}/{courseName}/{courseSection}/{student}")
+    public String getAllStudentAbsencesByNameAndSection(@PathVariable Long courseId) {
+        LOG.info("getAllStudentAbsences - starting - courseId: {}", courseId);
+
+
+    }
 }
