@@ -57,3 +57,13 @@ h1 {
 #reuse-grid-button {
     float: none !important;
 }
+
+.attendance-buttons {
+    float: right;
+    visibility: hidden;
+    margin-left: 4px;
+}
+
+.absent {
+    background-color: #d47a10 !important;
+}

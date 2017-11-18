@@ -8,6 +8,7 @@ function Cell(opt) {
     this.parent = opt.parent;
     this.rows = opt.rows;
     this.state = 0;
+    this.absent = opt.absent || false;
 
     this.setState = function (state) {
         this.el.removeClass(this.states[this.state]);
@@ -61,6 +62,22 @@ function Cell(opt) {
         return this.student;
     };
 
+    this.studentIsAbsent = function() {
+        return this.absent;
+    };
+
+    this.setAbsent = function (setAbsent) {
+        if(setAbsent) {
+            //this.el.addClass("absent");
+            this.el.html(this.el.html()+' <div style="font-size: larger;color: #b70505;">•</div>');
+            this.absent = true;
+        } else {
+            //this.el.removeClass("absent");
+            this.el.html(this.student.username);
+            this.absent = false;
+        }
+    };
+
     this.el.on('click', {cell: this}, function (e) {
         var cell = e.data.cell;
         if (cell.parent.editable) {
@@ -102,6 +119,12 @@ function Cell(opt) {
                     postSeat(seat);
                 });
             }
+        } else if(cell.parent.takeAttendance) {
+            if(!cell.hasStudent()) {
+                return;
+            }
+
+            cell.setAbsent(!cell.absent);
         }
     });
 
@@ -141,6 +164,7 @@ function Grid(opt) {
     this.editable = opt.editable;
     this.selectable = opt.selectable;
     this.seats = opt.seats;
+    this.takeAttendance = opt.takeAttendance || false;
     this.cells = []; // init seat 2D array
 
     this.getSeats = function () {
@@ -178,6 +202,32 @@ function Grid(opt) {
                 this.cells[i][j].removeStudent();
             }
         }
+    };
+
+    this.resetAbsences = function () {
+        for (var i = 0; i < this.cells.length; i++) {
+            for(var j = 0; j < this.cells[i].length; j++) {
+                this.cells[i][j].setAbsent(false);
+            }
+        }
+    };
+
+    this.getAbsences = function() {
+        var absences = [];
+        for (var i = 0; i < this.cells.length; i++) {
+            for(var j = 0; j < this.cells[i].length; j++) {
+                if (this.cells[i][j].studentIsAbsent()) {
+                    absences.push({
+                        "id": this.cells[i][j].getStudentID()
+                    });
+                }
+            }
+        }
+        return absences;
+    };
+
+    this.getCourseID = function () {
+        return this.id;
     };
 
     this.render = function () {
