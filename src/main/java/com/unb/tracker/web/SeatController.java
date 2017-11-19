@@ -44,6 +44,12 @@ public class SeatController {
             throw new BadRequestException();
         }
 
+        LOG.debug("seat state: {}", seat.getState());
+        if(seatRepository.findOne(seat.getId()).getState() != Seat.AVAILABLE) {
+            LOG.warn("student {} is trying to choose an unavailable seat", user.getUsername());
+            throw new BadRequestException();
+        }
+
         if(seat.getStudent() != null && !user.getId().equals(seat.getStudent().getId())) {
             LOG.warn("{} trying to alter {}'s seat", user.getUsername(), seat.getStudent().getUsername());
             throw new BadRequestException();

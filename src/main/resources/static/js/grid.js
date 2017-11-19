@@ -83,6 +83,10 @@ function Cell(opt) {
     this.el.on('click', {cell: this}, function (e) {
         var cell = e.data.cell;
         if (cell.parent.editable) {
+            if(cell.hasStudent()) {
+                return;
+            }
+
             cell.el.removeClass(cell.states[cell.state]);
             cell.state++;
             if (!cell.states[cell.state]) {

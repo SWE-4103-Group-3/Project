@@ -207,6 +207,21 @@ function postAbsences(courseID, absences) {
     });
 }
 
+function postSeat(info) {
+    $.ajax({
+        type: "post",
+        url: "/seats",
+        data: JSON.stringify(info),
+        contentType: "application/json",
+        success: function() {
+            window.location.reload();
+        },
+        error: function (data) {
+            displayErrorNotification
+        }
+    });
+}
+
 //Query Backend for Courses Matching Query String, Populate Queried Course List
 function queryAndPopulateCourses(query) {
     var courseLineEventHandler = function() {
