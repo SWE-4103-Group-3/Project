@@ -131,6 +131,30 @@
             username: '{{ user.username }}',
             hasExtendedPrivileges: {{ user.hasExtendedPrivileges }}
         };
+        {% if user.hasExtendedPrivileges %}
+        	$('#confirmDelete').change(function() {
+				$('#deleteButton').attr('disabled',!this.checked);
+			});
+
+			$('#deleteButton').click(function() {
+				$.ajax({
+				    type: "post",
+				    url: "/courses/{{course.id}}/delete",
+				    contentType: "application/json",
+				    error: function (data, status) {
+				        console.error(data);
+				    },
+				    success: function (data){
+				        toastr.success("Course successfully deleted.");
+				        setTimeout(function(){
+				            window.location.replace("/{{ username }}");
+				        },1600);
+
+				    }
+				});
+			});
+        {% endif %}
     </script>
     <script type="text/javascript" src="/static/js/course.js"></script>
 {% endblock %}
+

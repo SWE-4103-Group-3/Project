@@ -208,7 +208,11 @@ public class CourseController {
         Course courseGive = courseRepository.findOne(courseGiveID);
 
         reuseCourseGridHelper(courseReceive, courseGive);
+        LOG.debug("courseReceive number of seats: {}", courseReceive.getSeats().size());
+
         courseRepository.save(courseReceive);
+
+        LOG.debug("courseReceive number of seats from db: {}", courseRepository.findOne(courseReceiveID).getSeats().size());
 
         return courseReceive;
     }
