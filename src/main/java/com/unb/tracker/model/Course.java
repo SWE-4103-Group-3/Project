@@ -116,9 +116,11 @@ public class Course {
 
     public List<Seat> getOutOfBoundsSeats(int rows, int cols) {
         List<Seat> seatsToRemove = new ArrayList<>();
-        for(Seat s : seats) {
-            if(s.getRow() >= rows || s.getCol() >= cols) {
-                seatsToRemove.add(s);
+        if(seats != null) {
+            for(Seat s : seats) {
+                if(s.getRow() >= rows || s.getCol() >= cols) {
+                    seatsToRemove.add(s);
+                }
             }
         }
         return seatsToRemove;
