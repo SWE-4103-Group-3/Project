@@ -29,11 +29,11 @@
             <input  id="startDate" name="startDate" type="text" class="form-control datepicker" {% if courseCreationError %}value="{{ startDate }}" {% else %} value="{{ course.startDate }}" {% endif %}>
             <label for="startDate">Start Date</label>
         </div>
-        <div class="md-form">
+        <div id="course-form-rows" class="md-form">
             <input id="courseRows"  name="rows" type="number" class="form-control" {% if courseCreationError %}value="{{ rowsAmount }}" {% else %} value="{{ course.rows }}" {% endif %}>
             <label for="courseRows">Rows</label>
         </div>
-        <div class="md-form">
+        <div id="course-form-cols" class="md-form">
             <input id="courseCols" name="cols" type="number" class="form-control" {% if courseCreationError %}value="{{ colsAmount }}" {% else %} value="{{ course.cols }}"  {% endif %}>
             <label for="courseCols">Columns</label>
         </div>

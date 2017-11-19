@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -104,5 +105,22 @@ public class Course {
     @Transient
     public void setCourseGridReuseID(Long courseGridReuseID) {
         this.courseGridReuseID = courseGridReuseID;
+    }
+
+    public void removeSeats(List<Seat> seatsToRemove) {
+        seats.removeAll(seatsToRemove);
+        for(Seat s : seatsToRemove) {
+            s.setCourse(null);
+        }
+    }
+
+    public List<Seat> getOutOfBoundsSeats(int rows, int cols) {
+        List<Seat> seatsToRemove = new ArrayList<>();
+        for(Seat s : seats) {
+            if(s.getRow() >= rows || s.getCol() >= cols) {
+                seatsToRemove.add(s);
+            }
+        }
+        return seatsToRemove;
     }
 }

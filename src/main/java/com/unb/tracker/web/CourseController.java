@@ -110,6 +110,28 @@ public class CourseController {
         return course;
     }
 
+    @PostMapping(value = "/courses/{courseId}/seats/students/remove")
+    public @ResponseBody String removeStudentsFromSeats(@PathVariable Long courseId) {
+        LOG.info("removeStudentsFromSeats - starting");
+        Course course = courseRepository.findOne(courseId);
+        List<Seat> seats = course.getSeats();
+
+        List<User> students = new ArrayList<>();
+        for(Seat s : seats) {
+            User student = s.getStudent();
+            if(student != null) {
+                student.removeSeat(s);
+                students.add(student);
+                s.removeStudent();
+            }
+        }
+
+        seatRepository.save(seats);
+        userRepository.save(students);
+
+        return "saved";
+    }
+
     @GetMapping(value = "/courses")
     public @ResponseBody
     Iterable<Course> getCourses() {
@@ -134,23 +156,32 @@ public class CourseController {
             redir.addFlashAttribute("rowsAmount", course.getRows());
             redir.addFlashAttribute("colsAmount", course.getCols());
         }
+
+        // Are we trying to create a course?
         if (course.getId() == null) {
             course.setInstructor(user);
             if(bindingResult.hasErrors()) {
                 return "redirect:/" + user.getUsername();
             } else {
                 Long courseGridReuseID = course.getCourseGridReuseID();
-                if(courseGridReuseID != null)
-                {
+                if(courseGridReuseID != null) {
                     Course otherCourse = courseRepository.findOne(courseGridReuseID);
                     reuseCourseGridHelper(course, otherCourse);
                 }
             }
 
+        } else {
+            Course c = courseRepository.findOne(course.getId());
+            List<Seat> seatsToRemove = c.getOutOfBoundsSeats(course.getRows(), course.getCols());
+            c.removeSeats(seatsToRemove);
+            LOG.debug("removing {} seats", seatsToRemove.size());
+            seatRepository.save(seatsToRemove);
         }
+
         if(!bindingResult.hasErrors()) {
             courseRepository.save(course);
         }
+
         return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
     }
 
@@ -201,6 +232,7 @@ public class CourseController {
             newSeat.setRow(seat.getRow());
             newSeat.setCol(seat.getCol());
             newSeat.setState(seat.getState());
+            newSeat.setCourse(courseReceive);
 
             newCourseSeats.add(newSeat);
         }
