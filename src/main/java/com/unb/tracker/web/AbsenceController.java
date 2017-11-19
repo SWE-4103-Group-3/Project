@@ -30,13 +30,11 @@ public class AbsenceController {
     private UserRepository userRepository;
 
     @Autowired
-    private CourseValidator courseValidator;
-
-    @Autowired
     private AbsenceRepository absenceRepository;
 
     @PostMapping(value = "/courses/{courseId}/absences")
     public @ResponseBody
+    
     Course postAbsence(@PathVariable Long courseId, @RequestBody List<User> students) {
         LOG.info("postAbsence - starting");
         Course course = courseRepository.findOne(courseId);
@@ -52,43 +50,35 @@ public class AbsenceController {
         return course;
     }
 
-    @GetMapping(value = "/{courseName}")
-    public String getAllCourseAbsencesByName(@PathVariable String courseName, @PathVariable String instructor) {
-        LOG.info("getAllCourseAbsences - starting - courseName: {}", courseName);
+    @GetMapping(value = "/courses/{courseId}/absences")
+    public List<Absence> getAllCourseAbsencesById(@PathVariable String courseId) {
+        LOG.info("getAllCourseAbsences - starting - courseId: {}", courseId);
 
+        List<Absence> absences = absenceRepository.findByCourseId(courseId);
+
+        return absences;
     }
 
-    @GetMapping(value = "/{courseName}/{courseSection}")
-    public String getAllCourseAbsencesByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection) {
-        LOG.info("getAllCourseAbsences - starting - courseName: {}, courseSection: {}", courseName, courseSection);
+    @GetMapping(value = "/courses/{courseId}/absences/today")
+    public List<Absence> getAllCourseAbsencesForTodayById(@PathVariable String courseId) {
+        LOG.info("getAllCourseAbsencesForToday - starting - courseId: {}", courseId);
 
+        java.sql.Date today = new java.sql.Date(new java.util.Date().getTime());
+
+        List<Absence> absences = absenceRepository.findByCourseIdAndDate(courseId, today);
+
+        return absences;
     }
 
-    @GetMapping(value = "/{courseName}/today")
-    public String getAllCourseAbsencesForTodayByName(@PathVariable String courseName, @PathVariable String instructor) {
-        LOG.info("getAllCourseAbsencesForToday - starting - courseName: {}", courseName);
+    @GetMapping(value = "/courses/{courseId}/absences/{student}")
+    public List<Absence> getAllStudentAbsencesById(@PathVariable String courseId, @PathVariable String studentId) {
+        LOG.info("getAllStudentAbsences - starting - courseId: {}, student: {}", courseId, studentId);
 
+        java.sql.Date today = new java.sql.Date(new java.util.Date().getTime());
 
-    }
+        List<Absence> absences = absenceRepository.findByCourseIdAndStudentId(courseId, studentId);
 
-    @GetMapping(value = "/{courseName}/{courseSection}/today")
-    public String getAllCourseAbsencesForTodayByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection) {
-        LOG.info("getAllCourseAbsencesForToday - starting - courseName: {}, courseSection: {},", courseName, courseSection);
-
-
-    }
-
-    @GetMapping(value = "/{instructor}/{courseName}/{student}")
-    public String getAllStudentAbsencesByName(@PathVariable String courseName, @PathVariable String instructor, @PathVariable String student) {
-        LOG.info("getAllStudentAbsences - starting - courseName: {}, instructor: {}, student: {}", courseName, instructor, student);
-
-
-    }
-
-    @GetMapping(value = "/{instructor}/{courseName}/{student}")
-    public String getAllStudentAbsencesByNameAndSection(@PathVariable String courseName, @PathVariable String courseSection, @PathVariable String student) {
-        LOG.info("getAllStudentAbsences - starting - courseName: {}, courseSection: {}, instructor: {}, student: {}", courseName, courseSection, student);
-
+        return absences;
 
     }
 }
