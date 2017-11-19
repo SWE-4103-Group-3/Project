@@ -1,5 +1,6 @@
 package com.unb.tracker.web;
 
+import com.opencsv.CSVWriter;
 import com.unb.tracker.exception.BadRequestException;
 import com.unb.tracker.exception.NotFoundException;
 import com.unb.tracker.model.Course;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.StringWriter;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -220,4 +222,29 @@ public class CourseController {
         return "success";
     }
 
+
+    @GetMapping(value = "/courses/{courseId}/export")
+    public String exportAttendance(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
+        StringWriter writer = new StringWriter();
+
+        //using custom delimiter and quote character
+        CSVWriter csvWriter = new CSVWriter(writer, '#', '\'');
+
+
+        List<String[]> records = new ArrayList<String[]>();
+
+        // adding header record
+        records.add(new String[]{"ID", "Name", "Age", "Country"});
+    /*
+        Iterator<Attendance> it = getAbsencesByCourse;
+        while (it.hasNext()) {
+            Employee emp = it.next();
+            records.add(new String[] { emp.getId(), emp.getName(), emp.getAge(), emp.getCountry() });
+        }
+
+        csvWriter.writeAll(data);
+
+        csvWriter.close(); */
+        return null;
+    }
 }
