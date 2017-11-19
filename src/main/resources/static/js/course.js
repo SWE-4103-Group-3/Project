@@ -40,6 +40,25 @@ $(document).ready(function () {
         $(this).html('Edit');
     });
 
+    $('#take-attendance-button').on('click', function () {
+        grid.takeAttendance = true;
+        $(".attendance-buttons").css("visibility", "visible");
+    });
+
+    $('#submit-attendance-button').on('click', function () {
+        var absences = grid.getAbsences();
+        var courseID = grid.getCourseID();
+        postAbsences(courseID, absences);
+        grid.resetAbsences();
+        grid.takeAttendance = false;
+        $(".attendance-buttons").css("visibility", "hidden");
+    });
+
+    $('#cancel-attendance-button').on('click', function () {
+        grid.takeAttendance = false;
+        $(".attendance-buttons").css("visibility", "hidden");
+    });
+
     //Clear Student Ties to Seats
     $('#editclearseating').on('click', function(){
         displayClearModal();
@@ -170,6 +189,19 @@ function postSeats(courseID, seats) {
         contentType: "application/json",
         success: function() {
             toastr.success("Successfully saved seating template!");
+        },
+        error: displayErrorNotification
+    });
+}
+
+function postAbsences(courseID, absences) {
+    $.ajax({
+        type: "post",
+        url: "/courses/" + courseID + "/absences",
+        data: JSON.stringify(absences),
+        contentType: "application/json",
+        success: function() {
+            toastr.success("Successfully submitted attendance!");
         },
         error: displayErrorNotification
     });
