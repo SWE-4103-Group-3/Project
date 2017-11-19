@@ -73,7 +73,9 @@ function Cell(opt) {
             this.absent = true;
         } else {
             //this.el.removeClass("absent");
-            this.el.html(this.student.username);
+            if(this.student) {
+                this.el.html(this.student.username);
+            }
             this.absent = false;
         }
     };

@@ -12,6 +12,8 @@ import com.unb.tracker.validator.CourseValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,8 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Controller
+@EnableAutoConfiguration
 public class AbsenceController {
     private static final Logger LOG = LoggerFactory.getLogger(AbsenceController.class);
 
@@ -34,7 +38,6 @@ public class AbsenceController {
 
     @PostMapping(value = "/courses/{courseId}/absences")
     public @ResponseBody
-    
     Course postAbsence(@PathVariable Long courseId, @RequestBody List<User> students) {
         LOG.info("postAbsence - starting");
         Course course = courseRepository.findOne(courseId);
