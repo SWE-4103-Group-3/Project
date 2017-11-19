@@ -1,11 +1,15 @@
 package com.unb.tracker.web;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.opencsv.CSVWriter;
 import com.unb.tracker.exception.BadRequestException;
 import com.unb.tracker.exception.NotFoundException;
+import com.unb.tracker.model.Absence;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
 import com.unb.tracker.model.User;
+import com.unb.tracker.repository.AbsenceRepository;
 import com.unb.tracker.repository.CourseRepository;
 import com.unb.tracker.repository.SeatRepository;
 import com.unb.tracker.repository.UserRepository;
@@ -13,18 +17,20 @@ import com.unb.tracker.validator.CourseValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure. EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sun.rmi.runtime.Log;
 
 import java.io.StringWriter;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @EnableAutoConfiguration
@@ -42,6 +48,9 @@ public class CourseController {
 
     @Autowired
     private SeatRepository seatRepository;
+
+    @Autowired
+    private AbsenceRepository absenceRepository;
 
     @GetMapping(value = "/{username}/{courseName}")
     public String getCourseByName(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
@@ -224,27 +233,35 @@ public class CourseController {
 
 
     @GetMapping(value = "/courses/{courseId}/export")
-    public String exportAttendance(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
+    public String exportAttendance(@PathVariable Long courseId, ModelMap map, Principal principal) {
         StringWriter writer = new StringWriter();
+        CSVWriter csvWriter = new CSVWriter(writer);
 
-        //using custom delimiter and quote character
-        CSVWriter csvWriter = new CSVWriter(writer, '#', '\'');
+        List<User> courseStudents = new ArrayList<User>();
+        List<User> finalCourseStudents = courseStudents;
+        courseRepository.findById(courseId).iterator().next().getSeats().forEach(seat -> finalCourseStudents.add(seat.getStudent()));
+        courseStudents = courseStudents.stream().filter(Objects::nonNull).collect(Collectors.toList());
 
 
-        List<String[]> records = new ArrayList<String[]>();
+        Iterable<Absence> absences = absenceRepository.findByCourseId(courseId);
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
-        // adding header record
-        records.add(new String[]{"ID", "Name", "Age", "Country"});
-    /*
-        Iterator<Attendance> it = getAbsencesByCourse;
-        while (it.hasNext()) {
-            Employee emp = it.next();
-            records.add(new String[] { emp.getId(), emp.getName(), emp.getAge(), emp.getCountry() });
+        List<String[]> dates = new ArrayList<String[]>();
+        for (Absence absence : absences) {
+            dates.add(new String[] { df.format(absence.getDate()) });
         }
 
-        csvWriter.writeAll(data);
+        String[] dateArr = new String[dates.size()];
 
-        csvWriter.close(); */
+        int i = 0;
+        for (String[] date : dates) {
+            dateArr[i] = date[0];
+            i++;
+        }
+
+        csvWriter.writeNext(dateArr);
+        System.out.println(writer);
+
         return null;
     }
 }

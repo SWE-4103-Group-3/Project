@@ -144,6 +144,11 @@ $(document).ready(function () {
                 queryAndPopulateCourses(query);
         });
     });
+
+    $('#export').on('click', function() {
+        getCsv(courseID);
+    });
+
 });
 
 //Display or Hide Clear Grid Modal
@@ -265,11 +270,10 @@ function queryAndPopulateCourses(query) {
 }
 
 
-function getCsv(courseID, seats) {
+function getCsv(courseID) {
     $.ajax({
         type: "get",
         url: "/courses/" + courseID + "/export",
-        data: JSON.stringify(seats),
         contentType: "application/json",
         success: function() {
             toastr.success("Successfully saved seating template!");
