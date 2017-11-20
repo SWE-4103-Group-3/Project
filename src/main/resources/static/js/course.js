@@ -51,7 +51,7 @@ $(document).ready(function () {
 
         $('#modal-danger-clear-student-continue').one('click', function(){
             grid.removeStudents();
-            postSeats(courseID, grid.getSeats());
+            removeStudents(courseID);
 
         });
     });
@@ -168,6 +168,17 @@ function postSeats(courseID, seats) {
         url: "/courses/" + courseID + "/seats",
         data: JSON.stringify(seats),
         contentType: "application/json",
+        success: function() {
+            toastr.success("Successfully saved seating template!");
+        },
+        error: displayErrorNotification
+    });
+}
+
+function removeStudents(courseID) {
+    $.ajax({
+        type: "post",
+        url: "/courses/" + courseID + "/seats/students/remove",
         success: function() {
             toastr.success("Successfully saved seating template!");
         },

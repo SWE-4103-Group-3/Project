@@ -59,8 +59,10 @@ $(document).ready(function() {
             displayCourseSearchModal(false);
 
             if($('#course-grid-id').val()) {
-                $('#course-form-rows').val('1').hide();
-                $('#course-form-cols').val('1').hide();
+                $('#courseCols').val('1');
+                $('#courseRows').val('1');
+                $('#course-form-rows').hide();
+                $('#course-form-cols').hide();
             }
         });
 
