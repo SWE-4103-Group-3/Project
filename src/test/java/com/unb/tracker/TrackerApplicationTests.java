@@ -533,12 +533,12 @@ public class TrackerApplicationTests {
         this.mockMvc.perform(post("/course/gridReuse")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body2))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
 
         this.mockMvc.perform(post("/course/gridReuse")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body3))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     private Date convertToSqlDate(String dateString) throws Exception {
