@@ -67,17 +67,26 @@ function Cell(opt) {
     };
 
     this.setAbsent = function (setAbsent) {
+        if(!this.hasStudent()) {
+            return;
+        }
+
         if(setAbsent) {
-            //this.el.addClass("absent");
-            this.el.html(this.el.html()+' <div style="font-size: larger;color: #b70505;">•</div>');
+            this.el.html(this.student.username +' <i class="fa fa-minus-circle"></i>');
             this.absent = true;
         } else {
-            //this.el.removeClass("absent");
-            if(this.student) {
-                this.el.html(this.student.username);
-            }
+            this.el.html(this.student.username+' <i class="fa fa-check-circle"></i>');
             this.absent = false;
         }
+    };
+
+    this.clearAttendance = function () {
+        if(!this.hasStudent()) {
+            return;
+        }
+
+        this.el.html(this.student.username);
+        this.absent = false;
     };
 
     this.el.on('click', {cell: this}, function (e) {
@@ -210,14 +219,6 @@ function Grid(opt) {
         }
     };
 
-    this.resetAbsences = function () {
-        for (var i = 0; i < this.cells.length; i++) {
-            for(var j = 0; j < this.cells[i].length; j++) {
-                this.cells[i][j].setAbsent(false);
-            }
-        }
-    };
-
     this.getAbsences = function() {
         var absences = [];
         for (var i = 0; i < this.cells.length; i++) {
@@ -256,6 +257,24 @@ function Grid(opt) {
             this.el.append(row);
         }
         this.setSeats(this.seats);
+    };
+
+    this.startAttendance = function() {
+        this.takeAttendance = true;
+        for (var i = 0; i < this.cells.length; i++) {
+            for(var j = 0; j < this.cells[i].length; j++) {
+                this.cells[i][j].setAbsent(false);
+            }
+        }
+    };
+
+    this.endAttendance = function() {
+        this.takeAttendance = false;
+        for (var i = 0; i < this.cells.length; i++) {
+            for(var j = 0; j < this.cells[i].length; j++) {
+                this.cells[i][j].clearAttendance();
+            }
+        }
     };
 
     this.render();
