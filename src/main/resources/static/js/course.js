@@ -41,7 +41,7 @@ $(document).ready(function () {
     });
 
     $('#take-attendance-button').on('click', function () {
-        grid.takeAttendance = true;
+        grid.startAttendance();
         $(".attendance-buttons").css("visibility", "visible");
     });
 
@@ -49,13 +49,12 @@ $(document).ready(function () {
         var absences = grid.getAbsences();
         var courseID = grid.getCourseID();
         postAbsences(courseID, absences);
-        grid.resetAbsences();
-        grid.takeAttendance = false;
+        grid.endAttendance();
         $(".attendance-buttons").css("visibility", "hidden");
     });
 
     $('#cancel-attendance-button').on('click', function () {
-        grid.takeAttendance = false;
+        grid.endAttendance();
         $(".attendance-buttons").css("visibility", "hidden");
     });
 
