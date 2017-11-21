@@ -1,7 +1,5 @@
 package com.unb.tracker.web;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.opencsv.CSVWriter;
 import com.unb.tracker.exception.BadRequestException;
 import com.unb.tracker.exception.NotFoundException;
@@ -17,21 +15,21 @@ import com.unb.tracker.validator.CourseValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure. EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @EnableAutoConfiguration
@@ -241,7 +239,7 @@ public class CourseController {
 
         Iterable<Absence> absences = absenceRepository.findByCourseId(courseId);
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        Course course = courseRepository.findById(courseId);
+        Course course = courseRepository.findOne(courseId);
 
         List<String[]> absenceStrings = new ArrayList<>();
         for (Absence absence : absences) {

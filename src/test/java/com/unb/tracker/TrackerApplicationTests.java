@@ -40,7 +40,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -567,7 +566,7 @@ public class TrackerApplicationTests {
         absences.add(absence);
 
         when(userRepository.findByUsername("test")).thenReturn(instructor);
-        when(courseRepository.findById(1L)).thenReturn(myCourse);
+        when(courseRepository.findOne(1L)).thenReturn(myCourse);
 
         when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
         when(absenceRepository.findByCourseId(1L)).thenReturn(absences);
