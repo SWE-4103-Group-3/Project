@@ -16,6 +16,6 @@ public interface CourseRepository extends CrudRepository<Course, Long> {
     @Query(value = "SELECT * FROM course WHERE course.name LIKE CONCAT('%',:pname,'%') OR course.section LIKE CONCAT('%',:pname,'%') LIMIT 10", nativeQuery = true)
     public List<Course> findByPartialName(@Param("pname")String partialName);
 
-    public List<Course> findById(Long courseId);
+    public Course findById(Long courseId);
 
 }

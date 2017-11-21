@@ -8,7 +8,7 @@ import java.sql.Date;
 import java.util.List;
 
 public interface AbsenceRepository extends CrudRepository<Absence, Long> {
-    @OrderBy(clause = "date DESC")
+    @OrderBy(clause = "name DESC")
     public List<Absence> findByCourseId(Long courseId);
 
     public List<Absence> findByCourseIdAndDate(String courseID, Date date);

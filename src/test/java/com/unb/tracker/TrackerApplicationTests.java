@@ -2,9 +2,11 @@ package com.unb.tracker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import com.unb.tracker.model.Absence;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
 import com.unb.tracker.model.User;
+import com.unb.tracker.repository.AbsenceRepository;
 import com.unb.tracker.repository.CourseRepository;
 import com.unb.tracker.repository.UserRepository;
 import com.unb.tracker.service.CourseService;
@@ -38,6 +40,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -67,6 +70,9 @@ public class TrackerApplicationTests {
 
     @MockBean
     private CourseRepository courseRepository;
+
+    @MockBean
+    private AbsenceRepository absenceRepository;
 
     @MockBean
     private CourseService courseService;
@@ -539,6 +545,38 @@ public class TrackerApplicationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body3))
                 .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @WithMockUser("test")
+    public void ExportToCSV() throws Exception {
+
+        User instructor = new User();
+        instructor.setUsername("test");
+        instructor.setHasExtendedPrivileges(true);
+        Course myCourse = new Course();
+        myCourse.setName("CourseName");
+        myCourse.setSection("CourseSection");
+
+        List<Absence> absences = new ArrayList<>();
+        Absence absence = new Absence();
+        absence.setCourse(myCourse);
+        absence.setStudent(instructor);
+        absence.setDate(new Date(1511283075));
+        absences.add(absence);
+
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
+        when(courseRepository.findById(1L)).thenReturn(myCourse);
+
+        when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
+        when(absenceRepository.findByCourseId(1L)).thenReturn(absences);
+
+
+        this.mockMvc.perform(get("/courses/1/export")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     private Date convertToSqlDate(String dateString) throws Exception {

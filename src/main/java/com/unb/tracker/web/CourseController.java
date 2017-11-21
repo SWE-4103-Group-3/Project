@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.rmi.runtime.Log;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
 import java.security.Principal;
 import java.text.DateFormat;
@@ -233,35 +234,22 @@ public class CourseController {
 
 
     @GetMapping(value = "/courses/{courseId}/export")
-    public String exportAttendance(@PathVariable Long courseId, ModelMap map, Principal principal) {
+    @ResponseBody
+    public String exportAttendance(@PathVariable Long courseId, ModelMap map, Principal principal, HttpServletResponse response) {
         StringWriter writer = new StringWriter();
         CSVWriter csvWriter = new CSVWriter(writer);
 
-        List<User> courseStudents = new ArrayList<User>();
-        List<User> finalCourseStudents = courseStudents;
-        courseRepository.findById(courseId).iterator().next().getSeats().forEach(seat -> finalCourseStudents.add(seat.getStudent()));
-        courseStudents = courseStudents.stream().filter(Objects::nonNull).collect(Collectors.toList());
-
-
         Iterable<Absence> absences = absenceRepository.findByCourseId(courseId);
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        Course course = courseRepository.findById(courseId);
 
-        List<String[]> dates = new ArrayList<String[]>();
+        List<String[]> absenceStrings = new ArrayList<>();
         for (Absence absence : absences) {
-            dates.add(new String[] { df.format(absence.getDate()) });
+            absenceStrings.add(new String[]{absence.getStudent().getUsername(), df.format(absence.getDate())});
         }
 
-        String[] dateArr = new String[dates.size()];
-
-        int i = 0;
-        for (String[] date : dates) {
-            dateArr[i] = date[0];
-            i++;
-        }
-
-        csvWriter.writeNext(dateArr);
-        System.out.println(writer);
-
-        return null;
+        response.setHeader("Content-Disposition", "attachment; filename=" + course.getName() + "_" + course.getSection() + ".csv");
+        csvWriter.writeAll(absenceStrings);
+        return writer.toString();
     }
 }

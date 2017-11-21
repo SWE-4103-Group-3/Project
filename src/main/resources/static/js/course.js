@@ -269,19 +269,6 @@ function queryAndPopulateCourses(query) {
     });
 }
 
-
-function getCsv(courseID) {
-    $.ajax({
-        type: "get",
-        url: "/courses/" + courseID + "/export",
-        contentType: "application/json",
-        success: function() {
-            toastr.success("Successfully saved seating template!");
-        },
-        error: displayErrorNotification
-    });
-}
-
 //Display Error Notification
 function displayErrorNotification() {
     toastr.error('Something went wrong :( Try reloading the page or retry later.');
