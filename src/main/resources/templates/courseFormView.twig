@@ -26,7 +26,7 @@
         </div>
         <div class="md-form">
             <input id="courseSection"  type="text" name="section" class="form-control" {% if courseCreationError %}value="{{ sectionName }}" {% else %} value="{{ course.section }}" {% endif %}>
-            <label for="courseSection">Section</label>
+            <label for="courseSection">Section (Optional)</label>
         </div>
         <div class="md-form">
             <input  id="startDate" name="startDate" type="text" class="form-control datepicker" {% if courseCreationError %}value="{{ startDate }}" {% else %} value="{{ course.startDate }}" {% endif %}>
