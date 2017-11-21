@@ -145,10 +145,6 @@ $(document).ready(function () {
         });
     });
 
-    $('#export').on('click', function() {
-        getCsv(courseID);
-    });
-
 });
 
 //Display or Hide Clear Grid Modal
