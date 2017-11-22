@@ -40,6 +40,16 @@ function queryAndPopulateCourses(query) {
             //Remove all previously queried courses
             var courseList = $('#course-list-queried').empty();
 
+            if(data.length === 0) {
+                var $el = $('<div>')
+                    .addClass('list-group-item')
+                    .addClass('list-group-item-action')
+                    .addClass('course-list-queried-item')
+                    .text('No courses found :-(');
+
+                courseList.append($el);
+                return;
+            }
             //For each course, create div element with relevant course information
             for(var index = 0; index < data.length; index++) {
                 var $el = $('<div>')
