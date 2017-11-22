@@ -15,7 +15,7 @@
         <input id="username" value="{{ username }}" type="hidden" name="username">
         <input value="{{ course.instructor.id }}" type="hidden" name="instructor.id">
         <div class="md-form">
-            <input id="course-grid-id" name="courseGridReuseID" value="" type="number" style="display:none;">
+            <input id="course-id" name="courseGridReuseID" value="" type="number" style="display:none;">
         </div>
         <div class="md-form">
             <input id="courseName" type="text" name="name" class="form-control" id="courseFormName" {% if courseCreationError %}value="{{ courseName }}" {% else %} value="{{ course.name }}" {% endif %}>
