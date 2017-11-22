@@ -184,7 +184,7 @@ public class CourseController {
         if (course.getSection().isEmpty()) {
             course.setSection("");
             courseRepository.save(course);
-            
+
             map.addAttribute("course", course);
             return "redirect:/" + user.getUsername() + "/" + course.getName();
         }
