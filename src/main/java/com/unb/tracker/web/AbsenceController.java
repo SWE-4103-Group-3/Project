@@ -31,9 +31,6 @@ public class AbsenceController {
     private CourseRepository courseRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private AbsenceRepository absenceRepository;
 
     @PostMapping(value = "/courses/{courseId}/absences")
@@ -43,6 +40,9 @@ public class AbsenceController {
         Course course = courseRepository.findOne(courseId);
 
         java.sql.Date today = new java.sql.Date(new java.util.Date().getTime());
+        List<Absence> currentAbsences = absenceRepository.findByCourseIdAndDate(courseId, today);
+        absenceRepository.delete(currentAbsences);
+
         for(User s : students) {
             Absence a = new Absence();
             a.setStudent(s);
@@ -56,32 +56,19 @@ public class AbsenceController {
     @GetMapping(value = "/courses/{courseId}/absences")
     public List<Absence> getAllCourseAbsencesById(@PathVariable Long courseId) {
         LOG.info("getAllCourseAbsences - starting - courseId: {}", courseId);
-
-        List<Absence> absences = absenceRepository.findByCourseId(courseId);
-
-        return absences;
+        return absenceRepository.findByCourseId(courseId);
     }
 
     @GetMapping(value = "/courses/{courseId}/absences/today")
-    public List<Absence> getAllCourseAbsencesForTodayById(@PathVariable String courseId) {
+    public List<Absence> getAllCourseAbsencesForTodayById(@PathVariable Long courseId) {
         LOG.info("getAllCourseAbsencesForToday - starting - courseId: {}", courseId);
-
         java.sql.Date today = new java.sql.Date(new java.util.Date().getTime());
-
-        List<Absence> absences = absenceRepository.findByCourseIdAndDate(courseId, today);
-
-        return absences;
+        return absenceRepository.findByCourseIdAndDate(courseId, today);
     }
 
     @GetMapping(value = "/courses/{courseId}/absences/{student}")
-    public List<Absence> getAllStudentAbsencesById(@PathVariable String courseId, @PathVariable String studentId) {
+    public List<Absence> getAllStudentAbsencesById(@PathVariable Long courseId, @PathVariable Long studentId) {
         LOG.info("getAllStudentAbsences - starting - courseId: {}, student: {}", courseId, studentId);
-
-        java.sql.Date today = new java.sql.Date(new java.util.Date().getTime());
-
-        List<Absence> absences = absenceRepository.findByCourseIdAndStudentId(courseId, studentId);
-
-        return absences;
-
+        return absenceRepository.findByCourseIdAndStudentId(courseId, studentId);
     }
 }

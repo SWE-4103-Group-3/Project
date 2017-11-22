@@ -12,6 +12,7 @@ import com.unb.tracker.repository.CourseRepository;
 import com.unb.tracker.repository.SeatRepository;
 import com.unb.tracker.repository.UserRepository;
 import com.unb.tracker.validator.CourseValidator;
+import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +64,12 @@ public class CourseController {
         List<Course> courses = courseRepository.findByInstructorUsernameAndName(username, courseName);
         LOG.debug("courses size: {}", courses.size());
         if (courses.size() == 0) {
-            return "404";
+            throw new NotFoundException();
         } else if (courses.size() == 1) {
             map.addAttribute("course", courses.get(0));
             return "course";
         }
-        return "error";
+        throw new BadRequestException();
     }
 
     @GetMapping(value = "/{username}/{courseName}/{courseSection}")
@@ -83,7 +84,7 @@ public class CourseController {
 
         List<Course> courses = courseRepository.findByInstructorUsernameAndNameAndSection(username, courseName, courseSection);
         if (courses.size() == 0) {
-            return "404";
+            throw new NotFoundException();
         } else if (courses.size() == 1) {
             map.addAttribute("course", courses.get(0));
             return "course";

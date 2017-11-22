@@ -362,8 +362,8 @@ public class TrackerApplicationTests {
     @WithMockUser("test")
     public void getCourseThatExists() throws Exception {
         Course course = new Course();
-        course.setId(1l);
-        when(courseRepository.findOne(1l)).thenReturn(course);
+        course.setId(1L);
+        when(courseRepository.findOne(1L)).thenReturn(course);
         mockMvc.perform(get("/courses/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -373,8 +373,8 @@ public class TrackerApplicationTests {
     @WithMockUser("test")
     public void getCourseThatDoesNotExists() throws Exception {
         Course course = new Course();
-        course.setId(1l);
-        when(courseRepository.findOne(1l)).thenReturn(null);
+        course.setId(1L);
+        when(courseRepository.findOne(1L)).thenReturn(null);
         mockMvc.perform(get("/courses/1"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -384,27 +384,27 @@ public class TrackerApplicationTests {
     @WithMockUser("test")
     public void postSeat() throws Exception {
         Course course = new Course();
-        course.setId(1l);
-        when(courseRepository.findOne(1l)).thenReturn(course);
+        course.setId(1L);
+        when(courseRepository.findOne(1L)).thenReturn(course);
 
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
         when(userRepository.findByUsername("test")).thenReturn(user);
 
         Seat seat = new Seat();
-        seat.setId(1l);
+        seat.setId(1L);
         seat.setCourse(course);
         seat.setStudent(user);
         seat.setCol(7);
 
         Seat s = new Seat();
-        s.setId(1l);
+        s.setId(1L);
 
         List<Seat> seats = new ArrayList<>();
         seats.add(s);
         course.setSeats(seats);
 
-        mockMvc.perform(get("/courses/1/seat")
+        mockMvc.perform(get("/seats")
                 .content(this.json(seat)))
                 .andDo(print())
                 .andExpect(status().isOk());

@@ -11,8 +11,8 @@ public interface AbsenceRepository extends CrudRepository<Absence, Long> {
     @OrderBy(clause = "name DESC")
     public List<Absence> findByCourseId(Long courseId);
 
-    public List<Absence> findByCourseIdAndDate(String courseID, Date date);
+    List<Absence> findByCourseIdAndDate(Long courseId, Date date);
 
-    public List<Absence> findByCourseIdAndStudentId(String courseID, String studentId);
+    List<Absence> findByCourseIdAndStudentId(Long courseId, Long studentId);
 
 }
