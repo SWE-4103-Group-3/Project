@@ -144,6 +144,7 @@ $(document).ready(function () {
                 queryAndPopulateCourses(query);
         });
     });
+
 });
 
 //Display or Hide Clear Grid Modal

@@ -54,7 +54,7 @@ public class AbsenceController {
     }
 
     @GetMapping(value = "/courses/{courseId}/absences")
-    public List<Absence> getAllCourseAbsencesById(@PathVariable String courseId) {
+    public List<Absence> getAllCourseAbsencesById(@PathVariable Long courseId) {
         LOG.info("getAllCourseAbsences - starting - courseId: {}", courseId);
 
         List<Absence> absences = absenceRepository.findByCourseId(courseId);

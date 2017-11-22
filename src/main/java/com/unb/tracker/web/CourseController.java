@@ -1,10 +1,13 @@
 package com.unb.tracker.web;
 
+import com.opencsv.CSVWriter;
 import com.unb.tracker.exception.BadRequestException;
 import com.unb.tracker.exception.NotFoundException;
+import com.unb.tracker.model.Absence;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
 import com.unb.tracker.model.User;
+import com.unb.tracker.repository.AbsenceRepository;
 import com.unb.tracker.repository.CourseRepository;
 import com.unb.tracker.repository.SeatRepository;
 import com.unb.tracker.repository.UserRepository;
@@ -19,7 +22,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.StringWriter;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +47,9 @@ public class CourseController {
 
     @Autowired
     private SeatRepository seatRepository;
+
+    @Autowired
+    private AbsenceRepository absenceRepository;
 
     @GetMapping(value = "/{username}/{courseName}")
     public String getCourseByName(@PathVariable String username, @PathVariable String courseName, ModelMap map, Principal principal) {
@@ -220,4 +230,24 @@ public class CourseController {
         return "success";
     }
 
+
+    @GetMapping(value = "/courses/{courseId}/export")
+    @ResponseBody
+    public String exportAttendance(@PathVariable Long courseId, ModelMap map, Principal principal, HttpServletResponse response) {
+        StringWriter writer = new StringWriter();
+        CSVWriter csvWriter = new CSVWriter(writer);
+
+        Iterable<Absence> absences = absenceRepository.findByCourseId(courseId);
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        Course course = courseRepository.findOne(courseId);
+
+        List<String[]> absenceStrings = new ArrayList<>();
+        for (Absence absence : absences) {
+            absenceStrings.add(new String[]{absence.getStudent().getUsername(), df.format(absence.getDate())});
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=" + course.getName() + "_" + course.getSection() + ".csv");
+        csvWriter.writeAll(absenceStrings);
+        return writer.toString();
+    }
 }
