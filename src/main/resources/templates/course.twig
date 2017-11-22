@@ -111,7 +111,7 @@
                     </div>
                     <div id="course-list-queried">
                     </div>
-                    <input id="course-grid-id" name="courseGridReuseID" value="" type="number" style="display:none;">
+                    <input id="course-id" name="courseGridReuseID" value="" type="number" style="display:none;">
                 </div>
                 <div class="modal-footer justify-content-center">
                     <a type="button" id="search-course-grid-modal-submit-bottom" class="btn btn-primary-modal">Submit<i class="fa fa-diamond ml-1"></i></a>
@@ -124,6 +124,7 @@
 
 {% block script %}
     {{ parent() }}
+    <script type="text/javascript" src="/static/js/searchmodal.js"></script>
     <script type="text/javascript" src="/static/js/grid.js"></script>
     <script>
         var user = {

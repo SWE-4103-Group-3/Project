@@ -26,7 +26,6 @@ public class Course {
     private List<Seat> seats;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
     private User instructor;
 
     @Transient
