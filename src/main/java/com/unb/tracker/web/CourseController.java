@@ -12,15 +12,19 @@ import com.unb.tracker.validator.CourseValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +54,7 @@ public class CourseController {
 
         map.addAttribute("courseList", user.getCourses());
 
-        List<Course> courses = courseRepository.findByInstructorUsernameAndName(username, courseName);
+        List<Course> courses = courseRepository.findByInstructorUsernameAndNameAndSection(username, courseName, "");
         LOG.debug("courses size: {}", courses.size());
         if (courses.size() == 0) {
             return "404";
@@ -145,31 +149,30 @@ public class CourseController {
         if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();
         }
+        course.setInstructor(user);
 
         map.addAttribute("course", course);
         courseValidator.validate(course, bindingResult);
         if (bindingResult.hasErrors()) {
             redir.addFlashAttribute("courseCreationError", bindingResult.getFieldError().getCode());
             redir.addFlashAttribute("courseName", course.getName());
-            redir.addFlashAttribute("sectionName", course.getSection());
-            redir.addFlashAttribute("startDate", course.getStartDate().toString());
-            redir.addFlashAttribute("rowsAmount", course.getRows());
-            redir.addFlashAttribute("colsAmount", course.getCols());
+            redir.addFlashAttribute("courseSection", course.getSection());
+            redir.addFlashAttribute("startDate", course.getStartDate() == null ? "" : course.getStartDate().toString());
+            redir.addFlashAttribute("courseRows", course.getRows());
+            redir.addFlashAttribute("courseCols", course.getCols());
+
+            return "redirect:/" + user.getUsername();
         }
 
         // Are we trying to create a course?
         if (course.getId() == null) {
             course.setInstructor(user);
-            if(bindingResult.hasErrors()) {
-                return "redirect:/" + user.getUsername();
-            } else {
-                Long courseGridReuseID = course.getCourseGridReuseID();
-                if(courseGridReuseID != null) {
-                    Course otherCourse = courseRepository.findOne(courseGridReuseID);
-                    reuseCourseGridHelper(course, otherCourse);
-                }
-            }
 
+            Long courseGridReuseID = course.getCourseGridReuseID();
+            if(courseGridReuseID != null) {
+                Course otherCourse = courseRepository.findOne(courseGridReuseID);
+                reuseCourseGridHelper(course, otherCourse);
+            }
         } else {
             Course c = courseRepository.findOne(course.getId());
             List<Seat> seatsToRemove = c.getOutOfBoundsSeats(course.getRows(), course.getCols());
@@ -178,11 +181,26 @@ public class CourseController {
             seatRepository.save(seatsToRemove);
         }
 
-        if(!bindingResult.hasErrors()) {
+        if (course.getSection().isEmpty()) {
+            course.setSection("");
             courseRepository.save(course);
+
+            map.addAttribute("course", course);
+            return "redirect:/" + user.getUsername() + "/" + course.getName();
         }
 
+        courseRepository.save(course);
+        map.addAttribute("course", course);
         return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+
+        // true passed to CustomDateEditor constructor means convert empty String to null
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
     @GetMapping("/courses/query/{queryString}")

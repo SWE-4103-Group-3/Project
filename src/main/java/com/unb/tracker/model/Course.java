@@ -15,7 +15,6 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String timeSlot;
     private Date startDate;
     private String name;
     private String section;

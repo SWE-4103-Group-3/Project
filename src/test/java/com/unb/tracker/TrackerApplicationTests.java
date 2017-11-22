@@ -460,6 +460,7 @@ public class TrackerApplicationTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("name", "newname")
+                .param("startDate", "2017-01-01")
                 .param("cols", "3")
                 .param("rows", "3")
                 .param("section", "newsection"))
