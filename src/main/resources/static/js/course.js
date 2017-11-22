@@ -72,6 +72,7 @@ $(document).ready(function () {
 
     //Reuse Course Grid
     $('#reuse-grid-button').on('click', function (e) {
+        var delayTimer;
         displayCourseSearchModal();
 
         //Cancel, Close Modal, Restore Previous State
@@ -121,9 +122,12 @@ $(document).ready(function () {
 
         //Query for Courses Using Value From Input Field
         $('#search-course-field').on('input', function() {
-            var query = $('#search-course-field').val();
-            if(query)
-                queryAndPopulateCourses(query);
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function() {
+                var query = $('#search-course-field').val();
+                if(query)
+                    queryAndPopulateCourses(query);
+            }, 250);
         });
     });
 });

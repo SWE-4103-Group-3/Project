@@ -3,6 +3,7 @@ $("#createButton").click(function (){
 });
 
 $('#searchButton').on('click', function (e) {
+    var delayTimer;
     displayCourseSearchModal();
 
     //Cancel, Close Modal, Restore Previous State
@@ -39,8 +40,11 @@ $('#searchButton').on('click', function (e) {
 
     //Query for Courses Using Value From Input Field
     $('#search-course-field').on('input', function(e) {
-        var query = $('#search-course-field').val();
-        if(query)
-            queryAndPopulateCourses(query);
+        clearTimeout(delayTimer);
+        delayTimer = setTimeout(function() {
+            var query = $('#search-course-field').val();
+            if(query)
+                queryAndPopulateCourses(query);
+        }, 250);
     });
 });
