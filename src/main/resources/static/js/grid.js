@@ -249,8 +249,6 @@ function Grid(opt) {
             return;
         }
 
-        console.log(absences);
-
         for (var i = 0; i < this.cells.length; i++) {
             for (var j = 0; j < this.cells[i].length; j++) {
                 var cell = this.cells[i][j];
