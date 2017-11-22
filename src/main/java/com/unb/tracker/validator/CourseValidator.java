@@ -21,24 +21,22 @@ public class CourseValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Course course = (Course) o;
-
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"name", "Ensure all required fields are filled. (Check Course Name)");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"rows", "Ensure all required fields are filled. (Check Rows)");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"cols", "Ensure all required fields are filled. (Check Columns)");
         
         if (!courseService.findByInstructorUsernameAndNameAndSection(course.getInstructor().getUsername(), course.getName(), course.getSection()).isEmpty()) {
             errors.rejectValue("name", "This section for this course already exists.");
         }
 
-        if (course.getStartDate().toString().equals("1970-01-01")) {
+        if (course.getStartDate() == null) {
             errors.rejectValue("startDate", "Ensure all required fields are filled. (Check Start Date)");
         }
 
-        if (course.getName().length() > 10) {
+        if (course.getName() == null) {
+            errors.rejectValue("name", "Ensure all required fields are filled. (Check Course Name)");
+        } else if (course.getName().length() > 10) {
             errors.rejectValue("name", "Course name should be less than 10 characters");
         }
 
-        if (course.getSection().length() > 10) {
+        if (course.getSection() != null && course.getSection().length() > 10) {
             errors.rejectValue("section", "Section should be less than 10 characters");
         }
 
@@ -53,7 +51,5 @@ public class CourseValidator implements Validator {
         } else if (course.getCols() < 1 || course.getCols() > 31) {
             errors.rejectValue("cols", "Please enter between 1 and 31 columns.");
         }
-
-
     }
 }

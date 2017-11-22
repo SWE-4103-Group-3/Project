@@ -152,14 +152,10 @@ public class CourseController {
         if (bindingResult.hasErrors()) {
             redir.addFlashAttribute("courseCreationError", bindingResult.getFieldError().getCode());
             redir.addFlashAttribute("courseName", course.getName());
-            redir.addFlashAttribute("sectionName", course.getSection());
-            if(course.getStartDate().toString().equals("1970-01-01")) {
-                redir.addFlashAttribute("startDate", "");
-            } else {
-                redir.addFlashAttribute("startDate", course.getStartDate().toString());
-            }
-            redir.addFlashAttribute("rowsAmount", course.getRows());
-            redir.addFlashAttribute("colsAmount", course.getCols());
+            redir.addFlashAttribute("courseSection", course.getSection());
+            redir.addFlashAttribute("startDate", course.getStartDate() == null ? "" : course.getStartDate().toString());
+            redir.addFlashAttribute("courseRows", course.getRows());
+            redir.addFlashAttribute("courseCols", course.getCols());
 
             return "redirect:/" + user.getUsername();
         } else {

@@ -40,17 +40,6 @@ $(document).ready(function() {
         $('#courseForm').slideToggle();
     });
 
-    $("#course-form-submit").click(function() {
-
-        if(document.forms["courseForm"]["section"] == "") {
-            document.forms["courseForm"]["section"] = null;
-        }
-        
-        if(document.forms["courseForm"]["startDate"].value == ""){
-            document.forms["courseForm"]["startDate"].value = "1970-01-01";
-        }
-    });
-
     $('#reuse-grid-button').on('click', function (e) {
         displayCourseSearchModal();
 
