@@ -14,7 +14,6 @@ public class Absence {
     private Date date;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
     private User student;
 
 

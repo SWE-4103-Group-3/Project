@@ -34,9 +34,8 @@ public class AbsenceController {
     private AbsenceRepository absenceRepository;
 
     @PostMapping(value = "/courses/{courseId}/absences")
-    public @ResponseBody
-    Course postAbsence(@PathVariable Long courseId, @RequestBody List<User> students) {
-        LOG.info("postAbsence - starting");
+    public @ResponseBody Course postAbsences(@PathVariable Long courseId, @RequestBody List<User> students) {
+        LOG.info("postAbsences - starting");
         Course course = courseRepository.findOne(courseId);
 
         java.sql.Date today = new java.sql.Date(new java.util.Date().getTime());
@@ -60,14 +59,14 @@ public class AbsenceController {
     }
 
     @GetMapping(value = "/courses/{courseId}/absences/today")
-    public List<Absence> getAllCourseAbsencesForTodayById(@PathVariable Long courseId) {
+    public @ResponseBody List<Absence> getAllCourseAbsencesForTodayById(@PathVariable Long courseId) {
         LOG.info("getAllCourseAbsencesForToday - starting - courseId: {}", courseId);
         java.sql.Date today = new java.sql.Date(new java.util.Date().getTime());
         return absenceRepository.findByCourseIdAndDate(courseId, today);
     }
 
     @GetMapping(value = "/courses/{courseId}/absences/{student}")
-    public List<Absence> getAllStudentAbsencesById(@PathVariable Long courseId, @PathVariable Long studentId) {
+    public @ResponseBody List<Absence> getAllStudentAbsencesById(@PathVariable Long courseId, @PathVariable Long studentId) {
         LOG.info("getAllStudentAbsences - starting - courseId: {}, student: {}", courseId, studentId);
         return absenceRepository.findByCourseIdAndStudentId(courseId, studentId);
     }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface AbsenceRepository extends CrudRepository<Absence, Long> {
     @OrderBy(clause = "name DESC")
-    public List<Absence> findByCourseId(Long courseId);
+    List<Absence> findByCourseId(Long courseId);
 
     List<Absence> findByCourseIdAndDate(Long courseId, Date date);
 

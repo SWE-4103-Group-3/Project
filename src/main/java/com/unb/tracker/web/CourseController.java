@@ -121,6 +121,21 @@ public class CourseController {
         return course;
     }
 
+    @PostMapping(value = "/courses/{courseId}/seats/students/remove")
+    public @ResponseBody
+    String removeStudentsFromSeats(@PathVariable Long courseId) {
+        LOG.info("removeStudentsFromSeats - starting");
+        Course course = courseRepository.findOne(courseId);
+        List<Seat> seats = course.getSeats();
+
+        for(Seat s : seats) {
+            s.removeStudent();
+        }
+        seatRepository.save(seats);
+
+        return "saved";
+    }
+
     @GetMapping(value = "/courses")
     public @ResponseBody
     Iterable<Course> getCourses() {

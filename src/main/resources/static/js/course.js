@@ -4,10 +4,10 @@ var setModalId = 'set-modal';
 var removeButtonId = 'remove-button';
 var setButtonId = 'set-button';
 
-$(document).ready(function () {
-    var grid;
-    var courseID = $('input#courseID').val();
+var grid;
+var courseID = $('input#courseID').val();
 
+$(document).ready(function () {
     $.ajax({
         type: "get",
         url: "/courses/" + courseID,
@@ -22,6 +22,7 @@ $(document).ready(function () {
                 states: ["open", "closed", "reserved"]
             });
             $('#course-seating-grid').append(grid.el);
+            getAbsences(course.id);
         },
         error: displayErrorNotification
     });
@@ -202,6 +203,9 @@ function postAbsences(courseID, absences) {
         contentType: "application/json",
         success: function() {
             toastr.success("Successfully submitted attendance!");
+            setTimeout(function(){
+                window.location.reload();
+            },1600);
         },
         error: displayErrorNotification
     });
@@ -216,9 +220,19 @@ function postSeat(info) {
         success: function() {
             window.location.reload();
         },
-        error: function (data) {
-            displayErrorNotification
-        }
+        error: displayErrorNotification
+    });
+}
+
+function getAbsences(courseId) {
+    $.ajax({
+        type: "get",
+        url: "/courses/" + courseId + "/absences/today",
+        dataType: "json",
+        success: function (absences) {
+            grid.setAbsences(absences);
+        },
+        error: displayErrorNotification
     });
 }
 
