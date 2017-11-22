@@ -30,7 +30,7 @@ public class CourseValidator implements Validator {
             errors.rejectValue("startDate", "Ensure all required fields are filled. (Check Start Date)");
         }
 
-        if (course.getName() == null) {
+        if (course.getName() == null || course.getName().isEmpty()) {
             errors.rejectValue("name", "Ensure all required fields are filled. (Check Course Name)");
         } else if (course.getName().length() > 10) {
             errors.rejectValue("name", "Course name should be less than 10 characters");
