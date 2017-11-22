@@ -69,8 +69,7 @@ $(document).ready(function () {
             .one('click', function(){displayClearModal(false)});
 
         $('#modal-danger-clear-student-continue').one('click', function(){
-            grid.removeStudents();
-            postSeats(courseID, grid.getSeats());
+            removeStudents(courseID);
 
         });
     });
@@ -231,6 +230,18 @@ function getAbsences(courseId) {
         dataType: "json",
         success: function (absences) {
             grid.setAbsences(absences);
+        },
+        error: displayErrorNotification
+    });
+}
+
+function removeStudents() {
+    $.ajax({
+        type: "post",
+        url: "/courses/" + courseID + "/seats/students/remove",
+        success: function () {
+            grid.removeStudents();
+            toastr.success("Successfully removed students!");
         },
         error: displayErrorNotification
     });
