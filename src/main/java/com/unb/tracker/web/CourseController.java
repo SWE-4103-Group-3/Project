@@ -166,8 +166,10 @@ public class CourseController {
             return "redirect:/" + user.getUsername();
         }
 
+        boolean newCourse = false;
         // Are we trying to create a course?
         if (course.getId() == null) {
+            newCourse = true;
             course.setInstructor(user);
 
             Long courseGridReuseID = course.getCourseGridReuseID();
@@ -185,15 +187,31 @@ public class CourseController {
 
         if (course.getSection().isEmpty()) {
             course.setSection("");
-            courseRepository.save(course);
-
-            map.addAttribute("course", course);
-            return "redirect:/" + user.getUsername() + "/" + course.getName();
         }
 
         courseRepository.save(course);
+        
+        if(newCourse) {
+            LOG.debug("creating empty seats!!");
+            List<Seat> seats = new ArrayList<>();
+            for(int i = 0; i < course.getRows(); i++) {
+                for(int j = 0; j < course.getCols(); j++) {
+                    Seat s = new Seat();
+                    s.setState(Seat.AVAILABLE);
+                    s.setCourse(course);
+                    s.setRow(i);
+                    s.setCol(j);
+                    seats.add(s);
+                }
+            }
+            seatRepository.save(seats);
+        }
+
         map.addAttribute("course", course);
-        return "redirect:/" + user.getUsername() + "/" + course.getName() + "/" + course.getSection();
+
+        String redirectUrl = "/" + user.getUsername() + "/" + course.getName();
+        if(!course.getSection().equals("")) redirectUrl += "/" + course.getSection();
+        return "redirect:" + redirectUrl;
     }
 
     @InitBinder
@@ -292,7 +310,11 @@ public class CourseController {
             absenceStrings.add(new String[]{absence.getStudent().getUsername(), df.format(absence.getDate())});
         }
 
-        response.setHeader("Content-Disposition", "attachment; filename=" + course.getName() + "_" + course.getSection() + ".csv");
+        String header = "attachment; filename=" + course.getName();
+        if(course.getSection() != null && !course.getSection().equals("")) header += "_" + course.getSection();
+        header += ".csv";
+
+        response.setHeader("Content-Disposition",  header);
         csvWriter.writeAll(absenceStrings);
         return writer.toString();
     }
