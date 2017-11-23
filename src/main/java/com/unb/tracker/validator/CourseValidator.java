@@ -22,7 +22,7 @@ public class CourseValidator implements Validator {
     public void validate(Object o, Errors errors) {
         Course course = (Course) o;
         
-        if (!courseService.findByInstructorUsernameAndNameAndSection(course.getInstructor().getUsername(), course.getName(), course.getSection()).isEmpty()) {
+        if (course.getId() == null && !courseService.findByInstructorUsernameAndNameAndSection(course.getInstructor().getUsername(), course.getName(), course.getSection()).isEmpty()) {
             errors.rejectValue("name", "This section for this course already exists.");
         }
 

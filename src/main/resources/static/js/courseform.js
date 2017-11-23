@@ -1,3 +1,6 @@
+$("#edit-course-pencil-button, #course-edit-cancel-button").click(function (){
+    $("#courseForm").slideToggle();
+});
 
 $(document).ready(function () {
     var courseId = $('input#courseId').val();

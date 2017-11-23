@@ -67,3 +67,17 @@ h1 {
 .absent {
     background-color: #d47a10 !important;
 }
+
+#export-button {
+    margin: 0;
+}
+
+#edit-course-pencil-button {
+    background: url(/static/pencilicon.png) no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    width: 23px;
+    height: 23px;
+    cursor:pointer;
+    border:none;
+}
