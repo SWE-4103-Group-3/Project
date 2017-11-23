@@ -163,7 +163,16 @@ public class CourseController {
             redir.addFlashAttribute("courseRows", course.getRows());
             redir.addFlashAttribute("courseCols", course.getCols());
 
-            return "redirect:/" + user.getUsername();
+            if(course.getId() == null) {
+                return "redirect:/" + user.getUsername();
+            } else {
+                String url = user.getUsername() + "/" + course.getName();
+                if(!course.getSection().equals("")) {
+                    url += "/" + course.getSection();
+                }
+                return "redirect:/" + url;
+            }
+
         }
 
         boolean newCourse = false;

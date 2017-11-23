@@ -10,11 +10,9 @@
         <div class="course-editor-title">
             <h1 style="display:inline">{{ course.name }} <span style="color: grey;font-size:smaller;">{{ course.section }}</span></h1>
             {%  if  user.hasExtendedPrivileges %}
-                <a data-toggle="collapse" href="#courseForm" aria-expanded="false" aria-controls="courseForm">
-                    <img src="/static/pencilicon.png" style="width:23px;height:23px; margin-bottom:24px">
-                </a>
+                <div id="edit-course-pencil-button"></div>
                 <form method="get" action="/courses/{{ course.id }}/export" style="float:right">
-                    <button type="submit"  class="btn btn-primary" >
+                    <button id="export-button" type="submit"  class="btn btn-primary" >
                         Export Attendance to CSV
                     </button>
                 </form>
