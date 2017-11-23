@@ -4,10 +4,10 @@ var setModalId = 'set-modal';
 var removeButtonId = 'remove-button';
 var setButtonId = 'set-button';
 
-$(document).ready(function () {
-    var grid;
-    var courseID = $('input#courseID').val();
+var grid;
+var courseID = $('input#courseID').val();
 
+$(document).ready(function () {
     $.ajax({
         type: "get",
         url: "/courses/" + courseID,
@@ -22,6 +22,7 @@ $(document).ready(function () {
                 states: ["open", "closed", "reserved"]
             });
             $('#course-seating-grid').append(grid.el);
+            getAbsences(course.id);
         },
         error: displayErrorNotification
     });
@@ -40,6 +41,24 @@ $(document).ready(function () {
         $(this).html('Edit');
     });
 
+    $('#take-attendance-button').on('click', function () {
+        grid.startAttendance();
+        $(".attendance-buttons").css("visibility", "visible");
+    });
+
+    $('#submit-attendance-button').on('click', function () {
+        var absences = grid.getAbsences();
+        var courseID = grid.getCourseID();
+        postAbsences(courseID, absences);
+        grid.endAttendance();
+        $(".attendance-buttons").css("visibility", "hidden");
+    });
+
+    $('#cancel-attendance-button').on('click', function () {
+        grid.endAttendance();
+        $(".attendance-buttons").css("visibility", "hidden");
+    });
+
     //Clear Student Ties to Seats
     $('#editclearseating').on('click', function(){
         displayClearModal();
@@ -50,7 +69,6 @@ $(document).ready(function () {
             .one('click', function(){displayClearModal(false)});
 
         $('#modal-danger-clear-student-continue').one('click', function(){
-            grid.removeStudents();
             removeStudents(courseID);
 
         });
@@ -130,6 +148,7 @@ $(document).ready(function () {
             }, 250);
         });
     });
+
 });
 
 //Display or Hide Clear Grid Modal
@@ -162,12 +181,55 @@ function postSeats(courseID, seats) {
     });
 }
 
-function removeStudents(courseID) {
+
+function postAbsences(courseID, absences) {
+    $.ajax({
+        type: "post",
+        url: "/courses/" + courseID + "/absences",
+        data: JSON.stringify(absences),
+        contentType: "application/json",
+        success: function() {
+            toastr.success("Successfully submitted attendance!");
+            setTimeout(function(){
+                window.location.reload();
+            },1600);
+        },
+        error: displayErrorNotification
+    });
+}
+
+function postSeat(info) {
+    $.ajax({
+        type: "post",
+        url: "/seats",
+        data: JSON.stringify(info),
+        contentType: "application/json",
+        success: function() {
+            window.location.reload();
+        },
+        error: displayErrorNotification
+    });
+}
+
+function getAbsences(courseId) {
+    $.ajax({
+        type: "get",
+        url: "/courses/" + courseId + "/absences/today",
+        dataType: "json",
+        success: function (absences) {
+            grid.setAbsences(absences);
+        },
+        error: displayErrorNotification
+    });
+}
+
+function removeStudents() {
     $.ajax({
         type: "post",
         url: "/courses/" + courseID + "/seats/students/remove",
-        success: function() {
-            toastr.success("Successfully saved seating template!");
+        success: function () {
+            grid.removeStudents();
+            toastr.success("Successfully removed students!");
         },
         error: displayErrorNotification
     });

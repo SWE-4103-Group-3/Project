@@ -101,6 +101,14 @@
             <artifactId>commons-lang3</artifactId>
             <version>${apache.version}</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>3.8</version>
+        </dependency>
+
     </dependencies>
 
     <build>

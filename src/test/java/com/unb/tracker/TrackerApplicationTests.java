@@ -2,10 +2,13 @@ package com.unb.tracker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import com.unb.tracker.model.Absence;
 import com.unb.tracker.model.Course;
 import com.unb.tracker.model.Seat;
 import com.unb.tracker.model.User;
+import com.unb.tracker.repository.AbsenceRepository;
 import com.unb.tracker.repository.CourseRepository;
+import com.unb.tracker.repository.SeatRepository;
 import com.unb.tracker.repository.UserRepository;
 import com.unb.tracker.service.CourseService;
 import com.unb.tracker.web.CourseController;
@@ -69,7 +72,13 @@ public class TrackerApplicationTests {
     private CourseRepository courseRepository;
 
     @MockBean
+    private AbsenceRepository absenceRepository;
+
+    @MockBean
     private CourseService courseService;
+
+    @MockBean
+    private SeatRepository seatRepository;
 
     @MockBean
     private UserRepository userRepository;
@@ -140,6 +149,8 @@ public class TrackerApplicationTests {
         when(userRepository.findByUsername("test")).thenReturn(instructor);
 
         when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
+
+        when(seatRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
 
         String name = "DGDUSMMYVK";
         String timeSlot = "8:30";
@@ -306,7 +317,7 @@ public class TrackerApplicationTests {
 
         when(userRepository.findByUsername("test")).thenReturn(new User());
 
-        when(courseRepository.findByInstructorUsernameAndName("test", "test")).thenReturn(new ArrayList<Course>() {{
+        when(courseRepository.findByInstructorUsernameAndNameAndSection("test", "test", "")).thenReturn(new ArrayList<Course>() {{
             add(course);
         }});
 
@@ -357,8 +368,8 @@ public class TrackerApplicationTests {
     @WithMockUser("test")
     public void getCourseThatExists() throws Exception {
         Course course = new Course();
-        course.setId(1l);
-        when(courseRepository.findOne(1l)).thenReturn(course);
+        course.setId(1L);
+        when(courseRepository.findOne(1L)).thenReturn(course);
         mockMvc.perform(get("/courses/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -368,8 +379,8 @@ public class TrackerApplicationTests {
     @WithMockUser("test")
     public void getCourseThatDoesNotExists() throws Exception {
         Course course = new Course();
-        course.setId(1l);
-        when(courseRepository.findOne(1l)).thenReturn(null);
+        course.setId(1L);
+        when(courseRepository.findOne(1L)).thenReturn(null);
         mockMvc.perform(get("/courses/1"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -379,27 +390,27 @@ public class TrackerApplicationTests {
     @WithMockUser("test")
     public void postSeat() throws Exception {
         Course course = new Course();
-        course.setId(1l);
-        when(courseRepository.findOne(1l)).thenReturn(course);
+        course.setId(1L);
+        when(courseRepository.findOne(1L)).thenReturn(course);
 
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
         when(userRepository.findByUsername("test")).thenReturn(user);
 
         Seat seat = new Seat();
-        seat.setId(1l);
+        seat.setId(1L);
         seat.setCourse(course);
         seat.setStudent(user);
         seat.setCol(7);
 
         Seat s = new Seat();
-        s.setId(1l);
+        s.setId(1L);
 
         List<Seat> seats = new ArrayList<>();
         seats.add(s);
         course.setSeats(seats);
 
-        mockMvc.perform(get("/courses/1/seat")
+        mockMvc.perform(get("/seats")
                 .content(this.json(seat)))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -543,12 +554,44 @@ public class TrackerApplicationTests {
         this.mockMvc.perform(post("/course/gridReuse")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body2))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
 
         this.mockMvc.perform(post("/course/gridReuse")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body3))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @WithMockUser("test")
+    public void ExportToCSV() throws Exception {
+
+        User instructor = new User();
+        instructor.setUsername("test");
+        instructor.setHasExtendedPrivileges(true);
+        Course myCourse = new Course();
+        myCourse.setName("CourseName");
+        myCourse.setSection("CourseSection");
+
+        List<Absence> absences = new ArrayList<>();
+        Absence absence = new Absence();
+        absence.setCourse(myCourse);
+        absence.setStudent(instructor);
+        absence.setDate(new Date(1511283075));
+        absences.add(absence);
+
+        when(userRepository.findByUsername("test")).thenReturn(instructor);
+        when(courseRepository.findOne(1L)).thenReturn(myCourse);
+
+        when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
+        when(absenceRepository.findByCourseId(1L)).thenReturn(absences);
+
+
+        this.mockMvc.perform(get("/courses/1/export")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     private Date convertToSqlDate(String dateString) throws Exception {

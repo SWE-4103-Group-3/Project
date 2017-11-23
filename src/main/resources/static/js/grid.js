@@ -7,7 +7,9 @@ function Cell(opt) {
     this.states = opt.states;
     this.parent = opt.parent;
     this.rows = opt.rows;
-    this.state = 0;
+    this.state = opt.state || 0;
+    this.absent = opt.absent || false;
+    this.absentInDatabse = opt.absentInDatabse || false;
 
     this.setState = function (state) {
         this.el.removeClass(this.states[this.state]);
@@ -61,9 +63,77 @@ function Cell(opt) {
         return this.student;
     };
 
+    this.studentIsAbsent = function() {
+        return this.absent;
+    };
+
+    this.setAbsent = function (setAbsent) {
+        if(!this.hasStudent()) {
+            return;
+        }
+
+        if(setAbsent) {
+            this.showAbsentSymbol();
+            this.absent = true;
+        } else {
+            this.showPresentSymbol();
+            this.absent = false;
+        }
+    };
+
+    this.endAttendance = function () {
+        if(!this.hasStudent()) {
+            return;
+        }
+
+        if(!this.absentInDatabse) {
+            this.removeSymbol();
+        } else {
+            this.showAbsentSymbol();
+        }
+
+        this.absent = false;
+    };
+
+    this.startAttendance = function () {
+        if(this.absentInDatabse) {
+            this.setAbsent(true);
+            return;
+        }
+
+        this.setAbsent(false);
+    };
+
+
+    this.setAbsentInDatabase = function(absentInDatabase) {
+        if(absentInDatabase) {
+            this.absentInDatabse = true;
+            this.showAbsentSymbol();
+        } else {
+            this.absentInDatabse = false;
+            this.removeSymbol();
+        }
+    };
+
+    this.showAbsentSymbol = function () {
+        this.el.html(this.student.username +' <i class="fa fa-minus-circle"></i>');
+    };
+
+    this.showPresentSymbol = function () {
+        this.el.html(this.student.username +' <i class="fa fa-check-circle"></i>');
+    };
+
+    this.removeSymbol = function() {
+        this.el.html(this.student.username);
+    };
+
     this.el.on('click', {cell: this}, function (e) {
         var cell = e.data.cell;
         if (cell.parent.editable) {
+            if(cell.hasStudent()) {
+                return;
+            }
+
             cell.el.removeClass(cell.states[cell.state]);
             cell.state++;
             if (!cell.states[cell.state]) {
@@ -102,6 +172,12 @@ function Cell(opt) {
                     postSeat(seat);
                 });
             }
+        } else if(cell.parent.takeAttendance) {
+            if(!cell.hasStudent()) {
+                return;
+            }
+
+            cell.setAbsent(!cell.absent);
         }
     });
 
@@ -141,6 +217,8 @@ function Grid(opt) {
     this.editable = opt.editable;
     this.selectable = opt.selectable;
     this.seats = opt.seats;
+    this.absences = opt.absences;
+    this.takeAttendance = opt.takeAttendance || false;
     this.cells = []; // init seat 2D array
 
     this.getSeats = function () {
@@ -166,6 +244,29 @@ function Grid(opt) {
         }
     };
 
+    this.setAbsences = function(absences) {
+        if(!absences) {
+            return;
+        }
+
+        for (var i = 0; i < this.cells.length; i++) {
+            for (var j = 0; j < this.cells[i].length; j++) {
+                var cell = this.cells[i][j];
+                var studentId = cell.getStudentID();
+
+                if(!studentId) {
+                    continue;
+                }
+
+                for (var k = 0; k < absences.length; k++) {
+                    if (studentId === absences[k].student.id) {
+                        cell.setAbsentInDatabase(true);
+                    }
+                }
+            }
+        }
+    };
+
     this.clearSeats = function() {
         for (var i = 0; i < this.cells.length; i++)
             for(var j = 0; j < this.cells[i].length; j++)
@@ -176,6 +277,43 @@ function Grid(opt) {
         for (var i = 0; i < this.cells.length; i++) {
             for(var j = 0; j < this.cells[i].length; j++) {
                 this.cells[i][j].removeStudent();
+            }
+        }
+    };
+
+    this.getAbsences = function() {
+        var absences = [];
+        for (var i = 0; i < this.cells.length; i++) {
+            for(var j = 0; j < this.cells[i].length; j++) {
+                if (this.cells[i][j].studentIsAbsent()) {
+                    absences.push({
+                        "id": this.cells[i][j].getStudentID()
+                    });
+                }
+            }
+        }
+        return absences;
+    };
+
+    this.getCourseID = function () {
+        return this.id;
+    };
+
+
+    this.startAttendance = function() {
+        this.takeAttendance = true;
+        for (var i = 0; i < this.cells.length; i++) {
+            for(var j = 0; j < this.cells[i].length; j++) {
+                this.cells[i][j].startAttendance();
+            }
+        }
+    };
+
+    this.endAttendance = function() {
+        this.takeAttendance = false;
+        for (var i = 0; i < this.cells.length; i++) {
+            for(var j = 0; j < this.cells[i].length; j++) {
+                this.cells[i][j].endAttendance();
             }
         }
     };
@@ -200,6 +338,7 @@ function Grid(opt) {
             this.el.append(row);
         }
         this.setSeats(this.seats);
+        this.setAbsences(this.absences);
     };
 
     this.render();

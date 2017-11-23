@@ -8,6 +8,8 @@ import javax.persistence.*;
 
 @Entity
 public class Seat {
+    public static final int AVAILABLE = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

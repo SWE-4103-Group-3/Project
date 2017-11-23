@@ -13,6 +13,11 @@
                 <a data-toggle="collapse" href="#courseForm" aria-expanded="false" aria-controls="courseForm">
                     <img src="/static/pencilicon.png" style="width:23px;height:23px; margin-bottom:24px">
                 </a>
+                <form method="get" action="/courses/{{ course.id }}/export" style="float:right">
+                    <button type="submit"  class="btn btn-primary" >
+                        Export Attendance to CSV
+                    </button>
+                </form>
                 {% include '/templates/courseFormView.twig' with {course: course}%}
             {% endif %}
         </div>
@@ -26,6 +31,9 @@
                 <button id="editclearseating" type="button" class="btn btn-primary">Clear Student Seating</button>
                 <button id="editcleartemplate" type="button" class="btn btn-primary">Reset Seat Template</button>
                 <button type="button" class="btn btn-primary" id="reuse-grid-button">Use Seat Grid From Other Course</button>
+                <button type="button" class="btn btn-primary" id="take-attendance-button">Take Attendance</button>
+                <button type="button" class="btn btn-primary attendance-buttons" id="submit-attendance-button">Submit</button>
+                <button type="button" class="btn btn-blue-grey attendance-buttons" id="cancel-attendance-button">Cancel</button>
             </div>
         {% endif %}
 
@@ -37,7 +45,7 @@
 
 {% block modals %}
     {% include 'danger.modal.twig' with {'id': 'remove-modal', 'title': 'Seating', 'message': 'Are you sure you want to remove yourself?', 'buttonId': 'remove-button'} %}
-    {% include 'good.modal.twig' with {'id': 'set-modal', 'title': 'Seating', 'message': 'Are you sure you want to choose this seat?', 'buttonId': 'set-button'} %}
+    {% include 'info.modal.twig' with {'id': 'set-modal', 'title': 'Seating', 'message': 'Are you sure you want to choose this seat?', 'buttonId': 'set-button'} %}
     <!--Clear Student Seating Warning Modal-->
     <div class="modal fade" id="modal-danger-clear-student" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-notify modal-danger" role="document">
