@@ -18,11 +18,12 @@ $(document).ready(function () {
                 cols: course.cols,
                 seats: course.seats,
                 id: course.id,
-                selectable: !user.hasExtendedPrivileges,
                 states: ["open", "closed", "reserved"]
             });
             $('#course-seating-grid').append(grid.el);
-            getAbsences(course.id);
+            if(user.hasExtendedPrivileges) {
+                getAbsences(course.id);
+            }
         },
         error: displayErrorNotification
     });
@@ -70,7 +71,6 @@ $(document).ready(function () {
 
         $('#modal-danger-clear-student-continue').one('click', function(){
             removeStudents(courseID);
-
         });
     });
 
@@ -176,6 +176,20 @@ function postSeats(courseID, seats) {
         contentType: "application/json",
         success: function() {
             toastr.success("Successfully saved seating template!");
+        },
+        error: displayErrorNotification
+    });
+}
+
+function removeStudent(seatID) {
+    $.ajax({
+        type: "post",
+        url: "/seats/" + seatID + "/student/remove",
+        success: function() {
+            toastr.success("Successfully removed student!");
+            setTimeout(function(){
+                window.location.reload();
+            },1600);
         },
         error: displayErrorNotification
     });
