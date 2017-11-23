@@ -166,9 +166,10 @@ public class CourseController {
             if(course.getId() == null) {
                 return "redirect:/" + user.getUsername();
             } else {
-                String url = user.getUsername() + "/" + course.getName();
-                if(!course.getSection().equals("")) {
-                    url += "/" + course.getSection();
+                Course redirect = courseRepository.findById(course.getId());
+                String url = user.getUsername() + "/" + redirect.getName();
+                if(!redirect.getSection().equals("")) {
+                    url += "/" + redirect.getSection();
                 }
                 return "redirect:/" + url;
             }
