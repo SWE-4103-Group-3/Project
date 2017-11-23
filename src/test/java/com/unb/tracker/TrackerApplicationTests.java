@@ -311,7 +311,7 @@ public class TrackerApplicationTests {
 
         when(userRepository.findByUsername("test")).thenReturn(new User());
 
-        when(courseRepository.findByInstructorUsernameAndName("test", "test")).thenReturn(new ArrayList<Course>() {{
+        when(courseRepository.findByInstructorUsernameAndNameAndSection("test", "test", "")).thenReturn(new ArrayList<Course>() {{
             add(course);
         }});
 
