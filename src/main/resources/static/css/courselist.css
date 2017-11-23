@@ -2,12 +2,12 @@ div.courselist {
     margin-right: calc(100% - 275px);
     width: 275px;
     height: 100%;
+    min-height: calc(100vh - 65px);
     position: absolute;
     z-index: 1;
-    top: 65px;
     left: 0;
     overflow-x: hidden;
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, .125);
     border-top-right-radius: 1px;
 }
 

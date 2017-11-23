@@ -12,20 +12,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
-{
-	@Autowired
-	private UserDetailsService userDetailsService;
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception
-	{
-		//TODO: Should ensure we are only exposing static content (css & js) for pages accessible to everyone (index page)
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        //TODO: Should ensure we are only exposing static content (css & js) for pages accessible to everyone (index page)
+
+        //@formatter:off
 		http
 			.csrf()
 				.disable()
@@ -45,9 +45,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 				.logoutSuccessUrl("/")
 				.permitAll();
 	}
+    //@formatter:on
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
-	}
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+    }
 }

@@ -1,36 +1,35 @@
 package com.unb.tracker.model;
 
 
-import java.sql.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity // This tells Hibernate to make a table out of this class
 public class Course {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    //TODO: Add link to users table when it actually exists
-    //private User Professor;
-
-    //TODO: Add link to seat plan table when it actually exists
-    //private SeatPlan seatPlan
-
-    //TODO: Investigate how to keep "Old seat Plan (another FK?)"
-    //private SeatPlan oldSeatPlan
-
-    private String timeSlot;
     private Date startDate;
-    private Date endDate;
     private String name;
     private String section;
     private Integer rows;
     private Integer cols;
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER) //necessary for hibernate when updating course that does not already have a seat plan
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Seat> seats;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private User instructor;
+
+    @Transient
+    private Long courseGridReuseID;
 
     public User getInstructor() {
         return instructor;
@@ -80,24 +79,12 @@ public class Course {
         this.id = id;
     }
 
-    public String getTimeSlot() { return timeSlot; }
-
-    public void setTimeSlot(String timeSlot) { this.timeSlot = timeSlot; }
-
     public Date getStartDate() {
         return startDate;
     }
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public String getName() {
@@ -108,5 +95,32 @@ public class Course {
         this.name = name;
     }
 
+    @Transient
+    public Long getCourseGridReuseID() {
+        return courseGridReuseID;
+    }
 
+    @Transient
+    public void setCourseGridReuseID(Long courseGridReuseID) {
+        this.courseGridReuseID = courseGridReuseID;
+    }
+
+    public void removeSeats(List<Seat> seatsToRemove) {
+        seats.removeAll(seatsToRemove);
+        for(Seat s : seatsToRemove) {
+            s.setCourse(null);
+        }
+    }
+
+    public List<Seat> getOutOfBoundsSeats(int rows, int cols) {
+        List<Seat> seatsToRemove = new ArrayList<>();
+        if(seats != null) {
+            for(Seat s : seats) {
+                if(s.getRow() >= rows || s.getCol() >= cols) {
+                    seatsToRemove.add(s);
+                }
+            }
+        }
+        return seatsToRemove;
+    }
 }
