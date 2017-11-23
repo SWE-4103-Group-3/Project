@@ -165,15 +165,14 @@ public class CourseController {
 
             if(course.getId() == null) {
                 return "redirect:/" + user.getUsername();
-            } else {
-                Course redirect = courseRepository.findOne(course.getId());
-                String url = user.getUsername() + "/" + redirect.getName();
-                if(!redirect.getSection().equals("")) {
-                    url += "/" + redirect.getSection();
-                }
-                return "redirect:/" + url;
             }
-
+            
+            Course redirect = courseRepository.findOne(course.getId());
+            String url = user.getUsername() + "/" + redirect.getName();
+            if(!redirect.getSection().equals("")) {
+                url += "/" + redirect.getSection();
+            }
+            return "redirect:/" + url;
         }
 
         boolean newCourse = false;
