@@ -8,6 +8,7 @@ import com.unb.tracker.model.Seat;
 import com.unb.tracker.model.User;
 import com.unb.tracker.repository.AbsenceRepository;
 import com.unb.tracker.repository.CourseRepository;
+import com.unb.tracker.repository.SeatRepository;
 import com.unb.tracker.repository.UserRepository;
 import com.unb.tracker.service.CourseService;
 import com.unb.tracker.web.CourseController;
@@ -75,6 +76,9 @@ public class TrackerApplicationTests {
 
     @MockBean
     private CourseService courseService;
+
+    @MockBean
+    private SeatRepository seatRepository;
 
     @MockBean
     private UserRepository userRepository;
@@ -145,6 +149,8 @@ public class TrackerApplicationTests {
         when(userRepository.findByUsername("test")).thenReturn(instructor);
 
         when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
+
+        when(seatRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
 
         String name = "DGDUSMMYVK";
         String timeSlot = "8:30";
