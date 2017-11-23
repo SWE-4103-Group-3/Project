@@ -290,6 +290,10 @@ public class CourseController {
         if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();
         }
+
+        List<Absence> absences = absenceRepository.findByCourseId(courseId);
+        absenceRepository.delete(absences);
+
         courseRepository.delete(courseId);
         return "success";
     }
