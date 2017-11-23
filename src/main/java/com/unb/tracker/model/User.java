@@ -120,4 +120,8 @@ public class User {
             return courses;
         }
     }
+
+    public void removeSeat(Seat s) {
+        seats.remove(s);
+    }
 }

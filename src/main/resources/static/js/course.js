@@ -194,6 +194,7 @@ function postSeats(courseID, seats) {
     });
 }
 
+
 function postAbsences(courseID, absences) {
     $.ajax({
         type: "post",

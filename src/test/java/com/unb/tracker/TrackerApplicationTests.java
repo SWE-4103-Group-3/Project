@@ -440,6 +440,15 @@ public class TrackerApplicationTests {
 
         when(courseRepository.save(Matchers.anyCollection())).then(returnsFirstArg());
 
+        Course c = new Course();
+        List<Seat> seats = new ArrayList<>();
+        Seat seat = new Seat();
+        seat.setCol(1);
+        seat.setRow(1);
+        seats.add(seat);
+        c.setSeats(seats);
+        when(courseRepository.findOne(1l)).thenReturn(c);
+
         String name = "TestCourse";
         String section = "section";
         Integer rows = 2;
@@ -456,6 +465,7 @@ public class TrackerApplicationTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("name", "newname")
+                .param("startDate", "2017-01-01")
                 .param("cols", "3")
                 .param("rows", "3")
                 .param("section", "newsection"))

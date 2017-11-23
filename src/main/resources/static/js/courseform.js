@@ -59,8 +59,10 @@ $(document).ready(function() {
             displayCourseSearchModal(false);
 
             if($('#course-grid-id').val()) {
-                $('#course-form-rows').val('1').hide();
-                $('#course-form-cols').val('1').hide();
+                $('#courseCols').val('1');
+                $('#courseRows').val('1');
+                $('#course-form-rows').hide();
+                $('#course-form-cols').hide();
             }
         });
 
@@ -123,7 +125,7 @@ function queryAndPopulateCourses(query) {
                     .addClass('list-group-item-action')
                     .addClass('course-list-queried-item')
                     .addClass('cid-' + data[index].id)
-                    .text('Course: ' + data[index].name + ', Section: ' + data[index].section);
+                    .text('Course: ' + data[index].name + (data[index].section ? ', Section: ' + data[index].section : ''));
 
                 $el.on('click', courseLineEventHandler);
                 courseList.append($el);
