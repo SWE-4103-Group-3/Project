@@ -1,4 +1,4 @@
-{% extends '/templates/base.twig' %}
+{% extends 'base.twig' %}
 
 {% block title %}
     <title>Dashboard - {{ user.username }}</title>
@@ -13,37 +13,76 @@
     <nav class="navbar navbar-dark justify-content-between">
         <a href="/{{ user.username }}" class="navbar-brand" style="font-size: 20pt;">Attendance Tracker</a>
         <div class="float-right">
-            <img src="https://thumb9.shutterstock.com/display_pic_with_logo/78238/78238,1255878221,16/stock-photo-cyber-woman-with-a-corn-39094327.jpg" class="rounded-circle hoverable" style="width:35px;height:35px;">
+            <img src="https://thumb9.shutterstock.com/display_pic_with_logo/78238/78238,1255878221,16/stock-photo-cyber-woman-with-a-corn-39094327.jpg"
+                 class="rounded-circle hoverable" style="width:35px;height:35px;">
             <button class="btn btn-outline-success btn-sm my-0" onclick="location.href='/logout'">Logout</button>
         </div>
     </nav>
-    {% include '/templates/courselist.twig' %}
     <div class="dashboard-body">
+        {% include '/templates/courselist.twig' %}
         {% block content %}
             <div class="welcome-text">
                 <h1>Welcome back, {{ user.username }}!</h1>
                 {% if user.hasExtendedPrivileges %}
-                    {% block script %}
-                        <script type="text/javascript">
-                            $(document).ready(function() {
-                                $('.datepicker').pickadate({
-                                    formatSubmit: 'yyyy-mm-dd',
-                                    hiddenName: true
-                                });
-                                $('.timepicker').pickatime({
-                                    twelvehour: true
-                                });
-
-                            });
-                        </script>
-                    {% endblock %}
                     <p>Select a course from the course list, or create a course.</p>
-                    <button type="button" data-target="#courseForm" class="btn btn-primary" data-toggle="collapse" aria-expanded="false" aria-controls="courseForm">Create Course</button>
+                    <button id="createButton" type="button" data-target="#courseForm" class="btn btn-primary"
+                            aria-expanded="false" aria-controls="courseForm">Create Course
+                    </button>
                     {% include '/templates/courseFormView.twig' %}
                 {% else %}
-                    <p>Select a course from the course list.</p>
+                    <p>Select a course from the course list, or search for a course.</p>
+                    <button id="searchButton" type="button" class="btn btn-primary">Search Course</button>
+                    <!-- Modal for Searching for a Course Grid -->
+                    <div class="modal fade" id="search-course-grid-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-notify modal-info" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <p class="heading lead">Search For A Course</p>
+                                    <button type="button" id="search-course-grid-modal-close-top" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true" class="white-text">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="text-center">
+                                        <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+                                        <p>Please enter a course name below.</p>
+                                        <p>Click on the course you wish to enter, and click submit to view that course's seats</p>
+                                    </div>
+                                    <div class="md-form">
+                                        <input type="text" id="search-course-field" class="form-control">
+                                        <label for="search-course-field" class="">Search Course</label>
+                                    </div>
+                                    <div id="course-list-queried">
+                                    </div>
+                                    <input id="course-id" name="course-id" value="" type="hidden">
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <a type="button" id="search-course-grid-modal-submit-bottom" class="btn btn-primary-modal">Submit<i class="fa fa-diamond ml-1"></i></a>
+                                    <a type="button" id="search-course-grid-modal-close-bottom" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {% endif %}
             </div>
         {% endblock %}
     </div>
 {% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    {% if user.hasExtendedPrivileges %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').pickadate({
+                formatSubmit: 'yyyy-mm-dd',
+                hiddenName: true
+            });
+        });
+    </script>
+    {% endif %}
+    <script type="text/javascript" src="/static/js/searchmodal.js"></script>
+    <script type="text/javascript" src="/static/js/courseform.js"></script>
+    <script type="text/javascript" src="/static/js/dashboard.js"></script>
+{% endblock %}
+

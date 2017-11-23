@@ -1,36 +1,42 @@
-#grid {
-    width: 40%;
+.course-editor-body {
+    margin-bottom: 65px;
+    margin-left: 275px;
+    padding: 20px;
 }
+
+#course-seating-grid {
+    width: 100%;
+    height: calc(85vh - 200px);
+    overflow: auto;
+}
+
 #edit {
     margin: auto;
 }
 
-.dashboard-body {
-    padding-top: 10px;
-    padding-left: 30px;
-}
-
-table {
+table#course-seating-table {
+    display: table;
     width: 100%;
 }
-td {
-    border: 1px;
-    border-style: solid;
-    border-color: #e0e0e0;
-    max-width: 20px;
-    max-height: 20px;
-}
-.open {
-  background-color: #8fbf8f;
-}
-.closed {
-  background-color: #de9299;
-}
-.reserved {
-  background-color: #d3d494;
+
+td.course-seat {
+    border: 1px solid #e0e0e0;
+    text-align: center;
 }
 
-td:hover {
+.open {
+    background-color: #8fbf8f;
+}
+
+.closed {
+    background-color: #de9299;
+}
+
+.reserved {
+    background-color: #d3d494;
+}
+
+td.course-seat:hover {
     filter: brightness(120%);
 }
 
@@ -41,4 +47,37 @@ td:hover {
 
 h1 {
     font-size: 3rem;
+}
+
+.modal#modal-danger-clear-student,
+.modal#modal-danger-reset-template {
+    top: calc(50% - 350px);
+}
+
+#reuse-grid-button {
+    float: none !important;
+}
+
+.attendance-buttons {
+    float: right;
+    visibility: hidden;
+    margin-left: 4px;
+}
+
+.absent {
+    background-color: #d47a10 !important;
+}
+
+#export-button {
+    margin: 0;
+}
+
+#edit-course-pencil-button {
+    background: url(/static/pencilicon.png) no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    width: 23px;
+    height: 23px;
+    cursor:pointer;
+    border:none;
 }
