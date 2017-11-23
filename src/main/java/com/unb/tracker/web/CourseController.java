@@ -166,7 +166,7 @@ public class CourseController {
             if(course.getId() == null) {
                 return "redirect:/" + user.getUsername();
             } else {
-                Course redirect = courseRepository.findById(course.getId());
+                Course redirect = courseRepository.findOne(course.getId());
                 String url = user.getUsername() + "/" + redirect.getName();
                 if(!redirect.getSection().equals("")) {
                     url += "/" + redirect.getSection();
