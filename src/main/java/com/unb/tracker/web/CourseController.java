@@ -167,6 +167,7 @@ public class CourseController {
         }
 
         boolean newCourse = false;
+        boolean usingTemplate = false;
         // Are we trying to create a course?
         if (course.getId() == null) {
             newCourse = true;
@@ -174,6 +175,7 @@ public class CourseController {
 
             Long courseGridReuseID = course.getCourseGridReuseID();
             if(courseGridReuseID != null) {
+                usingTemplate = true;
                 Course otherCourse = courseRepository.findOne(courseGridReuseID);
                 reuseCourseGridHelper(course, otherCourse);
             }
@@ -191,7 +193,8 @@ public class CourseController {
 
         courseRepository.save(course);
 
-        if(newCourse) {
+
+        if(!usingTemplate && newCourse) {
             LOG.debug("creating empty seats!!");
             List<Seat> seats = new ArrayList<>();
             for(int i = 0; i < course.getRows(); i++) {
