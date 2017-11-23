@@ -190,7 +190,7 @@ public class CourseController {
         }
 
         courseRepository.save(course);
-        
+
         if(newCourse) {
             LOG.debug("creating empty seats!!");
             List<Seat> seats = new ArrayList<>();
@@ -286,6 +286,7 @@ public class CourseController {
     @PostMapping(value = "courses/{courseId}/delete")
     @ResponseBody
     public String deleteCourse(@PathVariable Long courseId, Principal principal) {
+        LOG.info("deleteCourse - starting - course.id: {}", courseId);
         User user = userRepository.findByUsername(principal.getName());
         if (user == null || !user.getHasExtendedPrivileges()) {
             throw new BadRequestException();

@@ -36,11 +36,10 @@ public class SeatController {
     @PostMapping("/seats")
     public @ResponseBody String postSeat(@RequestBody Seat seat, Principal principal) {
         LOG.info("postSeat - starting - seat.id: {}", seat.getId());
-
         User user = userRepository.findByUsername(principal.getName());
 
-        if(user.getHasExtendedPrivileges()) {
-            LOG.warn("instructor {} trying to choose a seat", user.getId());
+        if(seat.getStudent() == null) {
+            LOG.warn("student must not be null");
             throw new BadRequestException();
         }
 
@@ -50,7 +49,7 @@ public class SeatController {
             throw new BadRequestException();
         }
 
-        if(seat.getStudent() != null && !user.getId().equals(seat.getStudent().getId())) {
+        if(!user.getId().equals(seat.getStudent().getId())) {
             LOG.warn("{} trying to alter {}'s seat", user.getUsername(), seat.getStudent().getUsername());
             throw new BadRequestException();
         }
@@ -75,17 +74,33 @@ public class SeatController {
             }
         }
 
-        // Are we trying to remove a student?
-        if(seat.getStudent() == null) {
-            LOG.debug("removing {} from seat", user.getUsername());
-            return "removed";
-        }
-
         LOG.debug("saving {} to seat {}", user.getUsername(), seat.getId());
-        //seat.setStudent(user);
         seatRepository.save(seat);
+
         user.getSeats().add(seat);
         userRepository.save(user);
+
+        return "saved";
+    }
+
+    @PostMapping("/seats/{seatId}/student/remove")
+    public @ResponseBody String removeStudentFromSeat(@PathVariable Long seatId, Principal principal) {
+        LOG.info("removeStudentFromSeat - starting - seat.id: {}", seatId);
+        User user = userRepository.findByUsername(principal.getName());
+
+        if(!user.getHasExtendedPrivileges()) {
+            LOG.warn("{} trying to remove student from seat", user.getUsername());
+            throw new BadRequestException();
+        }
+
+        Seat seat = seatRepository.findOne(seatId);
+        if(seat == null) {
+            throw new NotFoundException();
+        }
+
+        LOG.debug("removing {} from their seat", seat.getStudent() == null ? null : seat.getStudent().getUsername());
+        seat.removeStudent();
+        seatRepository.save(seat);
 
         return "saved";
     }

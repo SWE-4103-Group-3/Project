@@ -140,12 +140,26 @@ function Cell(opt) {
                 cell.state = 0;
             }
             cell.el.addClass(cell.states[cell.state]);
-        } else if(cell.parent.selectable) {
-            if(user.hasExtendedPrivileges) {
+        } else if(cell.parent.takeAttendance) {
+            if(!cell.hasStudent()) {
                 return;
             }
 
-            if(cell.hasStudent() && cell.getStudentID() !== user.id) {
+            cell.setAbsent(!cell.absent);
+        } else if(cell.parent.selectable) {
+            var seat = cell.getInfo();
+            if(user.hasExtendedPrivileges) {
+                if(cell.hasStudent()) {
+                    $('#' + removeModalId).modal();
+                    $('#' + removeButtonId).one('click', function () {
+                        removeStudent(seat.id);
+                    });
+                }
+
+                return;
+            }
+
+            if(cell.hasStudent()) {
                 return;
             }
 
@@ -153,31 +167,13 @@ function Cell(opt) {
                 return;
             }
 
-            var seat = cell.getInfo();
-
-            // Is the student trying to remove himself?
-            if(cell.hasStudent()) {
-                $('#'+removeModalId).modal();
-                $('#'+removeButtonId).on('click', function () {
-                    seat.student = null;
-                    postSeat(seat);
-                });
-
-            } else {
-                $('#'+setModalId).modal();
-                $('#'+setButtonId).on('click', function () {
-                    seat.student = {
-                        "id": user.id
-                    };
-                    postSeat(seat);
-                });
-            }
-        } else if(cell.parent.takeAttendance) {
-            if(!cell.hasStudent()) {
-                return;
-            }
-
-            cell.setAbsent(!cell.absent);
+            $('#'+setModalId).modal();
+            $('#'+setButtonId).on('click', function () {
+                seat.student = {
+                    "id": user.id
+                };
+                postSeat(seat);
+            });
         }
     });
 
@@ -215,7 +211,7 @@ function Grid(opt) {
     this.cols = opt.cols;
     this.states = opt.states;
     this.editable = opt.editable;
-    this.selectable = opt.selectable;
+    this.selectable = opt.selectable || true;
     this.seats = opt.seats;
     this.absences = opt.absences;
     this.takeAttendance = opt.takeAttendance || false;

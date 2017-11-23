@@ -44,7 +44,7 @@
 {% endblock %}
 
 {% block modals %}
-    {% include 'danger.modal.twig' with {'id': 'remove-modal', 'title': 'Seating', 'message': 'Are you sure you want to remove yourself?', 'buttonId': 'remove-button'} %}
+    {% include 'danger.modal.twig' with {'id': 'remove-modal', 'title': 'Seating', 'message': 'Are you sure you want to remove this student?', 'buttonId': 'remove-button'} %}
     {% include 'info.modal.twig' with {'id': 'set-modal', 'title': 'Seating', 'message': 'Are you sure you want to choose this seat?', 'buttonId': 'set-button'} %}
     <!--Clear Student Seating Warning Modal-->
     <div class="modal fade" id="modal-danger-clear-student" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
