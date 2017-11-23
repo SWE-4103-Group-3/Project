@@ -71,7 +71,6 @@ $(document).ready(function () {
 
         $('#modal-danger-clear-student-continue').one('click', function(){
             removeStudents(courseID);
-
         });
     });
 
